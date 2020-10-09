@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Modules\BasicAuthentication\Module;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 
 class Authenticate extends Middleware
@@ -12,10 +13,11 @@ class Authenticate extends Middleware
      * @param  \Illuminate\Http\Request  $request
      * @return string|null
      */
-    protected function redirectTo($request)
-    {
+    protected function redirectTo($request) {
+        $auth_module = resolve(Module::class);
+
         if (! $request->expectsJson()) {
-            return route('login');
+            return $auth_module->route_prefix("/login");
         }
     }
 }

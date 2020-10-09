@@ -13,3 +13,6 @@ yarn-error.log
 tags
 tags.lock
 tags.temp
+/public/js
+/public/*.js
+/public/*.js.map

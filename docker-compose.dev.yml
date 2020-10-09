@@ -6,20 +6,21 @@ services:
     build:
       context: .
       dockerfile: .docker/dev.Dockerfile
+    container_name: kwerio
     tty: true
     stdin_open: true
     working_dir: /var/www/html
     volumes:
       - ./:/var/www/html
     ports:
-      - 9080:80
+      - 8000:80
     networks:
       kwerio:
         ipv4_address: ${DOCKER_APP_IPV4}
     environment:
       USER_ID: ${DOCKER_USER_ID}
       GROUP_ID: ${DOCKER_GROUP_ID}
-    command: /root/dev.setup.sh
+    command: /root/setup.sh
 
 networks:
   kwerio:
