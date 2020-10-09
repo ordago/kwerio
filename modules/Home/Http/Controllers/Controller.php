@@ -12,6 +12,6 @@ class Controller extends BaseController {
      * @return View
      */
     function index(Module $module) {
-        return view($module->view("index"));
+        return $module->view("index");
     }
 }

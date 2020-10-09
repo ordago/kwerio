@@ -19,7 +19,8 @@ mix.webpackConfig({
   },
   resolve: {
     alias: {
-
+      Kwerio: path.resolve(__dirname, "resources/js"),
+      KwerioComponents: path.resolve(__dirname, "resources/js/components"),
     },
   },
 })

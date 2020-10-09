@@ -16,3 +16,5 @@ tags.temp
 /public/js
 /public/*.js
 /public/*.js.map
+/public/mix-manifest.json
+/public/fonts
