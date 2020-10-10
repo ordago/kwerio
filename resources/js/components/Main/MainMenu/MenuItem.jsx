@@ -5,7 +5,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import React from "react"
 import clsx from "clsx"
 
-import { expand } from "./index.slice"
+import { actions } from "../../../App.slice"
 import useStyles from "./index.styles"
 
 function MenuItem(props) {
@@ -28,7 +28,7 @@ function MenuItem(props) {
       className={clsx({ [classes.nestedListItem]: level > 0 })}
       onClick={() => {
         if (hasChildrens) {
-          dispatch(expand(item.id))
+          dispatch(actions.expandMenu(item.id))
         }
       }}
     >
