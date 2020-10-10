@@ -20,13 +20,22 @@ class ModulesLoader {
         $shadow = [];
         $modules = [];
 
+        $uids = [];
+
         foreach ($finder as $dir) {
             $class = "Modules\\" . $dir->getBasename() . "\\Module";
+            $moduleInstance = new $class;
+
+            if (in_array($moduleInstance->uid, $uids)) {
+                throw new \Exception("A module already exists with uid: {$moduleInstance->uid}");
+            }
+
+            $uids[] = $moduleInstance->uid;
 
             $module = [
                 "basename" => $dir->getBasename(),
                 "service_provider" => "Modules\\" . $dir->getBasename() . "\\ServiceProvider",
-                "module" => new $class,
+                "module" => $moduleInstance,
                 "config" => require $dir->getPathname() . "/config/module.php",
             ];
 

@@ -20,29 +20,37 @@ class ModulesLoaderTest extends TestCase {
         parent::setUp();
 
         foreach ($this->dummy as $dir => $deps) {
-            @mkdir(base_path("modules/{$dir}"));
-            @mkdir(base_path("modules/{$dir}/config"));
-
-            file_put_contents(
-                base_path("modules/{$dir}/config/module.php"),
-                $this->_get_config($dir, $deps)
-            );
-
-            file_put_contents(
-                base_path("modules/{$dir}/Module.php"),
-                $this->_get_module($dir)
-            );
+            $this->_create_module($dir, $deps);
         }
     }
 
     protected function tearDown(): void {
         parent::tearDown();
 
-        $filesystem = resolve(Filesystem::class);
+        $dummy = array_merge(
+            $this->dummy,
+            [
+                "FooDup" => [],
+            ],
+        );
 
-        foreach ($this->dummy as $dir => $deps) {
-            $filesystem->deleteDirectory(base_path("modules/{$dir}"));
+        foreach ($dummy as $dir => $deps) {
+            $this->_remove_module($dir);
         }
+    }
+
+    /**
+     * @test
+     */
+    function fail_if_duplicated_module_found() {
+        $this->expectException(\Exception::class);
+
+        $this->_create_module("FooDup");
+        $module_content = $this->_get_module("FooDup", "public \$uid = 'module__foo';");
+        file_put_contents(base_path("modules/FooDup/Module.php"), $module_content);
+
+        $ml = resolve(ModulesLoader::class);
+        $ml->load_from_disk();
     }
 
     /** @test */
@@ -87,13 +95,67 @@ class ModulesLoaderTest extends TestCase {
      *
      * @return string
      */
-    function _get_module($name) {
+    function _get_module($name, $extra = "") {
         return "<?php
             namespace Modules\\{$name};
             use App\Opt\Module as BaseModule;
             class Module extends BaseModule {
                 public \$name = '{$name}';
+                {$extra}
             }
         ";
+    }
+
+    /**
+     * Get module service provider.
+     *
+     * @param string $in_namespace
+     * @return string
+     */
+    function _get_service_provider($in_namespace) {
+        return "<?php
+            namespace Modules\\{$in_namespace};
+            use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+            class ServiceProvider extends BaseServiceProvider {
+                function register() { }
+                function boot() { }
+            }
+        ";
+    }
+
+    /**
+     * Remove module.
+     *
+     * @param string $dir
+     */
+    private function _remove_module($dir) {
+        $filesystem = resolve(Filesystem::class);
+        $filesystem->deleteDirectory(base_path("modules/{$dir}"));
+    }
+
+    /**
+     * Create a new module.
+     *
+     * @param string $dir
+     * @param array  $deps
+     */
+    private function _create_module($dir, $deps = null) {
+        @mkdir(base_path("modules/{$dir}"));
+        @mkdir(base_path("modules/{$dir}/config"));
+
+        file_put_contents(
+            base_path("modules/{$dir}/config/module.php"),
+            $this->_get_config($dir, $deps)
+        );
+
+        file_put_contents(
+            base_path("modules/{$dir}/Module.php"),
+            $this->_get_module($dir)
+        );
+
+        file_put_contents(
+            base_path("modules/{$dir}/ServiceProvider.php"),
+            $this->_get_service_provider($dir)
+        );
     }
 }

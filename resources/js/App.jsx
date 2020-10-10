@@ -8,6 +8,7 @@ import { jssPreset, StylesProvider, createMuiTheme, ThemeProvider } from "@mater
 import React from "react"
 import rtl from "jss-rtl"
 
+import { fetch_metadata } from "./App.slice"
 import Main from "./components/Main"
 import useStyles from "./App.styles"
 
@@ -17,6 +18,10 @@ function InnerApp({ children }) {
     classes = useStyles(),
     muiTheme = React.useMemo(() => createMuiTheme(theme), [theme]),
     jss = create({ plugins: [...jssPreset().plugins, rtl()] })
+
+  React.useEffect(() => {
+    dispatch(fetch_metadata())
+  }, [])
 
   return (
     <StylesProvider jss={jss}>

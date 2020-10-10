@@ -4,18 +4,23 @@ namespace App\Opt;
 
 use Illuminate\Support\Str;
 
-class MOdule {
+class Module {
     public $name;
     public $slug;
     public $uid;
 
     function __construct() {
-        if (!$this->name) {
+        if (empty($this->name)) {
             throw new \Exception("Module name is required");
         }
 
-        $this->uid = "module__" . Str::slug($this->name, "_");
-        $this->slug = Str::slug($this->name);
+        if (empty($this->uid)) {
+            $this->uid = "module__" . Str::slug($this->name, "_");
+        }
+
+        if (empty($this->uid)) {
+            $this->slug = Str::slug($this->name);
+        }
     }
 
     /**
