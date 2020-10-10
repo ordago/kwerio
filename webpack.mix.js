@@ -1,6 +1,8 @@
 const mix = require('laravel-mix'),
   fs = require("fs")
 
+mix.react("resources/js/index.jsx", "public/js/app.js")
+
 const modules_dir = fs.opendirSync("./modules")
 
 while ((dirent = modules_dir.readSync()) !== null) {
