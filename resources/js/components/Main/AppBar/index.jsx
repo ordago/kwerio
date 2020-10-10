@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux"
 import MenuIcon from "@material-ui/icons/Menu"
 import React from "react"
 
-import { toggle as toggleMenu } from "../MainMenu/index.slice"
+import { actions } from '../../../App.slice.js'
 import useStyles from "./index.styles"
 
 function AppBar() {
@@ -24,7 +24,7 @@ function AppBar() {
             edge="start"
             className={classes.menuIconBtn}
             color="inherit"
-            onClick={() => dispatch(toggleMenu())}
+            onClick={() => dispatch(actions.toggleMenu())}
           >
             <MenuIcon />
           </IconButton>

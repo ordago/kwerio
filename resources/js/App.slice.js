@@ -11,14 +11,17 @@ export const fetch_metadata = createAsyncThunk(`${PREFIX}/fetch_metadata`, async
 ))
 
 const initialState = {
-
+  menu: {
+    open: false,
+    data: [],
+  },
 }
 
 const slice = createSlice({
   name: PREFIX,
   initialState,
   reducers: {
-
+    toggleMenu: (state, action) => { state.menu.open = !state.menu.open },
   },
   extraReducers: {
     // fetch_metadata
@@ -28,7 +31,7 @@ const slice = createSlice({
       console.error(action)
     },
     [fetch_metadata.fulfilled]: (state, action) => {
-      console.log(action)
+      state.menu = action.payload.menu
     },
   },
 })

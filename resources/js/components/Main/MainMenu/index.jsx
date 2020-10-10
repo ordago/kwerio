@@ -5,9 +5,10 @@ import React from "react"
 import { toggle } from "./index.slice"
 import Menu from "./Menu"
 import useStyles from "./index.styles"
+import { actions } from '../../../App.slice.js'
 
 function MainMenu() {
-  const { open } = useSelector((state) => state.mainMenu),
+  const { open } = useSelector((state) => state.app.menu),
     settings = useSelector((state) => state.config.settings),
     dispatch = useDispatch(),
     classes = useStyles(settings)
@@ -15,7 +16,7 @@ function MainMenu() {
   function inner_toggle(dispatch) {
     return function(evt) {
       if (evt && evt.type === 'keydown' && (evt.key === "Tab" || evt.key === "Shift")) return
-      dispatch(toggle())
+      dispatch(actions.toggleMenu())
     }
   }
 

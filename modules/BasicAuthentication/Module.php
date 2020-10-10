@@ -6,4 +6,5 @@ use App\Opt\Module as BaseModule;
 
 class Module extends BaseModule {
     public $name = "Basic Authentication";
+    public $hidden = true;
 }

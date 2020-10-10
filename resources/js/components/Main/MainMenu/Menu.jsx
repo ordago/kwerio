@@ -8,7 +8,7 @@ import MenuItem from "./MenuItem"
 import useStyles from "./Menu.styles"
 
 function Menu(props) {
-  const { data } = useSelector((state) => state.mainMenu),
+  const { data } = useSelector((state) => state.app.menu),
     settings = useSelector((state) => state.config.settings),
     classes = useStyles(settings),
     dispatch = useDispatch()
