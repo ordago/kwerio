@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Modules\About;
+namespace Modules\%NS%;
 
 use App\Base\Module\Base as BaseModule;
 
 class Module extends BaseModule {
-    public $name = "About";
-    public $uid = "module__about";
+    public $name = "%NAME%";
+    public $uid = "%UID%";
 }

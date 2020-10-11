@@ -5,9 +5,9 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use Illuminate\Support\Arr;
 use Illuminate\Filesystem\Filesystem;
-use App\Opt\ModulesLoader;
+use App\Base\Module\Loader;
 
-class ModulesLoaderTest extends TestCase {
+class LoaderTest extends TestCase {
     private $dummy = [
         "Foo" => null,
         "Bar" => "Foo",
@@ -55,7 +55,7 @@ class ModulesLoaderTest extends TestCase {
 
     /** @test */
     function it_pass() {
-        $ml = resolve(ModulesLoader::class);
+        $ml = resolve(Loader::class);
         $modules = $ml->load_from_disk();
         $expected = ["Foo", "Bar", "Baz", "Qux", "Quux"];
         $results = [];
@@ -98,7 +98,7 @@ class ModulesLoaderTest extends TestCase {
     function _get_module($name, $extra = "") {
         return "<?php
             namespace Modules\\{$name};
-            use App\Opt\Module as BaseModule;
+            use App\Base\Module\Base as BaseModule;
             class Module extends BaseModule {
                 public \$name = '{$name}';
                 {$extra}

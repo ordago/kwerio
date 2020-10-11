@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\Opt;
+namespace App\Base\Module;
 
 use Illuminate\Support\Str;
 
-class Module {
+abstract class Base {
     /**
      * REQUIRED
      *
@@ -13,6 +13,8 @@ class Module {
     public $name;
 
     /**
+     * REQUIRED
+     *
      * Module unique identifier (can not be duplicated).
      */
     public $uid;
@@ -30,7 +32,7 @@ class Module {
     /**
      * Position of the module in the menu. default PHP_MAX_INT.
      */
-    public $position = PHP_INT_MAX;
+    public $position = 9999;
 
     /**
      * The module should not be displayed to the end user. default false.
@@ -45,8 +47,25 @@ class Module {
             throw new \Exception("Module name is required");
         }
 
-        if (empty($this->uid)) { $this->uid = "module__" . Str::slug($this->name, "_"); }
+        if (empty($this->uid)) {
+            throw new \Exception("Module uid is required");
+        }
+
         if (empty($this->slug)) { $this->slug = "/_/" . Str::slug($this->name); }
+    }
+
+    /**
+     * Set values dynamically on some properties.
+     *
+     * @param string $name
+     * @return mixed
+     */
+    function __get($name) {
+        if ($name === "path") {
+            return base_path("modules/" . explode("\\", static::class)[1]);
+        }
+
+        return $this->{$name};
     }
 
     /**

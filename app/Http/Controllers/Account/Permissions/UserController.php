@@ -13,7 +13,7 @@ class UserController extends Controller {
      * @return View
      */
     function index() {
-        return view("account.permissions.user");
+        return view("account.permissions.users");
     }
 
     /**

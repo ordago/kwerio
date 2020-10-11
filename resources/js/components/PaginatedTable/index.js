@@ -181,7 +181,7 @@ export default function(api, prefix) {
 
     },
     [`${prefix}.index/rejected`]: (state, action) => {
-
+      console.error(action)
     },
   }
 

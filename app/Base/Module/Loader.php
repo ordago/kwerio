@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace App\Opt;
+namespace App\Base\Module;
 
 use Symfony\Component\Finder\Finder;
 use Illuminate\Support\Arr;
 
-class ModulesLoader {
+class Loader {
     /**
      * Load modules from disk.
      *

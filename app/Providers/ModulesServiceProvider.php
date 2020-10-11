@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Symfony\Component\Finder\Finder;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Arr;
-use App\Opt\ModulesLoader;
+use App\Base\Module\Loader;
 
 class ModulesServiceProvider extends ServiceProvider
 {
@@ -16,8 +16,8 @@ class ModulesServiceProvider extends ServiceProvider
      * @return void
      */
     function register() {
-        $modulesLoader = resolve(ModulesLoader::class);
-        $this->modules = $modulesLoader->load_from_disk();
+        $loader = resolve(Loader::class);
+        $this->modules = $loader->load_from_disk();
 
         foreach ($this->modules as $module) {
             $this->app->register($module["service_provider"]);

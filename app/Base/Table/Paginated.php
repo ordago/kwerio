@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\Opt;
+namespace App\Base\Table;
 
 use Illuminate\Database\Eloquent\Builder;
 
-class PaginatedTable {
+class Paginated {
     private $builder;
 
     function setBuilder(Builder $builder) {

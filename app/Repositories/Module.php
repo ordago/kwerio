@@ -3,9 +3,10 @@
 namespace App\Repositories;
 
 use App\Base\Table\Paginated as PaginatedTable;
-use App\Models\User as UserModel;
+use App\Models\Module as ModuleModel;
+use SplFileInfo;
 
-class User {
+class Module {
     /**
      * Initialize constructor.
      *
@@ -13,11 +14,11 @@ class User {
      */
     function __construct(PaginatedTable $paginatedTable) {
         $this->paginatedTable = $paginatedTable;
-        $this->paginatedTable->setBuilder(UserModel::query());
+        $this->paginatedTable->setBuilder(ModuleModel::query());
     }
 
     /**
-     * List users.
+     * List Modules.
      *
      * @return array
      */
