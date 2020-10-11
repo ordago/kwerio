@@ -36,6 +36,7 @@ class Loader {
                 "basename" => $dir->getBasename(),
                 "service_provider" => "Modules\\" . $dir->getBasename() . "\\ServiceProvider",
                 "module" => $moduleInstance,
+                "uid" => $moduleInstance->uid,
                 "config" => require $dir->getPathname() . "/config/module.php",
             ];
 

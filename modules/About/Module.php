@@ -6,5 +6,4 @@ use App\Base\Module\Base as BaseModule;
 
 class Module extends BaseModule {
     public $name = "About";
-    public $uid = "module__about";
 }

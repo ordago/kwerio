@@ -87,7 +87,7 @@ class Maker {
             $this->set_dependencies($deps);
         }
 
-        $uid = "module__" . Str::slug($name, "_");
+        $uid = Str::studly($name);
         $dir = Str::studly($name);
         $path = base_path("modules/{$dir}");
         $slug = Str::slug($name);

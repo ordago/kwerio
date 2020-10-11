@@ -47,11 +47,8 @@ abstract class Base {
             throw new \Exception("Module name is required");
         }
 
-        if (empty($this->uid)) {
-            throw new \Exception("Module uid is required");
-        }
-
-        if (empty($this->slug)) { $this->slug = "/_/" . Str::slug($this->name); }
+        if (empty($this->uid)) $this->uid = Str::studly($this->name);
+        if (empty($this->slug)) $this->slug = "/_/" . Str::slug($this->name);
     }
 
     /**
