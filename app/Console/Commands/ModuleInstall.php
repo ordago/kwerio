@@ -3,54 +3,30 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Repositories\Module as ModuleRepository;
+use App\Base\Module\Maker;
 
 class ModuleInstall extends Command
 {
-    /**
-     * @var ModuleRepository
-     */
-    private $moduleRepo;
-
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = '
+    protected $signature = "
         module:install
-            {-p=|--path= : Local path to module}
-    ';
+            {name? : Module name}
+            {-p|--path= : Local path to module}
+    ";
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Install new module';
+    protected $description = "Install new module";
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct(ModuleRepository $moduleRepo)
-    {
-        parent::__construct();
-        $this->moduleRepo = $moduleRepo;
-    }
+    function handle() {
+        $maker = resolve(Maker::class);
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
-    public function handle()
-    {
+        $name = $this->argument("name");
         $path = $this->option("path");
 
-        $this->moduleRepo->install_from_local_path($path);
-
-        return 0;
+        if ($name) {
+            $maker->create($name);
+        } else if ($path) {
+            $maker->create_from_path($path);
+        } else {
+            throw new \Exception("A {name} or {path} is required to create a module");
+        }
     }
 }
