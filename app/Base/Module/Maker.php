@@ -57,11 +57,12 @@ class Maker {
     /**
      * Make new module and persist it to database.
      *
-     * @param string $name
+     * @param string       $name
+     * @param array|string $deps
      * @return Model
      */
-    function create(string $name = null) {
-        $module = $this->make($name ?? $this->name);
+    function create(string $name = null, $deps = []) {
+        $module = $this->make($name ?? $this->name, $deps);
 
         return $this->_create($module);
     }
@@ -69,16 +70,21 @@ class Maker {
     /**
      * Make new module without installing it to database.
      *
-     * @param string $name
+     * @param string       $name
+     * @param string|array $deps
      * @return Module
      */
-    function make(string $name = null) {
+    function make(string $name = null, $deps = []) {
         if (is_null($name) && is_null($this->name)) {
             throw new \Exception("A module name is required.");
         }
 
         if (is_null($name)) {
             $name = $this->name;
+        }
+
+        if (!empty($deps)) {
+            $this->set_dependencies($deps);
         }
 
         $uid = "module__" . Str::slug($name, "_");
@@ -176,8 +182,7 @@ class Maker {
 
         foreach (is_array($paths) ? $paths : func_get_args() as $path) {
             $path = $this->_resolve_directory($path);
-            $class = "Modules\\" . $path->getBasename() . "\Module";
-            $deps[] = (new $class)->uid;
+            $deps[] = $path->getBasename();
         }
 
         $this->dependencies = "['" . join("', '", $deps) . "']";

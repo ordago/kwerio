@@ -5,8 +5,8 @@ use Modules\%NS%\Module;
 $module = resolve(Module::class);
 
 return [
+    "depends_on" => %DEPENDS_ON%,
     "router" => [
-        "depends_on" => %DEPENDS_ON%,
         "prefix" => $module->route_prefix(),
         "namespace" => "\Modules\%NS%\Http\Controllers",
         "middleware" => %MIDDLEWARES%,

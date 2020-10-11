@@ -64,9 +64,11 @@ class Loader {
                 }
             }
 
-            $ins_idx = max($indexes);
-
-            $this->_insert($modules, $module, $ins_idx + 1);
+            if (empty($indexes)) {
+                $this->_insert($modules, $module, 0);
+            } else {
+                $this->_insert($modules, $module, max($indexes) + 1);
+            }
         }
 
         return $modules;
