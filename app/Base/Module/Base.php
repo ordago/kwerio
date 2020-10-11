@@ -3,6 +3,7 @@
 namespace App\Base\Module;
 
 use Illuminate\Support\Str;
+use App\Models\Module as ModuleModel;
 
 abstract class Base {
     /**
@@ -40,6 +41,13 @@ abstract class Base {
     public $hidden = false;
 
     /**
+     * ModuleModel instance.
+     *
+     * @var ModuleModel
+     */
+    public $model;
+
+    /**
      * Initialize constructor.
      */
     function __construct() {
@@ -63,6 +71,22 @@ abstract class Base {
         }
 
         return $this->{$name};
+    }
+
+    /**
+     * Overwrite the default property values, by the one provided by the model.
+     *
+     * @param ModuleModel $model
+     */
+    function overwrite_from_model(ModuleModel $model) {
+        $this->model = $model;
+
+        $this->name = $model->name;
+        $this->uid = $model->uid;
+        $this->slug = $model->slug;
+        $this->icon = $model->icon;
+        $this->position = $model->position;
+        $this->hidden = $model->hidden;
     }
 
     /**

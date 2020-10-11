@@ -30,7 +30,7 @@ class LoaderTest extends TestCase {
         $maker = resolve(Maker::class);
 
         foreach ($this->dummy as $dir => $deps) {
-            $maker->make($dir, $deps);
+            $maker->create($dir, $deps);
         }
     }
 
@@ -63,15 +63,15 @@ class LoaderTest extends TestCase {
             $ml = resolve(Loader::class);
             $modules = $ml->load_from_disk();
             $expected = ["Foo", "Bar", "Baz", "Qux", "Quux"];
-            $results = [];
+            $actual = [];
 
             foreach ($modules as $i => $module) {
                 if (in_array($module["basename"], $expected)) {
-                    $results[] = $module["basename"];
+                    $actual[] = $module["basename"];
                 }
             }
 
-            $this->assertEquals($results, $expected);
+            $this->assertEquals($actual, $expected);
         } catch (\Throwable $e) {
             throw $e;
         } finally {
