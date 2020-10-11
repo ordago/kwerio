@@ -6,8 +6,11 @@ use Tests\TestCase;
 use Illuminate\Support\Arr;
 use Illuminate\Filesystem\Filesystem;
 use App\Base\Module\Loader;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LoaderTest extends TestCase {
+    use RefreshDatabase;
+
     private $dummy = [
         "Foo" => null,
         "Bar" => "Foo",

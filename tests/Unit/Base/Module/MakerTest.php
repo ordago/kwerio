@@ -13,6 +13,50 @@ class MakerTest extends TestCase {
     use WithFaker, RefreshDatabase;
 
     /** @test */
+    function create_with_dependencies() {
+        $name = $this->faker->words(mt_rand(2, 5), true);
+        $dep1 = $this->faker->words(mt_rand(2, 5), true);
+        $dep2 = $this->faker->words(mt_rand(2, 5), true);
+
+        try {
+            $maker = resolve(Maker::class);
+            $maker->make($dep1);
+            $maker->create($dep2);
+
+            $maker = resolve(Maker::class)
+                ->set_name($name)
+                ->set_dependencies($dep1, $dep2)
+                ->create();
+
+            $this->assertDatabaseHas("modules", [ "name" => $name ]);
+        } catch (\Throwable $e) {
+            throw $e;
+        } finally {
+            $this->cleanup(null, $name);
+            $this->cleanup(null, $dep1);
+            $this->cleanup(null, $dep2);
+        }
+    }
+
+    /** @test */
+    function create_with_dependencies_failed() {
+        $this->expectException(\Exception::class);
+        $maker = resolve(Maker::class);
+
+        $name = $this->faker->words(mt_rand(2, 5), true);
+        $dep = $this->faker->words(mt_rand(2, 5), true);
+
+        try {
+            $maker->set_dependencies($dep)->create($name);
+        } catch (\Throwable $e) {
+            throw $e;
+        } finally {
+            $this->cleanup(null, $mod);
+            $this->cleanup(null, $dep);
+        }
+    }
+
+    /** @test */
     function sync() {
         $name1 = $this->faker->words(mt_rand(2, 5), true);
         $name2 = $this->faker->words(mt_rand(2, 5), true);

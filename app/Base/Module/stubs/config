@@ -6,6 +6,7 @@ $module = resolve(Module::class);
 
 return [
     "router" => [
+        "depends_on" => %DEPENDS_ON%,
         "prefix" => $module->route_prefix(),
         "namespace" => "\Modules\%NS%\Http\Controllers",
         "middleware" => %MIDDLEWARES%,

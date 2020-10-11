@@ -11,7 +11,9 @@ use Illuminate\Support\{
 };
 
 class Maker {
+    private $name = null;
     private $middlewares = '["web"]';
+    private $dependencies = '[]';
 
     /**
      * Add the modules that are not yet added to database.
@@ -46,16 +48,7 @@ class Maker {
      * @return Model
      */
     function create_from_path(string $path) {
-        if (file_exists($path)) {
-            $path = new SplFileInfo($path);
-        } else if (file_exists(base_path($path))) {
-            $path = new SplFileInfo(base_path($path));
-        } else if (file_exists(base_path("modules/{$path}"))) {
-            $path = new SplFileInfo(base_path("modules/{$path}"));
-        } else {
-            throw new \Exception("Module {$path} not found.");
-        }
-
+        $path = $this->_resolve_directory($path);
         $class = "Modules\\" . $path->getBasename() . "\Module";
 
         return $this->_create(new $class);
@@ -67,27 +60,10 @@ class Maker {
      * @param string $name
      * @return Model
      */
-    function create(string $name) {
-        $module = $this->make($name);
+    function create(string $name = null) {
+        $module = $this->make($name ?? $this->name);
 
         return $this->_create($module);
-    }
-
-    /**
-     * Persist the given module to the database.
-     *
-     * @param Module $module
-     * @return ModuleModel
-     */
-    private function _create($module) {
-        return ModuleModel::create([
-            "name" => $module->name,
-            "uid" => $module->uid,
-            "slug" => $module->slug,
-            "icon" => $module->icon,
-            "position" => $module->position,
-            "hidden" => $module->hidden,
-        ]);
     }
 
     /**
@@ -96,7 +72,15 @@ class Maker {
      * @param string $name
      * @return Module
      */
-    function make(string $name) {
+    function make(string $name = null) {
+        if (is_null($name) && is_null($this->name)) {
+            throw new \Exception("A module name is required.");
+        }
+
+        if (is_null($name)) {
+            $name = $this->name;
+        }
+
         $uid = "module__" . Str::slug($name, "_");
         $dir = Str::studly($name);
         $path = base_path("modules/{$dir}");
@@ -110,6 +94,7 @@ class Maker {
         $config = file_get_contents(__DIR__ . "/stubs/config");
         $config = str_replace("%NS%", $dir, $config);
         $config = str_replace("%MIDDLEWARES%", $this->middlewares, $config);
+        $config = str_replace("%DEPENDS_ON%", $this->dependencies, $config);
 
         mkdir("{$path}/config", 0755, true);
         file_put_contents("{$path}/config/module.php", $config);
@@ -178,5 +163,79 @@ class Maker {
         $this->middlewares = "['" . join("', '", $m) . "']";
 
         return $this;
+    }
+
+    /**
+     * Set module dependencies.
+     *
+     * @param string ...$items
+     * @return $this
+     */
+    function set_dependencies($paths) {
+        $deps = [];
+
+        foreach (is_array($paths) ? $paths : func_get_args() as $path) {
+            $path = $this->_resolve_directory($path);
+            $class = "Modules\\" . $path->getBasename() . "\Module";
+            $deps[] = (new $class)->uid;
+        }
+
+        $this->dependencies = "['" . join("', '", $deps) . "']";
+
+        return $this;
+    }
+
+    /**
+     * Set module name.
+     *
+     * @param string $name
+     * @return self
+     */
+    function set_name(string $name) {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Persist the given module to the database.
+     *
+     * @param Module $module
+     * @return ModuleModel
+     */
+    private function _create($module) {
+        return ModuleModel::create([
+            "name" => $module->name,
+            "uid" => $module->uid,
+            "slug" => $module->slug,
+            "icon" => $module->icon,
+            "position" => $module->position,
+            "hidden" => $module->hidden,
+        ]);
+    }
+
+    /**
+     * Resolve the given path to module directory.
+     *
+     * @param string $path
+     * @return SplFileInfo
+     * @throws Exception
+     */
+    private function _resolve_directory(string $path) {
+        if (!file_exists($path)) {
+            $path = Str::studly($path);
+        }
+
+        if (file_exists($path)) {
+            $path = new SplFileInfo($path);
+        } else if (file_exists(base_path($path))) {
+            $path = new SplFileInfo(base_path($path));
+        } else if (file_exists(base_path("modules/{$path}"))) {
+            $path = new SplFileInfo(base_path("modules/{$path}"));
+        } else {
+            throw new \Exception("Module {$path} not found.");
+        }
+
+        return $path;
     }
 }
