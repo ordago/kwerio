@@ -5,5 +5,9 @@ export default makeStyles(theme => createStyles({
     display: "flex",
     flexDirection: "column",
     width: "100%",
-  }
+  },
+
+  box: {
+    marginTop: settings => settings.appbar_height,
+  },
 }))
