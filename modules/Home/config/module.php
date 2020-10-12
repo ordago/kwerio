@@ -5,6 +5,7 @@ use Modules\Home\Module;
 $module = resolve(Module::class);
 
 return [
+    "depends_on" => [],
     "router" => [
         "prefix" => "/",
         "namespace" => "\Modules\Home\Http\Controllers",

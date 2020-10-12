@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use App\Base\Module\Base as Module;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class Loader {
     /**
@@ -42,7 +43,7 @@ class Loader {
             $model = $this->_can_load($models, $moduleInstance);
             if (empty($model)) continue;
 
-            $moduleInstance->overwrite_from_model($model);
+            $moduleInstance->overwrite_with_db_values($model);
             $uids[] = $moduleInstance->uid;
 
             $module = [
@@ -132,7 +133,7 @@ class Loader {
      */
     private function _load_models() {
         try {
-            return ModuleModel::all();
+            return collect(DB::table("modules")->get());
         } catch (QueryException $e) {
             if (Str::contains($e->getMessage(), ["no such table", "modules"])) {
                 return [];

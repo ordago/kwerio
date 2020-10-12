@@ -41,13 +41,6 @@ abstract class Base {
     public $hidden = false;
 
     /**
-     * ModuleModel instance.
-     *
-     * @var ModuleModel
-     */
-    public $model;
-
-    /**
      * Initialize constructor.
      */
     function __construct() {
@@ -76,11 +69,9 @@ abstract class Base {
     /**
      * Overwrite the default property values, by the one provided by the model.
      *
-     * @param ModuleModel $model
+     * @param object $model
      */
-    function overwrite_from_model(ModuleModel $model) {
-        $this->model = $model;
-
+    function overwrite_with_db_values($model) {
         $this->name = $model->name;
         $this->uid = $model->uid;
         $this->slug = $model->slug;

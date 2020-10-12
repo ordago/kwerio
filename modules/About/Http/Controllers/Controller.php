@@ -3,9 +3,10 @@
 namespace Modules\About\Http\Controllers;
 
 use App\Http\Controllers\Controller as BaseController;
+use Modules\About\Module;
 
 class Controller extends BaseController {
-    function index() {
-
+    function index(Module $module) {
+        return $module->view("index");
     }
 }

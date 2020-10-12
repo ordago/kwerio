@@ -16,7 +16,12 @@ class ModulesServiceProvider extends ServiceProvider
      * @return void
      */
     function register() {
+        $loader = resolve(Loader::class);
+        $this->modules = $loader->load_from_disk();
 
+        foreach ($this->modules as $module) {
+            $this->app->register($module["service_provider"]);
+        }
     }
 
     /**
@@ -25,15 +30,6 @@ class ModulesServiceProvider extends ServiceProvider
      * @return void
      */
     function boot() {
-        // Register:
-        $loader = resolve(Loader::class);
-        $this->modules = $loader->load_from_disk();
-
-        foreach ($this->modules as $module) {
-            $this->app->register($module["service_provider"]);
-        }
-
-        // Boot:
         Config::set("modules", $this->modules);
 
         foreach ($this->modules as $module) {

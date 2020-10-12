@@ -185,7 +185,9 @@ class Maker {
             $deps[] = $path->getBasename();
         }
 
-        $this->dependencies = "['" . join("', '", $deps) . "']";
+        if (count($deps)) {
+            $this->dependencies = "['" . join("', '", $deps) . "']";
+        }
 
         return $this;
     }
