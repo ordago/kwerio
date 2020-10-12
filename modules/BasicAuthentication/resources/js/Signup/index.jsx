@@ -1,4 +1,4 @@
-import { Button, Paper, TextField } from "@material-ui/core"
+import { Button, Link, Paper, TextField } from "@material-ui/core"
 import React, { useState } from "react"
 
 import _ from "lodash"
@@ -60,7 +60,9 @@ function Signup() {
 
     axios.post(`/_/basic-authentication/signup`, { email, password, password_confirmation })
       .then(response => {
-
+        if (response.status === 201) {
+          window.location.href = "/"
+        }
       })
       .catch(e => console.error(e))
   }
@@ -114,6 +116,8 @@ function Signup() {
       >
         Signup
       </Button>
+
+      <Link href="/_/basic-authentication/login">Login</Link>
     </Paper>
   )
 }

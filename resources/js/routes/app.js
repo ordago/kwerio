@@ -9,6 +9,9 @@ const MODULES_ENDPOINT = `${ENDPOINT}/modules`
 
 export const api = {
   metadata: `${API_ENDPOINT}/metadata`,
+  groups: {
+    index: `${API_PERMISSIONS_ENDPOINT}/groups`,
+  },
   users: {
     index: `${API_PERMISSIONS_ENDPOINT}/users`,
   },
@@ -20,6 +23,9 @@ export const api = {
 export const endpoints = {
   account: {
     permissions: {
+      groups: {
+        index: `${PERMISSIONS_ENDPOINT}/groups`,
+      },
       users: {
         index: `${PERMISSIONS_ENDPOINT}/users`,
       },

@@ -1,4 +1,4 @@
-import { Button, Paper, TextField } from "@material-ui/core"
+import { Button, Link, Paper, TextField } from "@material-ui/core"
 import React, { useState } from "react"
 
 import axios from "axios"
@@ -9,7 +9,9 @@ function Login() {
 
   function submit() {
     axios.post("/_/basic-authentication/login", { email, password })
-      .then(response => {})
+      .then(response => {
+        window.location.href = "/"
+      })
       .catch(e => console.error(e))
   }
 
@@ -40,6 +42,8 @@ function Login() {
       <Button color="primary" name="submit" variant="contained" onClick={submit}>
         login
       </Button>
+
+      <Link href="/_/basic-authentication/signup">Signup</Link>
 
     </Paper>
   )

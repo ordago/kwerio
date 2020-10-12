@@ -36,6 +36,7 @@ class SignupController extends Controller {
         $user = User::create([
             "email" => $data["email"],
             "password" => Hash::make($data["password"]),
+            "owner_at" => User::count() === 0 ? now() : null,
         ]);
 
         Auth::login($user);

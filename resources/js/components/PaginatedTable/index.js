@@ -168,14 +168,17 @@ export default function(api, prefix) {
     [`${prefix}.index/fulfilled`]: (state, action) => {
       state.nb_checked = 0
       state.all_checked = false
-      state.page = action.payload.current_page
-      state.last_page = action.payload.last_page
-      state.current_page = action.payload.current_page - 1
-      state.per_page = action.payload.per_page
-      state.from = action.payload.from
-      state.to = action.payload.to
-      state.total = action.payload.total
-      state.data = action.payload.data
+
+      if (!_.isEmpty(action.payload)) {
+        state.page = action.payload.current_page
+        state.last_page = action.payload.last_page
+        state.current_page = action.payload.current_page - 1
+        state.per_page = action.payload.per_page
+        state.from = action.payload.from
+        state.to = action.payload.to
+        state.total = action.payload.total
+        state.data = action.payload.data
+      }
     },
     [`${prefix}.index/pending`]: (state, action) => {
 
