@@ -71,12 +71,6 @@ class MetadataController extends Controller {
                                 "icon" => "widgets",
                                 "link" => "/modules",
                             ],
-                            [
-                                "id" => Str::uuid(),
-                                "text" => "Billing",
-                                "icon" => "money",
-                                "link" => "#",
-                            ],
                         ],
                     ],
                 ],
