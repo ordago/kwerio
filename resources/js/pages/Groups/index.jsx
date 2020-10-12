@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux"
 import React from "react"
 
-import { actions, asyncActions } from "./index.slice"
+import { actions, asyncActions, fetch_metadata } from "./index.slice"
 import OneColumnPaper from "../Page/OneColumnPaper"
 import PaginatedTable from "../../components/PaginatedTable/index.jsx"
 import useStyles from "./index.styles"
@@ -12,6 +12,7 @@ function Groups() {
 
   React.useEffect(() => {
     dispatch(asyncActions.index())
+    dispatch(fetch_metadata())
   }, [])
 
   return (

@@ -3,9 +3,9 @@
 namespace App\Repositories;
 
 use App\Base\Table\Paginated as PaginatedTable;
-use App\Models\User as UserModel;
+use App\Models\Group as GroupModel;
 
-class User {
+class Group {
     /**
      * Initialize constructor.
      *
@@ -13,23 +13,15 @@ class User {
      */
     function __construct(PaginatedTable $paginatedTable) {
         $this->paginatedTable = $paginatedTable;
-        $this->paginatedTable->setBuilder(UserModel::query());
+        $this->paginatedTable->setBuilder(GroupModel::query());
     }
 
     /**
-     * List users.
+     * List groups.
      *
      * @return array
      */
     function index() {
-        return $this->paginatedTable->index([
-            "id",
-            "uuid",
-            "email",
-            "first_name",
-            "last_name",
-            "created_at",
-            "updated_at",
-        ]);
+        return $this->paginatedTable->index();
     }
 }

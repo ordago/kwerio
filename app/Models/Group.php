@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Group extends Model {
-    use HasFactory;
+    use HasFactory, Traits\LocalizeDatetimeAttributes;
 
     protected $casts = [
         "modules" => "json",

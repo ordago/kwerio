@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Account\Permissions;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Repositories\Group as GroupRepository;
 
 class GroupController extends Controller {
     /**
@@ -16,11 +17,20 @@ class GroupController extends Controller {
     }
 
     /**
+     * Get page metadata.
+     *
+     * @return array
+     */
+    function metadata() {
+
+    }
+
+    /**
      * Get a list of paginated groups.
      *
      * @return array
      */
-    function paginate() {
-
+    function paginate(GroupRepository $groupRepo) {
+        return $groupRepo->index();
     }
 }

@@ -1,20 +1,24 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import axios from 'axios'
 
 import PaginatedTable from "Kwerio/components/PaginatedTable"
 
-import { api } from "../../routes/app"
+import { api, endpoints } from "../../routes/app"
 
 const PREFIX = 'groups'
 
 const paginatedTable = PaginatedTable(api.groups, PREFIX)
 
+export const fetch_metadata = createAsyncThunk(`${PREFIX}/fetch_metadata`, async () => (
+  (await axios.get(api.groups.metadata)).data
+))
+
 const initialState = {
   ...paginatedTable.initialState,
   columns: [
     { slug: "id", label: "Id" },
-    { slug: "email", label: "Email", sort: true, sortDirection: "asc" },
-    { slug: "first_name", label: "First name", sort: true, sortDirection: "asc" },
-    { slug: "last_name", label: "Last name", sort: true, sortDirection: "asc" },
+    { slug: "name", label: "Name", sort: true, sortDirection: "asc" },
+    { slug: "modules", label: "Modules", sort: true, sortDirection: "asc" },
     { slug: "updated_at", label: "Updated at", sort: true, sortDirectory: "desc" },
     { slug: "created_at", label: "Created at", sort: true, sortDirection: "desc" },
   ]
@@ -28,6 +32,16 @@ const slice = createSlice({
   },
   extraReducers: {
     ...paginatedTable.extraReducers,
+
+    // fetch_metadata
+    [fetch_metadata.pending]: (state, action) => {
+    },
+    [fetch_metadata.rejected]: (state, action) => {
+      console.error(action)
+    },
+    [fetch_metadata.pending]: (state, action) => {
+      console.log(action)
+    },
   },
 })
 

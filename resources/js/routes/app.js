@@ -11,6 +11,7 @@ export const api = {
   metadata: `${API_ENDPOINT}/metadata`,
   groups: {
     index: `${API_PERMISSIONS_ENDPOINT}/groups`,
+    metadata: `${API_PERMISSIONS_ENDPOINT}/groups/metadata`,
   },
   users: {
     index: `${API_PERMISSIONS_ENDPOINT}/users`,

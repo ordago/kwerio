@@ -23,6 +23,7 @@ Route::middleware(["auth"])->group(function() {
         Route::get("/metadata", [MetadataController::class, "index"]);
 
         Route::prefix("account")->group(function() {
+            Route::get("/permissions/groups/metadata", [GroupController::class, "metadata"]);
             Route::post("/permissions/groups", [GroupController::class, "paginate"]);
             Route::post("/permissions/users", [UserController::class, "paginate"]);
         });

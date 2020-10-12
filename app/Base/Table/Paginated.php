@@ -11,19 +11,17 @@ class Paginated {
         $this->builder = $builder;
     }
 
-    function index() {
+    /**
+     * List items.
+     *
+     * @param ...$columns
+     * @return LengthAwarePaginator
+     */
+    function index($columns = ['*']) {
         $data = request()->only("page", "per_page", "q", "sorts");
 
         return $this->builder
             ->orderBy("updated_at", "desc")
-            ->paginate($data["per_page"], [
-                "id",
-                "uuid",
-                "email",
-                "first_name",
-                "last_name",
-                "created_at",
-                "updated_at",
-            ]);
+            ->paginate($data["per_page"], is_array($columns) ? $columns : func_get_args());
     }
 }
