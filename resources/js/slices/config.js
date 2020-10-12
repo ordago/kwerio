@@ -7,6 +7,7 @@ const initialState = {
     main_menu_width: 292,
     menu_width: 254,
     appbar_height: 48,
+    page_header_height: 40,
   }
 }
 
