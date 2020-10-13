@@ -4,7 +4,7 @@ import React from "react"
 
 import useStyles from "./index.styles"
 
-function Header({ children, title = "" }) {
+function Header({ children, title = "", className = {} }) {
   const { settings } = useSelector(state => state.config),
     classes = useStyles(settings)
 
@@ -13,7 +13,9 @@ function Header({ children, title = "" }) {
       <Typography className={classes.title}>{title}</Typography>
       <Divider orientation="vertical" />
 
-      {children}
+      <Box className={className} flexGrow={1}>
+        {children}
+      </Box>
     </Box>
   )
 }

@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux"
 import React from "react"
 
 import { actions, asyncActions } from "./index.slice"
-import OneColumnPaper from "../Page/OneColumnPaper"
+import OneColumnPage from "../Page/OneColumnPage"
 import PaginatedTable from "KwerioComponents/PaginatedTable/index.jsx"
 import useStyles from "./index.styles"
 
@@ -15,13 +15,13 @@ function Modules() {
   }, [])
 
   return (
-    <OneColumnPaper>
+    <OneColumnPage>
       <PaginatedTable
         reducer="modules"
         actions={actions}
         asyncActions={asyncActions}
       />
-    </OneColumnPaper>
+    </OneColumnPage>
   )
 }
 

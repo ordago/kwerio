@@ -25,4 +25,13 @@ class Module {
     function index() {
         return $this->paginatedTable->index();
     }
+
+    /**
+     * Get a list of all available modules.
+     *
+     * @return array
+     */
+    function all() {
+        return ModuleModel::all();
+    }
 }
