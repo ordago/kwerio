@@ -7,8 +7,8 @@ import MainMenu from "./MainMenu"
 import useStyles from "./index.styles"
 
 function Main({ children }) {
-  const { settings } = useSelector(state => state.config),
-    classes = useStyles(settings)
+  const config = useSelector(state => state.app.config),
+    classes = useStyles(config)
 
   return (
     <div className={classes.root}>

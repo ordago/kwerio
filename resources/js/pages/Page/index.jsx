@@ -11,8 +11,8 @@ import Users from "../Users"
 import useStyles from "./index.styles"
 
 function Page() {
-  const { settings } = useSelector(state => state.config),
-    classes = useStyles(settings)
+  const config = useSelector(state => state.app.config),
+    classes = useStyles(config)
 
   return (
     <Box className={classes.root}>

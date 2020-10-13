@@ -5,8 +5,8 @@ import React from "react"
 import useStyles from "./index.styles"
 
 function Header({ children, title = "", className = {} }) {
-  const { settings } = useSelector(state => state.config),
-    classes = useStyles(settings)
+  const config = useSelector(state => state.app.config),
+    classes = useStyles(config)
 
   return (
     <Box className={classes.root} display="flex" alignItems="center">

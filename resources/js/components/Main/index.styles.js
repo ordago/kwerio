@@ -8,6 +8,6 @@ export default makeStyles(theme => createStyles({
   },
 
   box: {
-    marginTop: settings => settings.appbar_height,
+    marginTop: config => config.appbar_height,
   },
 }))

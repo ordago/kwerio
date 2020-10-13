@@ -13,7 +13,7 @@ import Main from "./components/Main"
 import useStyles from "./App.styles"
 
 function InnerApp({ children }) {
-  const { theme, config } = useSelector(state => state),
+  const { theme, config } = useSelector(state => state.app),
     dispatch = useDispatch(),
     classes = useStyles(),
     muiTheme = React.useMemo(() => createMuiTheme(theme), [theme]),

@@ -9,9 +9,9 @@ import { actions } from '../../../App.slice.js'
 
 function MainMenu() {
   const { open } = useSelector((state) => state.app.menu),
-    settings = useSelector((state) => state.config.settings),
-    dispatch = useDispatch(),
-    classes = useStyles(settings)
+    config = useSelector((state) => state.app.config),
+    classes = useStyles(config),
+    dispatch = useDispatch()
 
   function inner_toggle(dispatch) {
     return function(evt) {

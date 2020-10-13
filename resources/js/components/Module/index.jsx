@@ -4,8 +4,8 @@ import React from "react"
 import useStyles from "./index.styles"
 
 function Module({ menu, content }) {
-  const { settings } = useSelector(state => state.config),
-    classes = useStyles(settings)
+  const config = useSelector(state => state.app.config),
+    classes = useStyles(config)
 
   return (
     <div className={classes.root}>

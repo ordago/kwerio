@@ -11,7 +11,7 @@ export default makeStyles(theme => createStyles({
     alignItems: "center",
     paddingRight: theme.spacing(1),
     borderBottom: `1px solid ${theme.palette.divider}`,
-    height: (settings) => settings.appbar_height,
+    height: (config) => config.appbar_height,
   },
 
   pin: {
