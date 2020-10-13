@@ -1,5 +1,5 @@
 @extends("base")
 
 @push("scripts")
-    <script src="{{ mix('/js/modules/login.js') }}"></script>
+    <script src="{{ rsc('/js/modules/login.js') }}"></script>
 @endpush

@@ -88,7 +88,10 @@ COPY .docker/dev.setup.sh /root/setup.sh
 RUN set -ex \
     && a2enmod deflate \
         mime \
-        rewrite
+        rewrite \
+        proxy \
+        proxy_http \
+        susbstitute
 
 # ----------------------------------------------------------------------------
 #                                                                    Cleanup -

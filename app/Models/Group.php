@@ -9,10 +9,6 @@ use Illuminate\Support\Str;
 class Group extends Model {
     use HasFactory, Traits\LocalizeDatetimeAttributes;
 
-    protected $casts = [
-        "modules" => "json",
-    ];
-
     public static function boot() {
         parent::boot();
 

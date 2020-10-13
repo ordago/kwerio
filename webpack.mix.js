@@ -28,5 +28,15 @@ mix.webpackConfig({
 })
 
 mix
-  .version()
   .sourceMaps()
+
+mix.options({
+  hmrOptions: {
+    host: '127.0.0.1',
+    port: 8080,
+  },
+})
+
+if (mix.inProduction()) {
+  mix.version()
+}

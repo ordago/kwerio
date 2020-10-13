@@ -3,8 +3,9 @@ import { useDispatch } from "react-redux"
 import { useHistory } from "react-router-dom"
 import React from "react"
 
-import { actions, asyncActions, fetch_metadata } from "./index.slice"
+import { actions, asyncActions } from "./index.slice"
 import { endpoints } from "../../routes/app"
+import { fetch_metadata } from "./index.service"
 import Header from "./Header"
 import OneColumnPage from "../Page/OneColumnPage"
 import PaginatedTable from "../../components/PaginatedTable/index.jsx"
@@ -26,7 +27,7 @@ function Groups() {
         right={() => (
           <Button
             variant="text"
-            onClick={() => history.push(endpoints.account.permissions.groups.create)}
+            onClick={() => history.push(endpoints.groups.create)}
           >
             create new
           </Button>

@@ -28,5 +28,19 @@ class ModulesTableSeeder extends Seeder
                 ]);
             }
         }
+
+        $this->_generate_fake_modules();
+    }
+
+    private function _generate_fake_modules() {
+        $faker = \Faker\Factory::create();
+
+        foreach (range(1, 10) as $_) {
+            $name = "Test " . $faker->words(mt_rand(2, 5), true);
+
+            Artisan::call("module:install", [
+                "name" => $name,
+            ]);
+        }
     }
 }

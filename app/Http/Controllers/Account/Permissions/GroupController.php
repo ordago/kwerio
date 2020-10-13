@@ -39,8 +39,6 @@ class GroupController extends Controller {
             "name" => "required|unique:groups,name",
             "modules" => "",
         ]);
-
-        dd($data);
     }
 
     function update() {

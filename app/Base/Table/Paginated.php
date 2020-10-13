@@ -20,8 +20,9 @@ class Paginated {
     function index($columns = ['*']) {
         $data = request()->only("page", "per_page", "q", "sorts");
 
-        return $this->builder
-            ->orderBy("updated_at", "desc")
-            ->paginate($data["per_page"], is_array($columns) ? $columns : func_get_args());
+        return $this->builder->paginate(
+            $data["per_page"],
+            is_array($columns) ? $columns : func_get_args()
+        );
     }
 }

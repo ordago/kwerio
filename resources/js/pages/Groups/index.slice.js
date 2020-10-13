@@ -1,18 +1,15 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
-import axios from 'axios'
-import Form from '@euvoor/form'
-import _ from 'lodash'
+import { createSlice } from "@reduxjs/toolkit"
+import Form from "@euvoor/form"
 
 import PaginatedTable from "Kwerio/components/PaginatedTable"
+import _ from "lodash"
 
-import { api, endpoints } from "../../routes/app"
-
-const PREFIX = 'groups'
+import { PREFIX, fetch_metadata, update_or_create } from "./index.service"
+import { api } from "../../routes/app"
 
 const paginatedTable = PaginatedTable(api.groups, PREFIX)
 
 const form = Form({
-  __path: "update_or_create",
   name: {
     helper_text: "Group name is required",
   },
@@ -20,28 +17,6 @@ const form = Form({
     required: false,
     value: [],
   },
-})
-
-export const fetch_metadata = createAsyncThunk(`${PREFIX}/fetch_metadata`, async () => (
-  (await axios.get(api.groups.metadata)).data
-))
-
-export const update_or_create = createAsyncThunk(`${PREFIX}/update_or_create`, async (__, { getState }) => {
-  const data = getState().groups.update_or_create
-
-  let endpoint = api.groups.update
-
-  if (_.isNull(data.uuid)) {
-    endpoint = api.groups.create
-  }
-
-  const response = await axios.post(endpoint, {
-    uuid: data.uuid,
-    name: data.name.value,
-    modules: data.modules.value,
-  })
-
-  console.log(response)
 })
 
 const initialState = {

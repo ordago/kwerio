@@ -10,7 +10,7 @@ const reducers = {
 
 render(
   <App store={createStore(reducers)}>
-    Hello
+    hi there
   </App>,
   document.getElementById("root")
 )
