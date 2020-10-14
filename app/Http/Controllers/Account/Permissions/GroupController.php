@@ -4,6 +4,11 @@ namespace App\Http\Controllers\Account\Permissions;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
+use App\Models\{
+    Group as GroupModel,
+};
+
 use App\Repositories\{
     Group as GroupRepository,
     Module as ModuleRepository,
@@ -15,63 +20,27 @@ class GroupController extends Controller {
      *
      * @return View
      */
-    function index() {
+    function show_page() {
         return view("account.permissions.groups");
     }
 
     /**
-     * Show page to create new group.
-     *
-     * @return View
-     */
-    function create() {
-        return view("account.permissions.groups");
-    }
-
-    /**
-     * Create a new group.
-     *
-     * @param Request $request
-     */
-    function store(Request $request) {
-        $data = $request->validate([
-            "uuid" => "",
-            "name" => "required|unique:groups,name",
-            "modules" => "",
-        ]);
-    }
-
-    function update() {
-
-    }
-
-    /**
-     * Get page metadata.
+     * Get groups.
      *
      * @return array
      */
-    function metadata(ModuleRepository $moduleRepo) {
-        $modules = $moduleRepo->all()->map(function($module) {
-            return [
-                "uid" => $module->uid,
-                "name" => $module->name,
-            ];
-        })
-            ->filter(function($module) {
-                return file_exists(base_path("modules/{$module["uid"]}"));
-            });
+    function index(Request $request) {
+        $data = $request->validate([
+            "page" => "required|numeric",
+        ]);
+
+        $paginator = GroupModel::paginate(config("app.per_pagae"), [
+            "id", "uuid", "name", "created_at", "updated_at",
+        ]);
 
         return [
-            "modules" => $modules,
+            "total" => $paginator->total(),
+            "items" => $paginator->items(),
         ];
-    }
-
-    /**
-     * Get a list of paginated groups.
-     *
-     * @return array
-     */
-    function paginate(GroupRepository $groupRepo) {
-        return $groupRepo->index();
     }
 }

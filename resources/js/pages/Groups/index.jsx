@@ -1,46 +1,31 @@
-import { Box, Button } from "@material-ui/core"
-import { useDispatch } from "react-redux"
-import { useHistory } from "react-router-dom"
+import { Box } from "@material-ui/core"
 import React from "react"
 
-import { actions, asyncActions } from "./index.slice"
-import { endpoints } from "../../routes/app"
-import { fetch_metadata } from "./index.service"
+import { adapter, tableAsyncActions } from "./index.slice"
 import Header from "./Header"
 import OneColumnPage from "../Page/OneColumnPage"
-import PaginatedTable from "../../components/PaginatedTable/index.jsx"
-import useStyles from "./index.styles"
+import PaginatedTable from "../../components/PaginatedTable"
 
 function Groups() {
-  const classes = useStyles(),
-    dispatch = useDispatch(),
-    history = useHistory()
-
-  React.useEffect(() => {
-    dispatch(asyncActions.index())
-    dispatch(fetch_metadata())
-  }, [])
-
   return (
     <Box>
-      <Header
-        right={() => (
-          <Button
-            variant="text"
-            onClick={() => history.push(endpoints.groups.create)}
-          >
-            create new
-          </Button>
-        )}
-      />
+      <Header RightComponent={<HeaderRight />} />
 
       <OneColumnPage>
         <PaginatedTable
-          reducer="groups"
-          actions={actions}
-          asyncActions={asyncActions}
+          adapter={adapter}
+          reducerName="groups"
+          asyncActions={tableAsyncActions}
         />
       </OneColumnPage>
+    </Box>
+  )
+}
+
+function HeaderRight() {
+  return (
+    <Box>
+      Status
     </Box>
   )
 }

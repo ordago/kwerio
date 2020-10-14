@@ -1,15 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit"
 
-import PaginatedTable from "Kwerio/components/PaginatedTable"
-
-import { api } from "../../routes/app"
-
 const PREFIX = 'users'
 
-const paginatedTable = PaginatedTable(api.users, PREFIX)
 
 const initialState = {
-  ...paginatedTable.initialState,
   columns: [
     { slug: "id", label: "Id" },
     { slug: "email", label: "Email", sort: true, sortDirection: "asc" },
@@ -24,14 +18,11 @@ const slice = createSlice({
   name: PREFIX,
   initialState,
   reducers: {
-    ...paginatedTable.reducers,
   },
   extraReducers: {
-    ...paginatedTable.extraReducers,
   },
 })
 
 export const actions = slice.actions
-export const asyncActions = paginatedTable.asyncActions("users", slice)
 
 export default slice.reducer

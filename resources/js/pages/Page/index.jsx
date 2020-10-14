@@ -4,11 +4,11 @@ import { useSelector } from "react-redux"
 import React from "react"
 
 import { endpoints } from "../../routes/app"
-import Groups from "../Groups"
-import Modules from "../Modules"
-import UpdateOrCreateGroup from "../Groups/UpdateOrCreate"
-import Users from "../Users"
 import useStyles from "./index.styles"
+
+const Users = React.lazy(() => import("../Users"))
+const Modules = React.lazy(() => import("../Modules"))
+const Groups = React.lazy(() => import("../Groups"))
 
 function Page() {
   const config = useSelector(state => state.app.config),
@@ -17,12 +17,19 @@ function Page() {
   return (
     <Box className={classes.root}>
       <Switch>
-        <Route exact path={endpoints.groups.index} render={props => <Groups {...props} />} />
-        <Route exact path={endpoints.groups.create} render={props => <UpdateOrCreateGroup {...props} />} />
-        <Route exact path={endpoints.users.index} render={props => <Users {...props} />} />
-        <Route exact path={endpoints.modules.index} render={props => <Modules {...props} />} />
+        <Route exact path={endpoints.groups.index} render={props => WithSuspense(<Groups {...props} />)} />
+        <Route exact path={endpoints.users.index} render={props => WithSuspense(<Users {...props} />)} />
+        <Route exact path={endpoints.modules.index} render={props => WithSuspense(<Modules {...props} />)} />
       </Switch>
     </Box>
+  )
+}
+
+function WithSuspense(component) {
+  return (
+    <React.Suspense fallback={<div />}>
+      {component}
+    </React.Suspense>
   )
 }
 

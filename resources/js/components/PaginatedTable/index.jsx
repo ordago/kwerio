@@ -13,23 +13,39 @@ import {
 } from "@material-ui/core"
 import { useDispatch, useSelector } from "react-redux"
 import React from "react"
+import { useSnackbar } from "notistack"
 
 import _ from "lodash"
 
+import { notify } from "../../utils/errors"
 import useStyles from "./index.styles"
 
 function PaginatedTable({
-  reducer,                      // slice reducer
-  actions,                      // slice actions
-  asyncActions,                 // slice async actions
-  hover = true,                 // enable hover on the table
-  canCheck = true,              // rows can be checked using checkbox
-  onRowClick = () => { },       // click event for the row
-  renderCell = null,            // custom cell renderer
+  reducerName,                  // Reducer name.
+  adapter,                      // Data to display in the table.
+  actions,                      // Slice actions.
+  asyncActions,                 // Slice async actions.
+  hover = true,                 // Enable hover on the table.
+  canCheck = true,              // Rows can be checked using checkbox.
+  renderCell = null,            // Custom cell renderer.
+  onRowClick = () => { },       // Click event for the row.
+  onSort = () => { },           // Callback to handle sorting.
 }) {
-  const state = useSelector(state => _.get(state, reducer, undefined)),
-    dispatch = useDispatch(),
+  const dispatch = useDispatch(),
+    state = useSelector(state => state[reducerName]),
+    { enqueueSnackbar } = useSnackbar(),
+    selector = adapter.getSelectors(),
     classes = useStyles()
+
+  let data = selector.selectAll(state),
+    offset = state.page * state.per_page
+
+  data = data.slice(offset, offset + state.per_page)
+
+  React.useEffect(() => {
+    dispatch(asyncActions.index())
+      .then(action => notify(action, enqueueSnackbar))
+  }, [])
 
   return (
     <Box>
@@ -53,10 +69,7 @@ function PaginatedTable({
                     <TableSortLabel
                       active={true}
                       direction={col.sortDirection}
-                      onClick={() => dispatch(asyncActions.sortBy({
-                        slug: col.slug,
-                        direction: col.sortDirection,
-                      }))}
+                      onClick={() => onSort(col.slug, col.sortDirection)}
                     >
                       {col.label}
                     </TableSortLabel>
@@ -68,7 +81,7 @@ function PaginatedTable({
           </TableHead>
 
           <TableBody>
-            {state.data.map(row => (
+            {data.map(row => (
               <TableRow
                 hover={hover}
                 selected={row.checked}
@@ -107,12 +120,11 @@ function PaginatedTable({
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[10, 25, 50, 100]}
                 rowsPerPage={state.per_page}
-                page={state.current_page}
+                page={state.page}
                 onChangePage={(_, page) => dispatch(asyncActions.onChangePage(page))}
                 onChangeRowsPerPage={e => dispatch(asyncActions.onChangeRowsPerPage(e.target.value))}
-                count={state.total}
+                count={state.rsc.total}
               />
             </TableRow>
           </TableFooter>

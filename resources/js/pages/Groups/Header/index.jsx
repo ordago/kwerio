@@ -6,16 +6,16 @@ import { endpoints } from "../../../routes/app"
 import BaseHeader from "../../Page/Header"
 import useStyles from "./index.styles"
 
-function Header({ title = "Groups", left = () => {}, right = () => {} }) {
+function Header({ title = "Groups", LeftComponent = [], RightComponent = [] }) {
   const classes = useStyles(),
     history = useHistory()
 
   return (
     <BaseHeader title={title} className={classes.root}>
-      <Box pl={2}>{left()}</Box>
+      <Box pl={2}>{LeftComponent}</Box>
 
       <Box className={classes.right} pr={2}>
-        {right()}
+        {RightComponent}
       </Box>
     </BaseHeader>
   )

@@ -10,8 +10,7 @@ use App\Http\Controllers\{
 Route::middleware(["auth"])->group(function() {
     // -------------------------------------------------------------- WEB -- #
     Route::prefix("account")->group(function() {
-        Route::get("/permissions/groups", [GroupController::class, "index"]);
-        Route::get("/permissions/groups/create", [GroupController::class, "create"]);
+        Route::get("/permissions/groups", [GroupController::class, "show_page"]);
         Route::get("/permissions/users", [UserController::class, "index"]);
     });
 
@@ -24,10 +23,7 @@ Route::middleware(["auth"])->group(function() {
         Route::get("/metadata", [MetadataController::class, "index"]);
 
         Route::prefix("account")->group(function() {
-            Route::get("/permissions/groups/metadata", [GroupController::class, "metadata"]);
-            Route::post("/permissions/groups/create", [GroupController::class, "store"]);
-            Route::post("/permissions/groups/update", [GroupController::class, "update"]);
-            Route::post("/permissions/groups", [GroupController::class, "paginate"]);
+            Route::post("/permissions/groups", [GroupController::class, "index"]);
             Route::post("/permissions/users", [UserController::class, "paginate"]);
         });
 

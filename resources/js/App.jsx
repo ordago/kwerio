@@ -7,6 +7,7 @@ import { create } from "jss"
 import { jssPreset, StylesProvider, createMuiTheme, ThemeProvider } from "@material-ui/core/styles"
 import React from "react"
 import rtl from "jss-rtl"
+import { SnackbarProvider } from 'notistack'
 
 import { fetch_metadata } from "./App.slice"
 import Main from "./components/Main"
@@ -26,12 +27,18 @@ function InnerApp({ children }) {
   return (
     <StylesProvider jss={jss}>
       <ThemeProvider theme={muiTheme}>
-        <div className={classes.root}>
-          <CssBaseline />
-          <BrowserRouter>
-            <Main>{children}</Main>
-          </BrowserRouter>
-        </div>
+        <SnackbarProvider
+          maxSnack={3}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          autoHideDuration={3000}
+        >
+          <div className={classes.root}>
+            <CssBaseline />
+            <BrowserRouter>
+              <Main>{children}</Main>
+            </BrowserRouter>
+          </div>
+        </SnackbarProvider>
       </ThemeProvider>
     </StylesProvider>
   )

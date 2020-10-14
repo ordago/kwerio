@@ -1,197 +1,109 @@
-import { createAsyncThunk } from "@reduxjs/toolkit"
-
 import _ from "lodash"
 import axios from "axios"
+import { createAsyncThunk } from '@reduxjs/toolkit'
 
-export default function(api, prefix) {
+import { needs_more } from "../../utils/table"
+import { rsc_catched_error } from "../../utils/errors"
+
+export default function(PREFIX, api) {
   const initialState = {
-    q: "",
+    loading: "idle",
     page: 0,
-    last_page: 1,
-    current_page: 0,
     per_page: 10,
-    from: 1,
-    to: 1,
-    total: 1,
-    data: [],
-    nb_checked: 0,
-    all_checked: false,
-    sorts: [],
-    columns: [],
+    rsc: {
+      page: 0,
+      total: 0,
+    }
   }
 
-  function asyncActions(reducer_name, slice) {
+  function asyncActions(reducer_name, actions) {
     /**
-     * Get paginated items for the given slice.
+     * Get the next chunk for items when the requested page exceed the number
+     * of cached items.
      */
-    const index = createAsyncThunk(`${prefix}.index`, async (opt, { dispatch, getState }) => {
-      let { page, per_page, q, sorts } = getState()[reducer_name],
-        params = {}
+    const index = createAsyncThunk(`${PREFIX}/index`, async (__, { dispatch, getState, rejectWithValue }) => {
+      try {
+        const state = getState()[reducer_name]
 
-      if (_.hasIn(opt, "page")) page = opt.page
-      if (_.hasIn(opt, "per_page")) per_page = opt.per_page
-      if (_.hasIn(opt, "q")) q = opt.q
-      if (_.hasIn(opt, "params")) params = opt.params
+        if (needs_more(state.ids.length, state.page, state.per_page)) {
+          const response = await axios.post(api.index, {
+            page: state.rsc.page + 1,
+          })
 
-      page += 1
+          if (
+            response.status === 200
+            && _.hasIn(response.data, "items")
+            && _.hasIn(response.data, "total")
+          ) {
+            dispatch(actions.upsertMany(response.data.items))
+            return response.data
+          }
 
-      return (await axios.post(api.index, { page, per_page, q, sorts, ...params })).data
-    })
-
-    /**
-     * Sort the table by the given field.
-     */
-    const sortBy = createAsyncThunk(`${prefix}.sortBy`, async ({ slug, direction }, { dispatch, getState }) => {
-      direction = direction === "desc" ? "asc" : "desc"
-
-      let oldSorts = getState()[reducer_name].sorts
-      let sorts = []
-
-      sorts.push({ slug, direction })
-
-      for (let i = 0; i < oldSorts.length; i ++) {
-        if (oldSorts[i].slug === slug) continue
-        sorts.push(oldSorts[i])
+          return rejectWithValue(response.data)
+        }
       }
 
-      dispatch(slice.actions.setColumnSort({ slug, direction }))
-      dispatch(slice.actions.setSorts(sorts))
-      dispatch(index({ page: 0 }))
-    })
-
-    /**
-     * @deprecated
-     */
-    const duplicate = createAsyncThunk(`${prefix}.duplicate`, async (_, { dispatch, getState }) => {
-      const { data, current_page } = getState()[reducer_name],
-        items = data.filter(item => item.checked)
-
-      let uuids = []
-
-      for (let i = 0; i < items.length; i ++) {
-        uuids.push(items[i].uuid)
+      catch (err) {
+        return rsc_catched_error(err, rejectWithValue)
       }
-
-      await axios.post(api.duplicate, { data: uuids })
-
-      dispatch(index({ page: current_page }))
     })
 
     /**
-     * @deprecated
+     * Handle page change.
+     *
+     * @param {integer} page
      */
-    const remove = createAsyncThunk(`${prefix}.remove`, async (_, { dispatch, getState }) => {
-      const { data, current_page } = getState()[reducer_name],
-        items = data.filter(item => item.checked)
-
-      let uuids = []
-
-      for (let i = 0; i < items.length; i ++) {
-        uuids.push(items[i].uuid)
-      }
-
-      await axios.post(api.remove, { data: uuids })
-
-      dispatch(index({ page: current_page }))
-    })
-
-    /**
-     * Fetch items of the given page.
-     */
-    const onChangePage = createAsyncThunk(`${prefix}.onChangePage`, async (page, { dispatch, getState }) => {
-      dispatch(index({ page }))
+    const onChangePage = createAsyncThunk(`${PREFIX}.onChangePage`, async (page, { dispatch, getState }) => {
+      dispatch(actions.setPage(page))
+      dispatch(index())
     })
 
     /**
      * Number of items to display is changed.
      */
     const onChangeRowsPerPage = createAsyncThunk("onChangeRowsPerPage", async (per_page, { dispatch, getState }) => {
-      dispatch(index({ page: 0, per_page }))
-    })
-
-    /**
-     * Search by the given query.
-     */
-    const onQChange = createAsyncThunk(`${prefix}.onQChange`, async (q, { dispatch }) => {
-      dispatch(slice.actions.setQ(q))
-      dispatch(index({ q, page: 0 }))
+      dispatch(actions.setPerPage(per_page))
+      dispatch(index())
     })
 
     return {
       index,
-      sortBy,
-      duplicate,
-      remove,
       onChangePage,
       onChangeRowsPerPage,
-      onQChange,
     }
   }
 
   const reducers = {
-    setColumnSort: (state, action) => {
-      state.columns.map(col => {
-        if (col.slug === action.payload.slug) {
-          col.sortDirection = action.payload.direction
-        }
-        return col
-      })
-    },
-
-    setSorts: (state, action) => {
-      state.sorts = action.payload
-    },
-
-    setQ: (state, action) => {
-      state.q = action.payload
-    },
-
-    toggleCheckAll: (state, action) => {
-      state.data.map(item => item.checked = action.payload)
-      state.all_checked = action.payload
-      state.nb_checked = action.payload ? state.data.length : 0
-    },
-
-    toggleCheck: (state, action) => {
-      state.data.map(item => {
-        if (item.uuid === action.payload.uuid) item.checked = action.payload.checked
-          return item
-      })
-      state.nb_checked = state.data.filter(item => item.checked).length
-
-      if (state.nb_checked === state.data.length) state.all_checked = true
-      else state.all_checked = false
-    },
+    setPage: (state, action) => { state.page = action.payload },
+    setPerPage: (state, action) => { state.per_page = action.payload; state.page = 0 },
   }
 
   const extraReducers = {
-    [`${prefix}.index/fulfilled`]: (state, action) => {
-      state.nb_checked = 0
-      state.all_checked = false
-
-      if (!_.isEmpty(action.payload)) {
-        state.page = action.payload.current_page
-        state.last_page = action.payload.last_page
-        state.current_page = action.payload.current_page - 1
-        state.per_page = action.payload.per_page
-        state.from = action.payload.from
-        state.to = action.payload.to
-        state.total = action.payload.total
-        state.data = action.payload.data
-      }
+    // index
+    [`${PREFIX}/index/pending`]: (state, action) => {
+      state.loading = "pending"
     },
-    [`${prefix}.index/pending`]: (state, action) => {
-
-    },
-    [`${prefix}.index/rejected`]: (state, action) => {
+    [`${PREFIX}/index/rejected`]: (state, action) => {
+      state.loading = "idle"
       console.error(action)
     },
+    [`${PREFIX}/index/fulfilled`]: (state, action) => {
+      state.loading = "idle"
+
+      if (_.hasIn(action.payload, "total")) {
+        state.rsc.total = action.payload.total
+      }
+
+      if (_.hasIn(action.payload, "items") && action.payload.items.length > 0) {
+        state.rsc.page += 1
+      }
+    }
   }
 
   return {
     initialState,
     asyncActions,
-    reducers,
     extraReducers,
+    reducers,
   }
 }
