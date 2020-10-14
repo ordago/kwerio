@@ -1,4 +1,5 @@
-import { Box } from "@material-ui/core"
+import { Box, CircularProgress } from "@material-ui/core"
+import { useSelector } from "react-redux"
 import React from "react"
 
 import { adapter, tableAsyncActions, actions } from "./index.slice"
@@ -7,9 +8,13 @@ import OneColumnPage from "../Page/OneColumnPage"
 import PaginatedTable from "../../components/PaginatedTable"
 
 function Groups() {
+  const state = useSelector(state => state.groups)
+
   return (
     <Box>
-      <Header RightComponent={<HeaderRight />} />
+      <Header
+        RightComponent={<HeaderRight loading={state.loading} />}
+      />
 
       <OneColumnPage>
         <PaginatedTable
@@ -23,10 +28,12 @@ function Groups() {
   )
 }
 
-function HeaderRight() {
+function HeaderRight({ loading }) {
   return (
     <Box>
-      Status
+      {loading === "pending" && (
+        <CircularProgress size={20} />
+      )}
     </Box>
   )
 }
