@@ -8,7 +8,7 @@ export const adapter = createEntityAdapter({
   selectId: group => group.uuid,
 })
 
-const paginatedTable = PaginatedTable(PREFIX, api.groups)
+const paginatedTable = PaginatedTable(PREFIX, api.groups, adapter)
 
 const initialState = adapter.getInitialState({
   ...paginatedTable.initialState,
@@ -24,7 +24,6 @@ const slice = createSlice({
   name: PREFIX,
   initialState,
   reducers: {
-    upsertMany: adapter.upsertMany,
     ...paginatedTable.reducers,
   },
   extraReducers: {

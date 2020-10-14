@@ -1,7 +1,7 @@
 import { Box } from "@material-ui/core"
 import React from "react"
 
-import { adapter, tableAsyncActions } from "./index.slice"
+import { adapter, tableAsyncActions, actions } from "./index.slice"
 import Header from "./Header"
 import OneColumnPage from "../Page/OneColumnPage"
 import PaginatedTable from "../../components/PaginatedTable"
@@ -13,6 +13,7 @@ function Groups() {
 
       <OneColumnPage>
         <PaginatedTable
+          actions={actions}
           adapter={adapter}
           reducerName="groups"
           asyncActions={tableAsyncActions}

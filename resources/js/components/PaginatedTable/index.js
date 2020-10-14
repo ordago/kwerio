@@ -5,7 +5,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { needs_more } from "../../utils/table"
 import { rsc_catched_error } from "../../utils/errors"
 
-export default function(PREFIX, api) {
+export default function(PREFIX, api, adapter) {
   const initialState = {
     loading: "idle",
     page: 0,
@@ -74,8 +74,16 @@ export default function(PREFIX, api) {
   }
 
   const reducers = {
-    setPage: (state, action) => { state.page = action.payload },
-    setPerPage: (state, action) => { state.per_page = action.payload; state.page = 0 },
+    upsertMany: adapter.upsertMany,
+    updateMany: adapter.updateMany,
+    updateOne: adapter.updateOne,
+    setPage: (state, action) => {
+      state.page = action.payload
+    },
+    setPerPage: (state, action) => {
+      state.per_page = action.payload
+      state.page = 0
+    },
   }
 
   const extraReducers = {

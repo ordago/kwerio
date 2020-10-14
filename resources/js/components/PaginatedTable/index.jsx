@@ -30,6 +30,8 @@ function PaginatedTable({
   renderCell = null,            // Custom cell renderer.
   onRowClick = () => { },       // Click event for the row.
   onSort = () => { },           // Callback to handle sorting.
+  primaryKey = "uuid",          // Primary key used in the data as 'id'.
+  slugKey = "slug"              // Name of the slug key.
 }) {
   const dispatch = useDispatch(),
     state = useSelector(state => state[reducerName]),
@@ -42,10 +44,32 @@ function PaginatedTable({
 
   data = data.slice(offset, offset + state.per_page)
 
+  /**
+   * Toggle checked attribute of all items in the cache.
+   *
+   * @param {boolran} checked
+   */
+  function _toggle_check_all(checked) {
+    dispatch(actions.updateMany(selector.selectIds(state).map(id => ({
+      id,
+      changes: { checked }
+    }))))
+  }
+
+  const nb_checked = selector.selectAll(state).filter(item => _.get(item, "checked", false)).length
+  let checkbox_all = { }
+
   React.useEffect(() => {
-    dispatch(asyncActions.index())
-      .then(action => notify(action, enqueueSnackbar))
+    if (nb_checked > 0) {
+      _toggle_check_all(false)
+    }
+
+    dispatch(asyncActions.index()).then(action => notify(action, enqueueSnackbar))
   }, [])
+
+  if (nb_checked > 0 && nb_checked < data.length) {
+    checkbox_all = { indeterminate: true }
+  }
 
   return (
     <Box>
@@ -56,20 +80,30 @@ function PaginatedTable({
               {canCheck && (
                 <TableCell>
                   <Checkbox
-                    checked={state.all_checked}
+                    { ...checkbox_all }
+                    checked={nb_checked > 0}
                     color="primary"
-                    onChange={e => dispatch(actions.toggleCheckAll(e.target.checked))}
+                    onChange={e => {
+                      const updates = selector.selectIds(state)
+                        .filter(id => data.filter(item => item[primaryKey] === id).length > 0)
+                        .map(primaryKey => ({
+                          id: primaryKey,
+                          changes: { checked: e.target.checked }
+                        }))
+
+                      dispatch(actions.updateMany(updates))
+                    }}
                     onClick={e => e.stopPropagation()}
                   />
                 </TableCell>
               )}
               {state.columns.map(col => (
-                <TableCell key={col.slug}>
+                <TableCell key={col[slugKey]}>
                   {col.sort && (
                     <TableSortLabel
                       active={true}
                       direction={col.sortDirection}
-                      onClick={() => onSort(col.slug, col.sortDirection)}
+                      onClick={() => onSort(col[slugKey], col.sortDirection)}
                     >
                       {col.label}
                     </TableSortLabel>
@@ -84,21 +118,21 @@ function PaginatedTable({
             {data.map(row => (
               <TableRow
                 hover={hover}
-                selected={row.checked}
-                key={row.uuid}
+                selected={_.get(row, "checked", false)}
+                key={row[primaryKey]}
                 onClick={() => onRowClick(row)}
               >
                 {canCheck && (
-                  <TableCell key={row.uuid}>
+                  <TableCell key={row[primaryKey]}>
                     <Checkbox
-                      checked={row.checked}
-                      onChange={e => dispatch(actions.toggleCheck({
-                        uuid: row.uuid,
-                        checked: e.target.checked,
+                      checked={_.get(row, "checked", false)}
+                      onChange={e => dispatch(actions.updateOne({
+                        id: row[primaryKey],
+                        changes: { checked: e.target.checked }
                       }))}
                       onClick={e => e.stopPropagation()}
                       color="primary"
-                      value={row.uuid}
+                      value={row[primaryKey]}
                     />
                   </TableCell>
                 )}
@@ -108,8 +142,8 @@ function PaginatedTable({
                   }
 
                   return (
-                    <TableCell key={col.slug}>
-                      {row[col.slug]}
+                    <TableCell key={col[slugKey]}>
+                      {row[col[slugKey]]}
                     </TableCell>
                   )
                 })}
@@ -122,8 +156,20 @@ function PaginatedTable({
               <TablePagination
                 rowsPerPage={state.per_page}
                 page={state.page}
-                onChangePage={(_, page) => dispatch(asyncActions.onChangePage(page))}
-                onChangeRowsPerPage={e => dispatch(asyncActions.onChangeRowsPerPage(e.target.value))}
+                onChangePage={(_, page) => {
+                  if (nb_checked > 0) {
+                    _toggle_check_all(false)
+                  }
+
+                  dispatch(asyncActions.onChangePage(page))
+                }}
+                onChangeRowsPerPage={e => {
+                  if (nb_checked > 0) {
+                    _toggle_check_all(false)
+                  }
+
+                  dispatch(asyncActions.onChangeRowsPerPage(e.target.value))
+                }}
                 count={state.rsc.total}
               />
             </TableRow>
