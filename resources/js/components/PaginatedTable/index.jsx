@@ -103,7 +103,15 @@ function PaginatedTable({
                     <TableSortLabel
                       active={true}
                       direction={col.sortDirection}
-                      onClick={() => onSort(col[slugKey], col.sortDirection)}
+                      onClick={() => {
+                        if (nb_checked > 0) {
+                          _toggle_check_all(false)
+                        }
+
+                        dispatch(actions.removeAll())
+                        dispatch(actions.handleSort(col))
+                        dispatch(asyncActions.index())
+                      }}
                     >
                       {col.label}
                     </TableSortLabel>

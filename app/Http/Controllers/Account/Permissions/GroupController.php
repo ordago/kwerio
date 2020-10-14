@@ -32,10 +32,17 @@ class GroupController extends Controller {
     function index(Request $request) {
         $data = $request->validate([
             "page" => "required|numeric",
+            "sorts" => "required|array",
         ]);
 
-        $paginator = GroupModel::paginate(config("app.per_pagae"), [
-            "id", "uuid", "name", "created_at", "updated_at",
+        $query = GroupModel::query();
+
+        foreach ($data["sorts"] as $sort) {
+            $query->orderBy($sort["name"], $sort["dir"]);
+        }
+
+        $paginator = $query->paginate(config("app.per_pagae"), [
+            "uuid", "name", "created_at", "updated_at",
         ]);
 
         return [

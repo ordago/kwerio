@@ -13,9 +13,8 @@ const paginatedTable = PaginatedTable(PREFIX, api.groups, adapter)
 const initialState = adapter.getInitialState({
   ...paginatedTable.initialState,
   columns: [
-    { slug: "id", label: "Id" },
     { slug: "name", label: "Name", sort: true, sortDirection: "asc" },
-    { slug: "updated_at", label: "Updated at", sort: true, sortDirectory: "desc" },
+    { slug: "updated_at", label: "Updated at", sort: true, sortDirection: "desc" },
     { slug: "created_at", label: "Created at", sort: true, sortDirection: "desc" },
   ],
 })

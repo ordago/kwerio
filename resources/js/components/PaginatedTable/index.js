@@ -16,7 +16,9 @@ export default function(PREFIX, api, adapter) {
     }
   }
 
-  function asyncActions(reducer_name, actions) {
+  function asyncActions(reducer_name, actions, afterCallbacks = {
+    index: null,
+  }) {
     /**
      * Get the next chunk for items when the requested page exceed the number
      * of cached items.
@@ -25,9 +27,19 @@ export default function(PREFIX, api, adapter) {
       try {
         const state = getState()[reducer_name]
 
+        let sorts = state.columns
+            .filter(col => _.hasIn(col, "sort"))
+            .sort((left, right) => {
+              if (left.sortOrder > right.sortOrder) return 1
+              else if (left.sortOrder < right.sortOrder) return -1
+              return 0
+            })
+            .map(col => ({ name: col.slug, dir: col.sortDirection }))
+
         if (needs_more(state.ids.length, state.page, state.per_page)) {
           const response = await axios.post(api.index, {
             page: state.rsc.page + 1,
+            sorts,
           })
 
           if (
@@ -36,6 +48,11 @@ export default function(PREFIX, api, adapter) {
             && _.hasIn(response.data, "total")
           ) {
             dispatch(actions.upsertMany(response.data.items))
+
+            if (_.get(afterCallbacks, "index") !== null) {
+              afterCallbacks.index(response.data.items)
+            }
+
             return response.data
           }
 
@@ -77,6 +94,7 @@ export default function(PREFIX, api, adapter) {
     upsertMany: adapter.upsertMany,
     updateMany: adapter.updateMany,
     updateOne: adapter.updateOne,
+    removeAll: adapter.removeAll,
     setPage: (state, action) => {
       state.page = action.payload
     },
@@ -84,6 +102,29 @@ export default function(PREFIX, api, adapter) {
       state.per_page = action.payload
       state.page = 0
     },
+    handleSort: (state, action) => {
+      state.page = 0
+      state.rsc.page = 0
+
+      state.columns.map((col, idx) => {
+        if (!_.hasIn(col, "sort")) {
+          return col
+        }
+
+        if (col.slug === action.payload.slug) {
+          col.sortOrder = 1
+          col.sortDirection = col.sortDirection === "asc" ? "desc" : "asc"
+          return col
+        }
+
+        if (!_.hasIn(col, "sortOrder")) {
+          col.sortOrder = idx + 1
+        }
+
+        col.sortOrder += 1
+        return col
+      })
+    }
   }
 
   const extraReducers = {
