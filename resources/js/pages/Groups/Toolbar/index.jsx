@@ -1,7 +1,9 @@
-import { Box, TextField } from "@material-ui/core"
+import { Box, Button, TextField } from "@material-ui/core"
+import { useDispatch } from "react-redux"
 import React, { useState, useRef } from "react"
-import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
+import { endpoints } from "../../../routes/app"
 import useStyles from "./index.styles"
 
 let timer
@@ -9,6 +11,7 @@ let timer
 function Toolbar({ actions, tableAsyncActions }) {
   const classes = useStyles(),
     dispatch = useDispatch(),
+    history = useHistory(),
     [q, setQ] = useState(""),
     q_ref = useRef()
 
@@ -38,7 +41,7 @@ function Toolbar({ actions, tableAsyncActions }) {
       </Box>
 
       <Box>
-        Right
+        <Button onClick={() => history.push(endpoints.groups.create)}>create new</Button>
       </Box>
     </Box>
   )

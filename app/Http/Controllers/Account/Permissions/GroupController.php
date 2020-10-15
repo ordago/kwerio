@@ -25,6 +25,15 @@ class GroupController extends Controller {
     }
 
     /**
+     * Show create page.
+     *
+     * @return View
+     */
+    function show_create_page() {
+        return view("account.permissions.groups");
+    }
+
+    /**
      * Get groups.
      *
      * @return array

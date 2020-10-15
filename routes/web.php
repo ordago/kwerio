@@ -11,6 +11,7 @@ Route::middleware(["auth"])->group(function() {
     // -------------------------------------------------------------- WEB -- #
     Route::prefix("account")->group(function() {
         Route::get("/permissions/groups", [GroupController::class, "show_page"]);
+        Route::get("/permissions/groups/create", [GroupController::class, "show_create_page"]);
         Route::get("/permissions/users", [UserController::class, "index"]);
     });
 
