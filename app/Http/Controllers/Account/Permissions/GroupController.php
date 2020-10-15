@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Account\Permissions;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -120,17 +121,14 @@ class GroupController extends Controller {
         try {
             $group = GroupModel::updateOrCreate(["uuid" => @$data["uuid"]], [
                 "name" => $data["name"],
-            ]);
+            ])->fresh();
 
             $modules = ModuleModel::whereIn("uid", $data["modules"])->get(["id"]);
             $group->modules()->sync($modules);
 
             DB::commit();
 
-            $groups = GroupModel::whereUuid($group->uuid)
-                ->get($this->columns);
-
-            return $this->_normalize($groups);
+            return $this->_normalize(GroupModel::whereUuid($group->uuid)->get());
         }
 
         catch (\Throwable $e) {
@@ -176,7 +174,7 @@ class GroupController extends Controller {
         return [
             "items" => $items,
             "total" => $total,
-            "next_path" => $total === config("app.per_page") ? $page + 1 : $page,
+            "next_page" => $total === config("app.per_page") ? $page + 1 : $page,
         ];
     }
 }

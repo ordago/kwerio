@@ -9,14 +9,19 @@ import { rsc_catched_error ,show_under_form_fields } from "../../utils/errors"
 
 export const PREFIX = "GROUPS"
 
+/**
+ * Fetch group by the given uuid.
+ */
 export const fetch_by_uuid = createAsyncThunk(`${PREFIX}/fetch_by_uuid`, async (uuid, { getState, dispatch, rejectWithValue }) => {
   try {
     const response = await axios.post(api.groups.fetch_by_uuid, { uuid })
 
     if (response.status === 200 && _.hasIn(response.data, "total") && _.hasIn(response.data, "items")) {
-      dispatch(actions.upsertOne({ ...response.data.items[0] }))
-
-      return response.data
+      if (response.data.items.length === 1) {
+        dispatch(actions.upsertOne({ ...response.data.items[0] }))
+        dispatch(actions.fillUpsert(response.data.items[0]))
+        return response.data
+      }
     }
 
     return rejectWithValue(response.data)
@@ -40,19 +45,22 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
     }
 
     const response = await axios.post(endpoint, {
+      uuid,
       name: name.value,
-      modules: modules.value.map(module => module.uid),
+      modules: modules.value,
     })
 
     if (response.status === 200 && _.hasIn(response.data, "total") && _.hasIn(response.data, "items")) {
-      dispatch(actions.upsertOne({
-        ...response.data.items[0],
-        touched_at: Date.now(),
-      }))
+      if (response.data.items.length === 1) {
+        dispatch(actions.upsertOne({
+          ...response.data.items[0],
+          touched_at: Date.now(),
+        }))
 
-      dispatch(actions.softReset())
+        dispatch(actions.softReset())
 
-      return response.data
+        return response.data
+      }
     }
 
     return rejectWithValue(response.data)
@@ -91,6 +99,7 @@ export const extraReducers = {
     }
   },
 
+  // fetch_by_uuid
   [fetch_by_uuid.pending]: (state, action) => {
     state.pending = true
   },

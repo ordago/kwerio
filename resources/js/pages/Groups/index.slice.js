@@ -39,9 +39,24 @@ const slice = createSlice({
   reducers: {
     ...form.reducers,
     ...paginatedTable.reducers,
-    handleChange: (state, action) => { form.reducers.handleChange(state.upsert, action) },
-    handleBlur: (state, action) => { form.reducers.handleBlur(state.upsert, action) },
     upsertOne: adapter.upsertOne,
+    resetUpsert: (state, action) => {
+      state.upsert.uuid = null
+      state.upsert.name.value = ""
+      state.upsert.modules.value = []
+    },
+    handleChange: (state, action) => {
+      form.reducers.handleChange(state.upsert, action)
+    },
+    handleBlur: (state, action) => {
+      form.reducers.handleBlur(state.upsert, action)
+    },
+    fillUpsert: (state, action) => {
+      const item = action.payload
+      state.upsert.uuid = item.uuid
+      state.upsert.name.value = item.name
+      state.upsert.modules.value = item.modules
+    },
   },
   extraReducers: {
     ...paginatedTable.extraReducers,

@@ -163,8 +163,10 @@ export default function(PREFIX, api, adapter) {
         state.rsc.total = action.payload.total
       }
 
-      if (_.hasIn(action.payload, "next_page")) {
-        state.rsc.page = action.payload.next_page
+      const next_page = _.get(action.payload, "next_page")
+
+      if (!_.isUndefined(next_page) && next_page >= 0) {
+        state.rsc.page = next_page
       }
     }
   }

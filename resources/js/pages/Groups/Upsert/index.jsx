@@ -14,8 +14,7 @@ import { useHistory } from "react-router-dom"
 import { useSnackbar } from "notistack"
 import React from "react"
 
-import { actions, asyncActions } from "../index.slice"
-import { adapter } from "../index.slice"
+import { actions, adapter, asyncActions } from "../index.slice"
 import { endpoints } from "../../../routes/app"
 import {
   adapter as modulesAdapter,
@@ -35,21 +34,32 @@ function Upsert({ match }) {
     dispatch = useDispatch(),
     { enqueueSnackbar } = useSnackbar(),
     history = useHistory(),
-    selector = adapter.getSelectors()
+    selector = adapter.getSelectors(),
+    modules_data = modulesSelector.selectAll(modulesState)
 
-  const modules_data = modulesSelector.selectAll(modulesState),
-    uuid = _.get(match, "params.uuid")
+  let modules_value = []
+
+  if (modules_data.length > 0) {
+    modules_value = modules.value
+      .map(uid => modulesSelector.selectById(modulesState, uid))
+      .filter(Boolean)
+  }
+
+  React.useEffect(() => {
+    const uuid = _.get(match, "params.uuid"),
+      item = selector.selectById(state, uuid)
+
+    if (!_.isUndefined(uuid) && _.isUndefined(item)) {
+      dispatch(asyncActions.fetch_by_uuid(uuid)).then(action => notify(action, enqueueSnackbar))
+    } else if (!_.isUndefined(item)) {
+      dispatch(actions.fillUpsert(item))
+    } else {
+      dispatch(actions.resetUpsert())
+    }
+  }, [])
 
   React.useEffect(() => {
     dispatch(modulesAsyncACtions.all()).then(action => notify(action, enqueueSnackbar))
-
-    if (!_.isUndefined(uuid)) {
-      const item = selector.selectById(state, uuid)
-
-      if (_.isUndefined(item)) {
-        dispatch(asyncActions.fetch_by_uuid(uuid)).then(action => notify(action, enqueueSnackbar))
-      }
-    }
   }, [])
 
   return (
@@ -73,12 +83,17 @@ function Upsert({ match }) {
             <Autocomplete
               multiple
               name={modules.name}
-              value={modules.value}
+              value={modules_value}
               filterSelectedOptions
               options={modules_data}
               getOptionLabel={option => option.name}
               getOptionSelected={(option, value) => option.uid === value.uid}
-              onChange={(e, value, reason) => dispatch(actions.handleChange({ name: modules.name, value }))}
+              onChange={(e, value, reason) => {
+                dispatch(actions.handleChange({
+                  name: modules.name,
+                  value: value.map(module => module.uid)
+                }))
+              }}
               fullWidth
               renderInput={(params) => (
                 <TextField

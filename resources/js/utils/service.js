@@ -40,5 +40,7 @@ export function move_to_start(state, id) {
     throw new Error(`${id} is not found in state.ids`)
   }
 
-  state.ids.unshift(state.ids.splice(idx, 1))
+  if (idx === 0) return
+
+  state.ids.unshift(state.ids.splice(idx, 1)[0])
 }
