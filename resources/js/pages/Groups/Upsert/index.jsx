@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useSnackbar } from "notistack"
 import React from "react"
 
-import { actions } from "../index.slice"
+import { actions, asyncActions } from "../index.slice"
 import {
   adapter as modulesAdapter,
   asyncActions as modulesAsyncACtions
@@ -33,8 +33,6 @@ function Upsert() {
     { enqueueSnackbar } = useSnackbar()
 
   const modules_data = modulesSelector.selectAll(modulesState)
-
-  console.log(modules.value)
 
   React.useEffect(() => {
     dispatch(modulesAsyncACtions.all()).then(action => notify(action, enqueueSnackbar))
@@ -82,7 +80,15 @@ function Upsert() {
           <CardActions>
             <Button
               disabled={is_disabled({ name })}
-              onClick={() => dispatch(update_or_create())}
+              onClick={() => {
+                dispatch(asyncActions.upsert())
+                  .then(action => notify(action, enqueueSnackbar))
+                  .then(action => {
+                    if (!_.isUndefined(action)) {
+                      enqueueSnackbar(`Group ${name.value} created successfully`, { variant: "success" })
+                    }
+                  })
+              }}
             >
               save
             </Button>

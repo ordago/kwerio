@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers\Account\Permissions;
 
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\{
     Group as GroupModel,
-};
-
-use App\Repositories\{
-    Group as GroupRepository,
-    Module as ModuleRepository,
+    Module as ModuleModel,
 };
 
 class GroupController extends Controller {
+    private $columns = [
+        "uuid",
+        "name",
+        "created_at",
+        "updated_at",
+    ];
+
     /**
      * Show groups page.
      *
@@ -55,13 +59,76 @@ class GroupController extends Controller {
             $query->orderBy($sort["name"], $sort["dir"]);
         }
 
-        $paginator = $query->paginate(config("app.per_pagae"), [
-            "uuid", "name", "created_at", "updated_at",
-        ]);
+        $paginator = $query->paginate(config("app.per_pagae"), $this->columns);
 
         return [
             "total" => $paginator->total(),
             "items" => $paginator->items(),
         ];
+    }
+
+    /**
+     * Create new group.
+     *
+     * @param Request $request
+     * @return string
+     *   The uuid of the newly created group
+     */
+    function create(Request $request) {
+        $data = $request->validate([
+            "name" => "required|unique:groups,name",
+            "modules" => "",
+        ]);
+
+        return $this->_upsert($data);
+    }
+
+    /**
+     * Update the given group.
+     *
+     * @param Request $request
+     * @return string
+     */
+    function update(Request $request) {
+        $data = $request->validate([
+            "uuid" => "required|exists:groups,uuid",
+            "name" => [
+                "required",
+                Rule::unique("groups")->ignore($request->get("uuid"), "uuid"),
+            ],
+            "modules" => "",
+        ]);
+
+        return $this->_upsert($data);
+    }
+
+    /**
+     * Update or Insert a new group.
+     *
+     * @param array $data
+     * @return Group
+     */
+    private function _upsert(array $data) {
+        DB::beginTransaction();
+
+        try {
+            $group = GroupModel::updateOrCreate(["uuid" => @$data["uuid"]], [
+                "name" => $data["name"],
+            ]);
+
+            $modules = ModuleModel::whereIn("uid", $data["modules"])->get(["id"]);
+            $group->modules()->sync($modules);
+
+            $group = GroupModel::whereUuid($group->uuid)->get($this->columns);
+
+            DB::commit();
+
+            return $group;
+        }
+
+        catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
     }
 }

@@ -12,6 +12,8 @@ export function notify(action, enqueueSnackbar) {
     && _.hasIn(action, "payload.message")
   ) {
     enqueueSnackbar(message(action.payload), { variant: "error" })
+  } else {
+    return action
   }
 }
 
@@ -47,6 +49,23 @@ export function map_field_to_str(data) {
   })
 
   return maps
+}
+
+/**
+ * Show errors under there equivalent field.
+ *
+ * @param {object} state
+ * @param {object} data
+ */
+export function show_under_form_fields(state, data) {
+  const errors = map_field_to_str(data)
+
+  _.forIn(errors, (msg, key) => {
+    if (_.hasIn(state, key)) {
+      state[key].helper_text = msg
+      state[key].error = true
+    }
+  })
 }
 
 /**

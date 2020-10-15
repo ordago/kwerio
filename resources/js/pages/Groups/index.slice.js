@@ -1,7 +1,7 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit"
 import Form from '@euvoor/form'
 
-import { PREFIX } from "./index.service"
+import { PREFIX, upsert, extraReducers } from "./index.service"
 import { api } from "../../routes/app"
 import PaginatedTable from "../../components/PaginatedTable/index"
 
@@ -44,10 +44,14 @@ const slice = createSlice({
   },
   extraReducers: {
     ...paginatedTable.extraReducers,
+    ...extraReducers,
   },
 })
 
 export const actions = slice.actions
 export const tableAsyncActions = paginatedTable.asyncActions("groups", actions)
+export const asyncActions = {
+  upsert,
+}
 
 export default slice.reducer

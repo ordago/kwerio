@@ -17,7 +17,6 @@ class CreateGroupModuleTable extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->uuid("uuid");
             $table->unsignedBigInteger("group_id");
             $table->unsignedBigInteger("module_id");
 

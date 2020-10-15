@@ -25,6 +25,9 @@ Route::middleware(["auth"])->group(function() {
 
         Route::prefix("account")->group(function() {
             Route::post("/permissions/groups", [GroupController::class, "index"]);
+            Route::post("/permissions/groups/create", [GroupController::class, "create"]);
+            Route::post("/permissions/groups/update", [GroupController::class, "update"]);
+
             Route::post("/permissions/users", [UserController::class, "paginate"]);
         });
 

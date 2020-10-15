@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 class Group extends Model {
     use HasFactory, Traits\LocalizeDatetimeAttributes;
 
+    protected $guarded = [];
+
     public static function boot() {
         parent::boot();
 
@@ -17,5 +19,9 @@ class Group extends Model {
                 $model->uuid = Str::uuid();
             }
         });
+    }
+
+    function modules() {
+        return $this->belongsToMany(Module::class);
     }
 }
