@@ -21,6 +21,9 @@ const initialState = {
     },
     direction: "ltr",
     props: {
+      MuiChip: {
+        size: "small",
+      },
       MuiCheckbox: {
         size: "small",
       },
