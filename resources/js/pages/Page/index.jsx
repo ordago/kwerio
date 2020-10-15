@@ -20,6 +20,7 @@ function Page() {
       <Switch>
         <Route exact path={endpoints.groups.index} render={props => WithSuspense(<Groups {...props} />)} />
         <Route exact path={endpoints.groups.create} render={props => WithSuspense(<GroupsUpsert {...props} />)} />
+        <Route exact path={endpoints.groups.update} render={props => WithSuspense(<GroupsUpsert {...props} />)} />
         <Route exact path={endpoints.users.index} render={props => WithSuspense(<Users {...props} />)} />
         <Route exact path={endpoints.modules.index} render={props => WithSuspense(<Modules {...props} />)} />
       </Switch>

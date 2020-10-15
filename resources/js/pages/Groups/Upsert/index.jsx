@@ -15,6 +15,7 @@ import { useSnackbar } from "notistack"
 import React from "react"
 
 import { actions, asyncActions } from "../index.slice"
+import { adapter } from "../index.slice"
 import { endpoints } from "../../../routes/app"
 import {
   adapter as modulesAdapter,
@@ -25,7 +26,7 @@ import Header from "../Header"
 import OneColumnPage from "../../Page/OneColumnPage"
 import useStyles from "./index.styles"
 
-function Upsert() {
+function Upsert({ match }) {
   const state = useSelector(state => state.groups),
     { name, modules } = state.upsert,
     classes = useStyles(),
@@ -33,12 +34,22 @@ function Upsert() {
     modulesState = useSelector(state => state.modules),
     dispatch = useDispatch(),
     { enqueueSnackbar } = useSnackbar(),
-    history = useHistory()
+    history = useHistory(),
+    selector = adapter.getSelectors()
 
-  const modules_data = modulesSelector.selectAll(modulesState)
+  const modules_data = modulesSelector.selectAll(modulesState),
+    uuid = _.get(match, "params.uuid")
 
   React.useEffect(() => {
     dispatch(modulesAsyncACtions.all()).then(action => notify(action, enqueueSnackbar))
+
+    if (!_.isUndefined(uuid)) {
+      const item = selector.selectById(state, uuid)
+
+      if (_.isUndefined(item)) {
+        dispatch(asyncActions.fetch_by_uuid(uuid)).then(action => notify(action, enqueueSnackbar))
+      }
+    }
   }, [])
 
   return (

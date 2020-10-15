@@ -38,6 +38,15 @@ class GroupController extends Controller {
     }
 
     /**
+     * Show update page.
+     *
+     * @return view
+     */
+    function show_update_page() {
+        return view("account.permissions.groups");
+    }
+
+    /**
      * Get groups.
      *
      * @return array
@@ -59,12 +68,9 @@ class GroupController extends Controller {
             $query->orderBy($sort["name"], $sort["dir"]);
         }
 
-        $paginator = $query->paginate(config("app.per_pagae"), $this->columns);
+        $results = $query->paginate(config("app.per_page"));
 
-        return [
-            "total" => $paginator->total(),
-            "items" => $paginator->items(),
-        ];
+        return $this->_normalize($results);
     }
 
     /**
@@ -119,19 +125,58 @@ class GroupController extends Controller {
             $modules = ModuleModel::whereIn("uid", $data["modules"])->get(["id"]);
             $group->modules()->sync($modules);
 
-            $group = GroupModel::whereUuid($group->uuid)->get($this->columns);
-
             DB::commit();
 
-            return [
-                "item" => $group->first(),
-                "total" => GroupModel::count(),
-            ];
+            $groups = GroupModel::whereUuid($group->uuid)
+                ->get($this->columns);
+
+            return $this->_normalize($groups);
         }
 
         catch (\Throwable $e) {
             DB::rollback();
             throw $e;
         }
+    }
+
+    /**
+     * Fetch a group by uuid.
+     *
+     * @return Group
+     */
+    function fetch_by_uuid(Request $request) {
+        $data = $request->validate([
+            "uuid" => "required|exists:groups,uuid",
+        ]);
+
+        $groups = GroupModel::whereUuid($data["uuid"])->get();
+
+        return $this->_normalize($groups);
+    }
+
+    /**
+     * Normalize the groups.
+     *
+     * @param Collection $groups
+     * @return array
+     */
+    function _normalize($groups) {
+        $items = $groups->map(function($group) {
+            $modules = $group->modules->pluck("uid")->toArray();
+
+            return array_merge(
+                ["modules" => $modules],
+                $group->only($this->columns)
+            );
+        });
+
+        $total = GroupModel::count();
+        $page = request()->get("page");
+
+        return [
+            "items" => $items,
+            "total" => $total,
+            "next_path" => $total === config("app.per_page") ? $page + 1 : $page,
+        ];
     }
 }

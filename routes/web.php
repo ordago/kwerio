@@ -12,6 +12,7 @@ Route::middleware(["auth"])->group(function() {
     Route::prefix("account")->group(function() {
         Route::get("/permissions/groups", [GroupController::class, "show_page"]);
         Route::get("/permissions/groups/create", [GroupController::class, "show_create_page"]);
+        Route::get("/permissions/groups/{uuid}", [GroupController::class, "show_update_page"]);
         Route::get("/permissions/users", [UserController::class, "index"]);
     });
 
@@ -27,6 +28,7 @@ Route::middleware(["auth"])->group(function() {
             Route::post("/permissions/groups", [GroupController::class, "index"]);
             Route::post("/permissions/groups/create", [GroupController::class, "create"]);
             Route::post("/permissions/groups/update", [GroupController::class, "update"]);
+            Route::post("/permissions/groups/fetch-by-uuid", [GroupController::class, "fetch_by_uuid"]);
 
             Route::post("/permissions/users", [UserController::class, "paginate"]);
         });

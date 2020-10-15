@@ -8,4 +8,5 @@ class Module extends Model {
     use Traits\LocalizeDatetimeAttributes;
 
     protected $guarded = [];
+    protected $hidden = ["pivot"];
 }

@@ -11,6 +11,7 @@ export const endpoints = {
   groups: {
     index: `${PERMISSIONS_ENDPOINT}/groups`,
     create: `${PERMISSIONS_ENDPOINT}/groups/create`,
+    update: `${PERMISSIONS_ENDPOINT}/groups/:uuid`
   },
   users: {
     index: `${PERMISSIONS_ENDPOINT}/users`,
@@ -27,6 +28,7 @@ export const api = {
     create: `${API_PERMISSIONS_ENDPOINT}/groups/create`,
     update: `${API_PERMISSIONS_ENDPOINT}/groups/update`,
     metadata: `${API_PERMISSIONS_ENDPOINT}/groups/metadata`,
+    fetch_by_uuid: `${API_PERMISSIONS_ENDPOINT}/groups/fetch-by-uuid`,
   },
   users: {
     index: `${API_PERMISSIONS_ENDPOINT}/users`,

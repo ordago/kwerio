@@ -49,7 +49,9 @@ export default function(PREFIX, api, adapter) {
             && _.hasIn(response.data, "items")
             && _.hasIn(response.data, "total")
           ) {
-            dispatch(actions.upsertMany(response.data.items))
+            if (response.data.items.length > 0) {
+              dispatch(actions.upsertMany(response.data.items))
+            }
 
             if (_.get(afterCallbacks, "index") !== null) {
               afterCallbacks.index(response.data.items)
@@ -97,6 +99,11 @@ export default function(PREFIX, api, adapter) {
     updateMany: adapter.updateMany,
     updateOne: adapter.updateOne,
     removeAll: adapter.removeAll,
+    softReset: (state, action) => {
+      state.loading = false
+      state.q = ""
+      state.page = 0
+    },
     setQ: (state, action) => {
       state.page = 0
       state.rsc.page = 0
@@ -151,8 +158,8 @@ export default function(PREFIX, api, adapter) {
         state.rsc.total = action.payload.total
       }
 
-      if (_.hasIn(action.payload, "items") && action.payload.items.length > 0) {
-        state.rsc.page += 1
+      if (_.hasIn(action.payload, "next_page")) {
+        state.rsc.page = action.payload.next_page
       }
     }
   }

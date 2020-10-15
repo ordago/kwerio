@@ -10,6 +10,8 @@ class Group extends Model {
     use HasFactory, Traits\LocalizeDatetimeAttributes;
 
     protected $guarded = [];
+    protected $hidden = ["pivot"];
+    protected $with = ["modules"];
 
     public static function boot() {
         parent::boot();
