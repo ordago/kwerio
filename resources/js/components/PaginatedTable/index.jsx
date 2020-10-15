@@ -12,8 +12,9 @@ import {
   TableSortLabel
 } from "@material-ui/core"
 import { useDispatch, useSelector } from "react-redux"
-import React from "react"
 import { useSnackbar } from "notistack"
+import React from "react"
+import clsx from "clsx"
 
 import _ from "lodash"
 
@@ -84,12 +85,12 @@ function PaginatedTable({
                     checked={nb_checked > 0}
                     color="primary"
                     onChange={e => {
-                      const updates = selector.selectIds(state)
-                        .filter(id => data.filter(item => item[primaryKey] === id).length > 0)
-                        .map(primaryKey => ({
-                          id: primaryKey,
+                      const updates = data.map(item => ({
+                          id: item[primaryKey],
                           changes: { checked: e.target.checked }
                         }))
+
+                      console.log(updates)
 
                       dispatch(actions.updateMany(updates))
                     }}
@@ -129,6 +130,7 @@ function PaginatedTable({
                 selected={_.get(row, "checked", false)}
                 key={row[primaryKey]}
                 onClick={() => onRowClick(row)}
+                className={clsx({ [classes.touchedAt]: _.hasIn(row, "touched_at") })}
               >
                 {canCheck && (
                   <TableCell key={row[primaryKey]}>

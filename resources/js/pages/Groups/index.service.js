@@ -2,7 +2,9 @@ import { createAsyncThunk } from "@reduxjs/toolkit"
 
 import axios from "axios"
 
+import { actions, form } from "./index.slice"
 import { api } from "../../routes/app"
+import { move_to_start } from "../../utils/service"
 import { rsc_catched_error ,show_under_form_fields } from "../../utils/errors"
 
 export const PREFIX = "GROUPS"
@@ -21,9 +23,16 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
       modules: modules.value.map(module => module.uid),
     })
 
-    if (response.status === 200 && _.hasIn(response, "data")) {
+    if (response.status === 200 && _.hasIn(response.data, "total") && _.hasIn(response.data, "item")) {
+      dispatch(actions.upsertOne({
+        ...response.data.item,
+        touched_at: Date.now(),
+      }))
+
       return response.data
     }
+
+    return rejectWithValue(response.data)
   }
 
   catch (err) {
@@ -41,6 +50,18 @@ export const extraReducers = {
   },
   [upsert.fulfilled]: (state, action) => {
     state.loading = false
-    console.log(action)
+
+    if (_.hasIn(action.payload, "total")) {
+      state.rsc.total = action.payload.total
+    }
+
+    state.upsert = {
+      ...state.upsert,
+      ...form.state,
+    }
+
+    if (_.hasIn(action.payload, "item")) {
+      move_to_start(state, action.payload.item.uuid)
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit"
-import Form from '@euvoor/form'
+import Form from "@euvoor/form"
 
 import { PREFIX, upsert, extraReducers } from "./index.service"
 import { api } from "../../routes/app"
@@ -9,7 +9,7 @@ export const adapter = createEntityAdapter({
   selectId: group => group.uuid,
 })
 
-const form = Form({
+export const form = Form({
   name: {},
   modules: {
     required: false,
@@ -27,9 +27,9 @@ const initialState = adapter.getInitialState({
     uuid: null,
   },
   columns: [
-    { slug: "name", label: "Name", sort: true, sortDirection: "asc" },
-    { slug: "updated_at", label: "Updated at", sort: true, sortDirection: "desc" },
-    { slug: "created_at", label: "Created at", sort: true, sortDirection: "desc" },
+    { slug: "name", label: "Name", sort: true, sortDirection: "asc", sortOrder: 2 },
+    { slug: "updated_at", label: "Updated at", sort: true, sortDirection: "desc", sortOrder: 1 },
+    { slug: "created_at", label: "Created at", sort: true, sortDirection: "desc", sortOrder: 2 },
   ],
 })
 
@@ -41,6 +41,7 @@ const slice = createSlice({
     ...paginatedTable.reducers,
     handleChange: (state, action) => { form.reducers.handleChange(state.upsert, action) },
     handleBlur: (state, action) => { form.reducers.handleBlur(state.upsert, action) },
+    upsertOne: adapter.upsertOne,
   },
   extraReducers: {
     ...paginatedTable.extraReducers,

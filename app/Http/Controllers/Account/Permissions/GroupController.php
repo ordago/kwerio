@@ -123,7 +123,10 @@ class GroupController extends Controller {
 
             DB::commit();
 
-            return $group;
+            return [
+                "item" => $group->first(),
+                "total" => GroupModel::count(),
+            ];
         }
 
         catch (\Throwable $e) {

@@ -10,10 +10,12 @@ import {
 } from "@material-ui/core"
 import { is_disabled } from "@euvoor/form"
 import { useDispatch, useSelector } from "react-redux"
+import { useHistory } from "react-router-dom"
 import { useSnackbar } from "notistack"
 import React from "react"
 
 import { actions, asyncActions } from "../index.slice"
+import { endpoints } from "../../../routes/app"
 import {
   adapter as modulesAdapter,
   asyncActions as modulesAsyncACtions
@@ -30,7 +32,8 @@ function Upsert() {
     modulesSelector = modulesAdapter.getSelectors(),
     modulesState = useSelector(state => state.modules),
     dispatch = useDispatch(),
-    { enqueueSnackbar } = useSnackbar()
+    { enqueueSnackbar } = useSnackbar(),
+    history = useHistory()
 
   const modules_data = modulesSelector.selectAll(modulesState)
 
@@ -86,6 +89,7 @@ function Upsert() {
                   .then(action => {
                     if (!_.isUndefined(action)) {
                       enqueueSnackbar(`Group ${name.value} created successfully`, { variant: "success" })
+                      history.push(endpoints.groups.index)
                     }
                   })
               }}

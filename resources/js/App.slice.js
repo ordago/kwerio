@@ -21,6 +21,9 @@ const initialState = {
     },
     direction: "ltr",
     props: {
+      MuiCheckbox: {
+        size: "small",
+      },
       MuiTextField: {
         margin: "dense",
         size: "small",
