@@ -94,13 +94,15 @@ export default function(PREFIX, api, adapter) {
     }
   }
 
+  /**
+   * Table reducers.
+   */
   const reducers = {
     upsertMany: adapter.upsertMany,
     updateMany: adapter.updateMany,
     updateOne: adapter.updateOne,
     removeAll: adapter.removeAll,
     softReset: (state, action) => {
-      state.loading = false
       state.q = ""
       state.page = 0
     },
@@ -142,6 +144,9 @@ export default function(PREFIX, api, adapter) {
     }
   }
 
+  /**
+   * Table extra reducers.
+   */
   const extraReducers = {
     // index
     [`${PREFIX}/index/pending`]: (state, action) => {
