@@ -9,6 +9,7 @@ import useStyles from "./index.styles"
 const Users = React.lazy(() => import("../Users"))
 const Modules = React.lazy(() => import("../Modules"))
 const Groups = React.lazy(() => import("../Groups"))
+const GroupsUpsert = React.lazy(() => import("../Groups/Upsert"))
 
 function Page() {
   const config = useSelector(state => state.app.config),
@@ -18,6 +19,7 @@ function Page() {
     <Box className={classes.root}>
       <Switch>
         <Route exact path={endpoints.groups.index} render={props => WithSuspense(<Groups {...props} />)} />
+        <Route exact path={endpoints.groups.create} render={props => WithSuspense(<GroupsUpsert {...props} />)} />
         <Route exact path={endpoints.users.index} render={props => WithSuspense(<Users {...props} />)} />
         <Route exact path={endpoints.modules.index} render={props => WithSuspense(<Modules {...props} />)} />
       </Switch>

@@ -33,5 +33,6 @@ export const api = {
   },
   modules: {
     index: `${API_MODULES_ENDPOINT}/modules`,
+    all: `${API_MODULES_ENDPOINT}/all`,
   },
 }

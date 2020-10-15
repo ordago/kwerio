@@ -4,8 +4,25 @@ namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\{
+    Module as ModuleModel,
+};
 
 class ModuleController extends Controller {
+    /**
+     * List of columns to return with every request.
+     */
+    private $columns = [
+        "uid",
+        "name",
+        "slug",
+        "icon",
+        "position",
+        "hidden",
+        "created_at",
+        "updated_at",
+    ];
+
     /**
      * Show modules page.
      *
@@ -16,12 +33,18 @@ class ModuleController extends Controller {
     }
 
     /**
-     * Get a list of paginated modules.
+     * Fetch all modules.
      *
-     * @param ModuleRepository $moduleRepo
      * @return array
      */
-    function paginate(ModuleRepository $moduleRepo) {
-        return $moduleRepo->index();
+    function all() {
+        $total = ModuleModel::count();
+
+        $items = ModuleModel::get($this->columns);
+
+        return [
+            "items" => $items,
+            "total" => $total,
+        ];
     }
 }

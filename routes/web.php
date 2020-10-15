@@ -30,6 +30,7 @@ Route::middleware(["auth"])->group(function() {
 
         Route::prefix("modules")->group(function() {
             Route::post("/", [ModuleController::class, "paginate"]);
+            Route::post("/all", [ModuleController::class, "all"]);
         });
     });
 });

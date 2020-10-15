@@ -7,7 +7,7 @@ import { rsc_catched_error } from "../../utils/errors"
 
 export default function(PREFIX, api, adapter) {
   const initialState = {
-    loading: "idle",
+    loading: false,
     q: "",
     page: 0,
     per_page: 10,
@@ -138,14 +138,14 @@ export default function(PREFIX, api, adapter) {
   const extraReducers = {
     // index
     [`${PREFIX}/index/pending`]: (state, action) => {
-      state.loading = "pending"
+      state.loading = true
     },
     [`${PREFIX}/index/rejected`]: (state, action) => {
-      state.loading = "idle"
+      state.loading = false
       console.error(action)
     },
     [`${PREFIX}/index/fulfilled`]: (state, action) => {
-      state.loading = "idle"
+      state.loading = false
 
       if (_.hasIn(action.payload, "total")) {
         state.rsc.total = action.payload.total

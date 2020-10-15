@@ -37,7 +37,7 @@ function Groups() {
 function HeaderRight({ loading }) {
   return (
     <Box>
-      {loading === "pending" && (
+      {loading && (
         <CircularProgress size={20} />
       )}
     </Box>
