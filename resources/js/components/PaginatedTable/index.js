@@ -8,6 +8,7 @@ import { rsc_catched_error } from "../../utils/errors"
 export default function(PREFIX, api, adapter) {
   const initialState = {
     loading: "idle",
+    q: "",
     page: 0,
     per_page: 10,
     rsc: {
@@ -39,6 +40,7 @@ export default function(PREFIX, api, adapter) {
         if (needs_more(state.ids.length, state.page, state.per_page)) {
           const response = await axios.post(api.index, {
             page: state.rsc.page + 1,
+            q: state.q,
             sorts,
           })
 
@@ -95,6 +97,12 @@ export default function(PREFIX, api, adapter) {
     updateMany: adapter.updateMany,
     updateOne: adapter.updateOne,
     removeAll: adapter.removeAll,
+    setQ: (state, action) => {
+      state.page = 0
+      state.rsc.page = 0
+      state.rsc.total = 0
+      state.q = action.payload
+    },
     setPage: (state, action) => {
       state.page = action.payload
     },

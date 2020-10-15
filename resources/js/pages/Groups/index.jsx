@@ -5,7 +5,8 @@ import React from "react"
 import { adapter, tableAsyncActions, actions } from "./index.slice"
 import Header from "./Header"
 import OneColumnPage from "../Page/OneColumnPage"
-import PaginatedTable from "../../components/PaginatedTable"
+import PaginatedTable from "../../components/PaginatedTable/index.jsx"
+import Toolbar from "./Toolbar"
 
 function Groups() {
   const state = useSelector(state => state.groups)
@@ -17,6 +18,11 @@ function Groups() {
       />
 
       <OneColumnPage>
+        <Toolbar
+          actions={actions}
+          tableAsyncActions={tableAsyncActions}
+        />
+
         <PaginatedTable
           actions={actions}
           adapter={adapter}

@@ -33,9 +33,14 @@ class GroupController extends Controller {
         $data = $request->validate([
             "page" => "required|numeric",
             "sorts" => "required|array",
+            "q" => "",
         ]);
 
         $query = GroupModel::query();
+
+        if (!empty($data["q"])) {
+            $query->where("name", "like", "%{$data['q']}%");
+        }
 
         foreach ($data["sorts"] as $sort) {
             $query->orderBy($sort["name"], $sort["dir"]);
