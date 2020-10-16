@@ -95,6 +95,14 @@ const slice = createSlice({
     },
     fillUpsert: (state, action) => {
       const item = action.payload
+      state.upsert.uuid = item.uuid
+      state.upsert.email.value = item.email
+      state.upsert.first_name.value = item.first_name
+      state.upsert.last_name.value = item.last_name
+      state.upsert.locale.value = item.locale
+      state.upsert.timezone.value = item.timezone
+      state.upsert.locale_iso_format.value = item.locale_iso_format
+      state.upsert.groups.value = item.groups
     },
   },
   extraReducers: {

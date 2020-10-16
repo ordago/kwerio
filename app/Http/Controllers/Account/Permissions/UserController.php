@@ -31,6 +31,26 @@ class UserController extends Controller {
         "updated_at",
     ];
 
+    private $rules = [];
+
+    /**
+     * Initialize constructor.
+     *
+     * @param Languages $languages
+     */
+    function __construct(Languages $languages) {
+        $this->rules = [
+            "email" => "required|unique:users,email|email",
+            "first_name" => "nullable",
+            "last_name" => "nullable",
+            "locale" => [ "nullable", Rule::in(collect($languages->all())->pluck("locale")) ],
+            "timezone" => [ "nullable", Rule::in(timezone_identifiers_list()) ],
+            "locale_iso_format" => [ "nullable", Rule::in(collect($this->_get_locale_iso_formats())->pluck("label")) ],
+            "password" => "required|confirmed|min:6",
+            "groups" => "nullable",
+        ];
+    }
+
     /**
      * Show users page.
      *
@@ -101,23 +121,48 @@ class UserController extends Controller {
     }
 
     /**
+     * Fetch a user by uuid.
+     *
+     * @return array
+     */
+    function fetch_by_uuid(Request $request) {
+        $data = $request->validate([
+            "uuid" => "required|exists:users,uuid",
+        ]);
+
+        $users = UserModel::whereUuid($data["uuid"])->get();
+
+        return $this->_normalize($users);
+    }
+
+    /**
      * Create new user.
      *
      * @param Request   $request
-     * @param Languages $languages
      * @return array
      */
-    function create(Request $request, Languages $languages) {
-        $data = $request->validate([
-            "email" => "required|unique:users,email|email",
-            "first_name" => "nullable",
-            "last_name" => "nullable",
-            "locale" => [ "nullable", Rule::in(collect($languages->all())->pluck("locale")) ],
-            "timezone" => [ "nullable", Rule::in(timezone_identifiers_list()) ],
-            "locale_iso_format" => [ "nullable", Rule::in(collect($this->_get_locale_iso_formats())->pluck("label")) ],
-            "password" => "required|confirmed",
-            "groups" => "nullable",
-        ]);
+    function create(Request $request) {
+        $data = $request->validate($this->rules);
+
+        return $this->_upsert($data);
+    }
+
+    /**
+     * Update the information related to the given user.
+     *
+     * @param Request $request
+     * @return array
+     */
+    function update(Request $request) {
+        $data = $request->validate(array_merge($this->rules, [
+            "uuid" => "required|exists:users,uuid",
+            "password" => "nullable|confirmed|min:6",
+            "email" => [
+                "required",
+                "email",
+                Rule::unique("users")->ignore($request->get("uuid"), "uuid"),
+            ],
+        ]));
 
         return $this->_upsert($data);
     }
@@ -139,7 +184,7 @@ class UserController extends Controller {
                 "locale" => $data["locale"],
                 "timezone" => $data["timezone"],
                 "locale_iso_format" => $data["locale_iso_format"],
-                "password" => Hash::make($data["password"]),
+                "password" => empty($data["password"]) ? null : Hash::make($data["password"]),
                 "is_rtl" => empty($data["locale"]) ? null : is_rtl($data["locale"]),
             ], function($value) {
                 return !is_null($value);
@@ -189,7 +234,12 @@ class UserController extends Controller {
      */
     private function _normalize($users) {
         $items = $users->map(function($user) {
-            return $user->only($this->columns);
+            $groups = $user->groups->pluck("uuid")->toArray();
+
+            return array_merge(
+                ["groups" => $groups],
+                $user->only($this->columns)
+            );
         });
 
         $total = UserModel::count();

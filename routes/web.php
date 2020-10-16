@@ -36,6 +36,8 @@ Route::middleware(["auth"])->group(function() {
 
             Route::post("/permissions/users", [UserController::class, "index"]);
             Route::post("/permissions/users/create", [UserController::class, "create"]);
+            Route::post("/permissions/users/update", [UserController::class, "update"]);
+            Route::post("/permissions/users/fetch-by-uuid", [UserController::class, "fetch_by_uuid"]);
             Route::post("/permissions/users/metadata", [UserController::class, "metadata"]);
         });
 

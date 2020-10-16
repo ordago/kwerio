@@ -12,11 +12,12 @@ class User extends Authenticatable {
     use HasFactory, Notifiable, Traits\LocalizeDatetimeAttributes;
 
     protected $guarded = [ ];
-
     protected $hidden = [
         'password',
         'remember_token',
     ];
+
+    protected $with = ["groups"];
 
     /**
      * The attributes that should be cast to native types.

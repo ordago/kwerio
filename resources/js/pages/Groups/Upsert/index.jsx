@@ -114,7 +114,7 @@ function Upsert({ match }) {
                   .then(action => notify(action, enqueueSnackbar))
                   .then(action => {
                     if (!_.isUndefined(action)) {
-                      enqueueSnackbar(`Group ${name.value} created successfully`, { variant: "success" })
+                      enqueueSnackbar(`Success`, { variant: "success" })
                       history.push(endpoints.groups.index)
                     }
                   })
