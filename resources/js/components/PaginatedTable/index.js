@@ -54,7 +54,7 @@ export default function(PREFIX, api, adapter) {
             }
 
             if (_.get(afterCallbacks, "index") !== null) {
-              afterCallbacks.index(response.data.items)
+              afterCallbacks.index(response)
             }
 
             return response.data
