@@ -70,7 +70,7 @@ function Upsert({ match }) {
                   .then(action => {
                     if (!_.isUndefined(action)) {
                       enqueueSnackbar(`Success`, { variant: "success" })
-                      //history.push(endpoints.users.index)
+                      history.push(endpoints.users.index)
                     }
                   })
               }}
