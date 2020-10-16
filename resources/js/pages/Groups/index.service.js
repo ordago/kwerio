@@ -2,12 +2,40 @@ import { createAsyncThunk } from "@reduxjs/toolkit"
 
 import axios from "axios"
 
-import { actions, form } from "./index.slice"
+import { actions, form, adapter } from "./index.slice"
 import { api } from "../../routes/app"
-import { move_to_start } from "../../utils/service"
+import { move_to_start, needs_more } from "../../utils/service"
 import { rsc_catched_error ,show_under_form_fields } from "../../utils/errors"
 
 export const PREFIX = "GROUPS"
+
+/**
+ * Fetch all groups.
+ */
+export const all = createAsyncThunk(`${PREFIX}/all`, async (__, { dispatch, getState, rejectWithValue }) => {
+  const state = getState().groups
+
+  if (needs_more(state, adapter)) {
+    try {
+      const response = await axios.post(api.groups.all)
+
+      if (
+        response.status === 200
+        && _.hasIn(response.data, "items")
+        && _.hasIn(response.data, "total")
+      ) {
+        dispatch(actions.upsertMany(response.data.items))
+        return response.data
+      }
+
+      return rejectWithValue(response.data)
+    }
+
+    catch (err) {
+      return rsc_catched_error(err, rejectWithValue)
+    }
+  }
+})
 
 /**
  * Fetch group by the given uuid.
@@ -101,7 +129,7 @@ export const extraReducers = {
 
   // fetch_by_uuid
   [fetch_by_uuid.pending]: (state, action) => {
-    state.pending = true
+    state.loading = true
   },
   [fetch_by_uuid.rejected]: (state, action) => {
     state.loading = false
@@ -114,4 +142,20 @@ export const extraReducers = {
       state.rsc.total = action.payload.total
     }
   },
+
+  // all
+  [all.pending]: (state, action) => {
+    state.loading = true
+  },
+  [all.rejected]: (state, action) => {
+    state.loading = false
+    console.error(action)
+  },
+  [all.fulfilled]: (state, action) => {
+    state.loading = false
+
+    if (_.hasIn(action.payload, "total")) {
+      state.rsc.total = action.payload.total
+    }
+  }
 }

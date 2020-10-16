@@ -1,7 +1,7 @@
 import { Box, Button, TextField } from "@material-ui/core"
 import { useDispatch } from "react-redux"
+import { useHistory } from "react-router-dom"
 import React, { useState, useRef } from "react"
-import { useHistory } from 'react-router-dom'
 
 import { endpoints } from "../../../routes/app"
 import useStyles from "./index.styles"

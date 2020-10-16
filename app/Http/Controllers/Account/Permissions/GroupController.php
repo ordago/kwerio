@@ -153,6 +153,15 @@ class GroupController extends Controller {
     }
 
     /**
+     * Fetch all groups.
+     *
+     * @return array
+     */
+    function all() {
+        return $this->_normalize(GroupModel::get());
+    }
+
+    /**
      * Normalize the groups.
      *
      * @param Collection $groups

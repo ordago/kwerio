@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Account\Permissions;
 
+use Carbon\Carbon;
+use App\Base\Languages;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\{
@@ -15,7 +17,6 @@ class UserController extends Controller {
         "first_name",
         "last_name",
         "locale",
-        "is_rtl",
         "timezone",
         "locale_iso_format",
         "created_at",
@@ -28,6 +29,24 @@ class UserController extends Controller {
      * @return View
      */
     function show_page() {
+        return view("account.permissions.users");
+    }
+
+    /**
+     * Show create page.
+     *
+     * @return View
+     */
+    function show_create_page() {
+        return view("account.permissions.users");
+    }
+
+    /**
+     * Show update page.
+     *
+     * @return view
+     */
+    function show_update_page() {
         return view("account.permissions.users");
     }
 
@@ -58,6 +77,29 @@ class UserController extends Controller {
         $items = $query->paginate(config("app.per_page"));
 
         return $this->_normalize($items);
+    }
+
+    /**
+     * Get metadata.
+     *
+     * @return array
+     */
+    function metadata(Languages $languages) {
+        $iso_formats = resolve(Carbon::class)->getIsoFormats();
+        $localeIsoFormats = [];
+
+        foreach ($iso_formats as $key => $value) {
+            $localeIsoFormats[] = [
+                "label" => $key,
+                "example" => now()->isoFormat($key),
+            ];
+        }
+
+        return [
+            "languages" => $languages->all(),
+            "timezones" => timezone_identifiers_list(),
+            "localeIsoFormats" => $localeIsoFormats,
+        ];
     }
 
     /**

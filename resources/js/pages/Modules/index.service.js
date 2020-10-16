@@ -18,7 +18,7 @@ export const all = createAsyncThunk(`${PREFIX}/fetch_all`, async (__, { dispatch
 
   if (needs_more(state, adapter)) {
     try {
-      const response = await axios.post(`${api.modules.all}`)
+      const response = await axios.post(api.modules.all)
 
       if (
         response.status === 200
