@@ -132,7 +132,7 @@ class UserController extends Controller {
         DB::beginTransaction();
 
         try {
-            $user = UserModel::updateOrCreate(["uuid" => @$data["uuid"]], [
+            $user = UserModel::updateOrCreate(["uuid" => @$data["uuid"]], array_filter([
                 "email" => $data["email"],
                 "first_name" => $data["first_name"],
                 "last_name" => $data["last_name"],
@@ -141,7 +141,10 @@ class UserController extends Controller {
                 "locale_iso_format" => $data["locale_iso_format"],
                 "password" => Hash::make($data["password"]),
                 "is_rtl" => empty($data["locale"]) ? null : is_rtl($data["locale"]),
-            ])->fresh();
+            ], function($value) {
+                return !is_null($value);
+            }))
+                ->fresh();
 
             $groups = GroupModel::whereIn("uuid", $data["groups"])->get(["id"]);
             $user->groups()->sync($groups);

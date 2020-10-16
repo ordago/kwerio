@@ -82,7 +82,10 @@ const slice = createSlice({
     ...paginatedTable.reducers,
     upsertOne: adapter.upsertOne,
     resetUpsert: (state, action) => {
-      state.upsert.uuid = null
+      state.upsert = {
+        uuid: null,
+        ...form.state,
+      }
     },
     handleChange: (state, action) => {
       form.reducers.handleChange(state.upsert, action)

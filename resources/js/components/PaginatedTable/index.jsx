@@ -90,8 +90,6 @@ function PaginatedTable({
                           changes: { checked: e.target.checked }
                         }))
 
-                      console.log(updates)
-
                       dispatch(actions.updateMany(updates))
                     }}
                     onClick={e => e.stopPropagation()}

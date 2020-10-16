@@ -15,7 +15,7 @@ import React from "react"
 
 import _ from "lodash"
 
-import { adapter, asyncActions } from "../index.slice"
+import { actions, adapter, asyncActions } from "../index.slice"
 import { endpoints } from "../../../routes/app"
 import { notify } from "../../../utils/errors"
 import Groups from "./Groups"
@@ -38,6 +38,10 @@ function Upsert({ match }) {
 
     if (!_.isUndefined(uuid) && _.isUndefined(item)) {
       dispatch(asyncActions.fetch_by_uuid(uuid)).then(action => notify(action, enqueueSnackbar))
+    } else if (!_.isUndefined(item)) {
+      dispatch(actions.fillUpsert(item))
+    } else {
+      dispatch(actions.resetUpsert())
     }
   }, [])
 
