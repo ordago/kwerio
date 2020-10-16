@@ -57,7 +57,13 @@ export const fetch_by_uuid = createAsyncThunk(`${PREFIX}/fetch_by_uuid`, async (
  */
 export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch, getState, rejectWithValue }) => {
   try {
-    const { uuid, name, modules } = getState().users.upsert
+    const {
+      uuid, email, first_name, last_name,
+      locale, timezone, locale_iso_format,
+      password, password_confirmation,
+      groups,
+    } = getState().users.upsert
+
     let endpoint = api.users.update
 
     if (_.isNull(uuid)) {
@@ -66,8 +72,15 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
 
     const response = await axios.post(endpoint, {
       uuid,
-      name: name.value,
-      modules: modules.value,
+      email: email.value,
+      first_name: first_name.value,
+      last_name: last_name.value,
+      locale: locale.value,
+      timezone: timezone.value,
+      locale_iso_format: locale_iso_format.value,
+      password: password.value,
+      password_confirmation: password_confirmation.value,
+      groups: groups.value,
     })
 
     if (response.status === 200 && _.hasIn(response.data, "total") && _.hasIn(response.data, "items")) {

@@ -9,6 +9,7 @@ import {
 } from "@material-ui/core"
 import { is_disabled } from "@euvoor/form"
 import { useDispatch, useSelector } from "react-redux"
+import { useHistory } from "react-router-dom"
 import { useSnackbar } from "notistack"
 import React from "react"
 
@@ -19,17 +20,17 @@ import { endpoints } from "../../../routes/app"
 import { notify } from "../../../utils/errors"
 import Groups from "./Groups"
 import Header from "../Header"
+import I18n from "./I18n"
 import OneColumnPage from "../../Page/OneColumnPage"
-import Password from "./Password"
 import PersonalInfo from "./PersonalInfo"
-import Region from "./Region"
 
 function Upsert({ match }) {
   const state = useSelector(state => state.users),
     selector = adapter.getSelectors(),
     { enqueueSnackbar } = useSnackbar(),
     dispatch = useDispatch(),
-    { email, first_name, last_name, locale } = state.upsert
+    { email, first_name, last_name, locale } = state.upsert,
+    history = useHistory()
 
   React.useEffect(() => {
     const uuid = _.get(match, "params.uuid"),
@@ -54,10 +55,7 @@ function Upsert({ match }) {
             <PersonalInfo />
             <Divider />
 
-            <Region />
-            <Divider />
-
-            <Password />
+            <I18n />
             <Divider />
 
             <Groups />
@@ -72,7 +70,7 @@ function Upsert({ match }) {
                   .then(action => {
                     if (!_.isUndefined(action)) {
                       enqueueSnackbar(`Success`, { variant: "success" })
-                      history.push(endpoints.groups.index)
+                      //history.push(endpoints.users.index)
                     }
                   })
               }}

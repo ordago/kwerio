@@ -36,4 +36,13 @@ class User extends Authenticatable {
             }
         });
     }
+
+    /**
+     * Get user groups.
+     *
+     * @return BelongsToMany
+     */
+    function groups() {
+        return $this->belongsToMany(Group::class);
+    }
 }

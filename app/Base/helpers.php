@@ -28,3 +28,27 @@ if (!function_exists("rsc")) {
         return mix($asset);
     }
 }
+
+if (!function_exists("is_rtl")) {
+    /**
+     * Check if the given locale is rtl or not.
+     *
+     * @param string $locale
+     * @return bool
+     * @throws Exception
+     */
+    function is_rtl(string $locale) {
+        $rtl_languages = [
+            "ar", "dv", "he", "ks", "ku", "pa", "fa", "ps", "sd", "tk", "ug", "ur", "yi",
+            "ara", "arc", "bal", "div", "fas", "heb", "ira", "jpr", "jrb", "kas",
+            "kur", "man", "men", "nqo", "ota", "pal", "pan", "peo", "per", "pus",
+            "sam", "snd", "syc", "syr", "tmh", "tuk", "uig", "urd", "yid",
+        ];
+
+        preg_match("/(^[[:alpha:]]+)/", $locale, $m);
+
+        if (!isset($m[1])) throw new \Exception("Invalid locale {$locale}");
+
+        return in_array(strtolower($m[1]), $rtl_languages);
+    }
+}

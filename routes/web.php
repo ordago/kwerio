@@ -35,6 +35,7 @@ Route::middleware(["auth"])->group(function() {
             Route::post("/permissions/groups/all", [GroupController::class, "all"]);
 
             Route::post("/permissions/users", [UserController::class, "index"]);
+            Route::post("/permissions/users/create", [UserController::class, "create"]);
             Route::post("/permissions/users/metadata", [UserController::class, "metadata"]);
         });
 

@@ -78,8 +78,7 @@ class GroupController extends Controller {
      * Create new group.
      *
      * @param Request $request
-     * @return string
-     *   The uuid of the newly created group
+     * @return array
      */
     function create(Request $request) {
         $data = $request->validate([
@@ -94,7 +93,7 @@ class GroupController extends Controller {
      * Update the given group.
      *
      * @param Request $request
-     * @return string
+     * @return array
      */
     function update(Request $request) {
         $data = $request->validate([
@@ -167,7 +166,7 @@ class GroupController extends Controller {
      * @param Collection $groups
      * @return array
      */
-    function _normalize($groups) {
+    private function _normalize($groups) {
         $items = $groups->map(function($group) {
             $modules = $group->modules->pluck("uid")->toArray();
 

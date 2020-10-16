@@ -53,9 +53,9 @@ function Groups() {
         renderInput={(params) => (
           <TextField
             {...params}
-            variant="outlined"
             label="groups"
-            margin="dense"
+            helperText={groups.error ? groups.helper_text : ""}
+            error={groups.error}
           />
         )}
       />

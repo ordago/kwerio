@@ -5,7 +5,7 @@ import React from "react"
 
 import { actions } from "../index.slice"
 
-function Region() {
+function I18n() {
   const state = useSelector(state => state.users),
     { locale, timezone, locale_iso_format } = state.upsert,
     dispatch = useDispatch()
@@ -37,7 +37,8 @@ function Region() {
           <TextField
             {...params}
             label="Choose a language"
-            variant="outlined"
+            helperText={locale.error ? locale.helper_text : ""}
+            error={locale.error}
             inputProps={{
               ...params.inputProps,
               autoComplete: 'new-password',
@@ -63,7 +64,8 @@ function Region() {
           <TextField
             {...params}
             label="Choose a timezone"
-            variant="outlined"
+            helperText={timezone.error ? timezone.helper_text : ""}
+            error={timezone.error}
             inputProps={{
               ...params.inputProps,
               autoComplete: 'new-password',
@@ -91,7 +93,8 @@ function Region() {
           <TextField
             {...params}
             label="Choose a format"
-            variant="outlined"
+            helperText={locale_iso_format.error ? locale_iso_format.helper_text : ""}
+            error={locale_iso_format.error}
             inputProps={{
               ...params.inputProps,
               autoComplete: 'new-password',
@@ -104,4 +107,4 @@ function Region() {
   )
 }
 
-export default React.memo(Region)
+export default React.memo(I18n)

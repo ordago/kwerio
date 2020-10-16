@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers\Account\Permissions;
 
-use Carbon\Carbon;
 use App\Base\Languages;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+
+use Illuminate\Support\Facades\{
+    DB,
+    Hash,
+};
+
 use App\Models\{
     User as UserModel,
+    Group as GroupModel,
 };
 
 class UserController extends Controller {
@@ -85,21 +93,89 @@ class UserController extends Controller {
      * @return array
      */
     function metadata(Languages $languages) {
+        return [
+            "languages" => $languages->all(),
+            "timezones" => timezone_identifiers_list(),
+            "localeIsoFormats" => $this->_get_locale_iso_formats(),
+        ];
+    }
+
+    /**
+     * Create new user.
+     *
+     * @param Request   $request
+     * @param Languages $languages
+     * @return array
+     */
+    function create(Request $request, Languages $languages) {
+        $data = $request->validate([
+            "email" => "required|unique:users,email|email",
+            "first_name" => "nullable",
+            "last_name" => "nullable",
+            "locale" => [ "nullable", Rule::in(collect($languages->all())->pluck("locale")) ],
+            "timezone" => [ "nullable", Rule::in(timezone_identifiers_list()) ],
+            "locale_iso_format" => [ "nullable", Rule::in(collect($this->_get_locale_iso_formats())->pluck("label")) ],
+            "password" => "required|confirmed",
+            "groups" => "nullable",
+        ]);
+
+        return $this->_upsert($data);
+    }
+
+    /**
+     * Upsert user.
+     *
+     * @param array $data
+     * @return array
+     */
+    private function _upsert(array $data) {
+        DB::beginTransaction();
+
+        try {
+            $user = UserModel::updateOrCreate(["uuid" => @$data["uuid"]], [
+                "email" => $data["email"],
+                "first_name" => $data["first_name"],
+                "last_name" => $data["last_name"],
+                "locale" => $data["locale"],
+                "timezone" => $data["timezone"],
+                "locale_iso_format" => $data["locale_iso_format"],
+                "password" => Hash::make($data["password"]),
+                "is_rtl" => empty($data["locale"]) ? null : is_rtl($data["locale"]),
+            ])->fresh();
+
+            $groups = GroupModel::whereIn("uuid", $data["groups"])->get(["id"]);
+            $user->groups()->sync($groups);
+
+            DB::commit();
+
+            return $this->_normalize(UserModel::whereUuid($user->uuid)->get());
+        }
+
+        catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+
+        abort(403);
+    }
+
+    /**
+     * Get a list of supported locale iso formats.
+     *
+     * @return array
+     */
+    private function _get_locale_iso_formats() {
         $iso_formats = resolve(Carbon::class)->getIsoFormats();
-        $localeIsoFormats = [];
+        $locale_iso_formats = [];
 
         foreach ($iso_formats as $key => $value) {
-            $localeIsoFormats[] = [
+            $locale_iso_formats[] = [
                 "label" => $key,
                 "example" => now()->isoFormat($key),
             ];
         }
 
-        return [
-            "languages" => $languages->all(),
-            "timezones" => timezone_identifiers_list(),
-            "localeIsoFormats" => $localeIsoFormats,
-        ];
+        return $locale_iso_formats;
     }
 
     /**
@@ -108,7 +184,7 @@ class UserController extends Controller {
      * @param Collection $users
      * @return array
      */
-    function _normalize($users) {
+    private function _normalize($users) {
         $items = $users->map(function($user) {
             return $user->only($this->columns);
         });
