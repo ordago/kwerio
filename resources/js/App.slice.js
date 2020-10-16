@@ -37,6 +37,9 @@ const initialState = {
         variant: "contained",
         color: "primary",
       },
+      MuiIconButton: {
+        size: "small",
+      },
       MuiSwitch: {
         color: "primary",
       },
