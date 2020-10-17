@@ -22,7 +22,7 @@ class ServiceProvider extends BaseServiceProvider {
      * Boot module.
      */
     function boot(Router $router, Module $module) {
-        $router->aliasMiddleware("access", Access::class);
+        $router->aliasMiddleware("access_Home", Access::class);
 
         $this->_register_routes($module);
         $this->_register_resources($module);
