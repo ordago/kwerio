@@ -96,6 +96,16 @@ class Maker {
             throw new \Exception("Path {$path} already exists");
         }
 
+        // Generate middleware file
+        $middleware = file_get_contents(__DIR__ . "/stubs/middleware");
+        $middleware = str_replace("%NS%", $dir, $middleware);
+
+        mkdir("{$path}/Http/Middleware", 0755, true);
+        file_put_contents("{$path}/Http/Middleware/Access.php", $middleware);
+
+        $middleware_name = "access_{$dir}";
+        $this->set_middlewares(["web", $middleware_name]);
+
         // Generate config file
         $config = file_get_contents(__DIR__ . "/stubs/config");
         $config = str_replace("%NS%", $dir, $config);
@@ -116,6 +126,7 @@ class Maker {
         // Generate service provider
         $service_provider = file_get_contents(__DIR__ . "/stubs/service_provider");
         $service_provider = str_replace("%NS%", $dir, $service_provider);
+        $service_provider = str_replace("%MIDDLEWARE_NAME%", $middleware_name, $service_provider);
 
         file_put_contents("{$path}/ServiceProvider.php", $service_provider);
 
@@ -166,7 +177,7 @@ class Maker {
      */
     function set_middlewares($items) {
         $items = Arr::wrap($items);
-        $this->middlewares = "['" . join("', '", $m) . "']";
+        $this->middlewares = "['" . join("', '", $items) . "']";
 
         return $this;
     }

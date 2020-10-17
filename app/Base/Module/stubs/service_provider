@@ -2,9 +2,14 @@
 
 namespace Modules\%NS%;
 
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use Modules\%NS%\Module;
+
+use Modules\%NS%\{
+    Http\Middleware\Access,
+    Module,
+};
 
 class ServiceProvider extends BaseServiceProvider {
     /**
@@ -18,14 +23,21 @@ class ServiceProvider extends BaseServiceProvider {
 
     /**
      * Boot module.
+     *
+     * @param Router $router
+     * @param Module $module
      */
-    function boot(Module $module) {
+    function boot(Router $router, Module $module) {
+        $router->aliasMiddleware("%MIDDLEWARE_NAME%", Access::class);
+
         $this->_register_routes($module);
         $this->_register_resources($module);
     }
 
     /**
      * Register module routes.
+     *
+     * @param Module $module
      */
     function _register_routes(Module $module) {
         Route::group([
@@ -39,6 +51,8 @@ class ServiceProvider extends BaseServiceProvider {
 
     /**
      * Register module resources.
+     *
+     * @param Module $module
      */
     function _register_resources(Module $module) {
         $this->loadViewsFrom(__DIR__ . "/resources/views", $module->uid);
