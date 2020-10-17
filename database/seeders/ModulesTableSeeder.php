@@ -33,14 +33,14 @@ class ModulesTableSeeder extends Seeder
     }
 
     private function _generate_fake_modules() {
-        $faker = \Faker\Factory::create();
+        //$faker = \Faker\Factory::create();
 
-        foreach (range(1, 10) as $_) {
-            $name = "Test " . $faker->words(mt_rand(2, 5), true);
+        //foreach (range(1, 10) as $_) {
+        //    $name = "Test " . $faker->words(mt_rand(2, 5), true);
 
-            Artisan::call("module:install", [
-                "name" => $name,
-            ]);
-        }
+        //    Artisan::call("module:install", [
+        //        "name" => $name,
+        //    ]);
+        //}
     }
 }

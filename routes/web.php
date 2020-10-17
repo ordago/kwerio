@@ -8,6 +8,12 @@ use App\Http\Controllers\{
 };
 
 Route::middleware(["auth"])->group(function() {
+    Route::prefix("api")->group(function() {
+        Route::get("/metadata", [MetadataController::class, "index"]);
+    });
+});
+
+Route::middleware(["auth", "owner-only"])->group(function() {
     // -------------------------------------------------------------- WEB -- #
     Route::prefix("account")->group(function() {
         Route::get("/permissions/groups", [GroupController::class, "show_page"]);
@@ -25,8 +31,6 @@ Route::middleware(["auth"])->group(function() {
 
     // -------------------------------------------------------------- API -- #
     Route::prefix("api")->group(function() {
-        Route::get("/metadata", [MetadataController::class, "index"]);
-
         Route::prefix("account")->group(function() {
             Route::post("/permissions/groups", [GroupController::class, "index"]);
             Route::post("/permissions/groups/create", [GroupController::class, "create"]);

@@ -39,6 +39,27 @@ class User extends Authenticatable {
     }
 
     /**
+     * Check if authenticated user is the owner of the application.
+     *
+     * @return bool
+     */
+    function is_owner(): bool {
+        return !is_null($this->owner_at) && !empty(trim($this->owner_at));
+    }
+
+    function can_access_module($uid) {
+        foreach ($this->groups as $group) {
+            foreach ($group->modules as $module) {
+                if ($module->uid === $uid) {
+                    return true;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Get user groups.
      *
      * @return BelongsToMany

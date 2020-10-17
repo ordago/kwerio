@@ -9,6 +9,6 @@ return [
     "router" => [
         "prefix" => $module->route_prefix(),
         "namespace" => "\Modules\About\Http\Controllers",
-        "middleware" => ["web", "auth"],
+        "middleware" => ["web", "auth", "access"],
     ],
 ];

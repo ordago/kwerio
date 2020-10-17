@@ -5,6 +5,8 @@ namespace Modules\Home;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Modules\Home\Module;
+use Modules\Home\Http\Middleware\Access;
+use Illuminate\Routing\Router;
 
 class ServiceProvider extends BaseServiceProvider {
     /**
@@ -19,7 +21,9 @@ class ServiceProvider extends BaseServiceProvider {
     /**
      * Boot module.
      */
-    function boot(Module $module) {
+    function boot(Router $router, Module $module) {
+        $router->aliasMiddleware("access", Access::class);
+
         $this->_register_routes($module);
         $this->_register_resources($module);
     }

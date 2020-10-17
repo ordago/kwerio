@@ -9,6 +9,6 @@ return [
     "router" => [
         "prefix" => "/",
         "namespace" => "\Modules\Home\Http\Controllers",
-        "middleware" => ["web", "auth"],
+        "middleware" => ["web", "auth", "access"],
     ],
 ];
