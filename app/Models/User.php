@@ -47,7 +47,16 @@ class User extends Authenticatable {
         return !is_null($this->owner_at) && !empty(trim($this->owner_at));
     }
 
+    /**
+     * Check if user is allowed to access module.
+     *
+     * @param string $uid
+     */
     function can_access_module($uid) {
+        if ($this->is_owner()) {
+            return true;
+        }
+
         foreach ($this->groups as $group) {
             foreach ($group->modules as $module) {
                 if ($module->uid === $uid) {
