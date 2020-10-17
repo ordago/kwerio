@@ -1,0 +1,133 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.1\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: es\n"
+
+msgid "Applications"
+msgstr "Aplicaciones"
+
+msgid "Account"
+msgstr "Cuenta"
+
+msgid "Permissions"
+msgstr "Permisos"
+
+msgid "Groups"
+msgstr "Grupos"
+
+msgid "Users"
+msgstr "Usuarios"
+
+msgid "Settings"
+msgstr "Ajustes"
+
+msgid "Services"
+msgstr "Servicios"
+
+msgid "Styling"
+msgstr "Estilo"
+
+msgid "Billing"
+msgstr "Facturación"
+
+msgid "Profile"
+msgstr "Perfil"
+
+msgid "Logout"
+msgstr "Cerrar sesión"
+
+msgid "My Profile"
+msgstr "Mi Perfil"
+
+msgid "Edit my data"
+msgstr "Editar mis datos"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "First name"
+msgstr "Nombre"
+
+msgid "Last name"
+msgstr "Apellido"
+
+msgid "Profile picture"
+msgstr "Foto de perfil"
+
+msgid "Upload profile picture"
+msgstr "Cargar imagen de perfil"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "Change password"
+msgstr "Cambiar contraseña"
+
+msgid "Current password"
+msgstr "Contraseña actual"
+
+msgid "New password"
+msgstr "Nueva contraseña"
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Primary color"
+msgstr "Color primario"
+
+msgid "Secondary color"
+msgstr "Color secundario"
+
+msgid "Logo"
+msgstr "Logo"
+
+msgid "Upload logo"
+msgstr "Subir Logo"
+
+msgid "Favicon"
+msgstr "Favicon"
+
+msgid "Upload favicon"
+msgstr "Cargar Favicon"
+
+msgid "Default language"
+msgstr "Idioma padrão"
+
+msgid "User Management"
+msgstr "Gestión de usuarios"
+
+msgid "Add User"
+msgstr "Añadir usuario"
+
+msgid "Rows per page"
+msgstr "Filas por página"
+
+msgid "of"
+msgstr "de"
+
+msgid "Role"
+msgstr "Rol"
+
+msgid "Update user"
+msgstr "Actualizar Usuario"
+
+msgid "Update"
+msgstr "Actualizar"
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Groups Management"
+msgstr "Gestión de Grupos"
+
+msgid "Updated"
+msgstr "Actualizado"

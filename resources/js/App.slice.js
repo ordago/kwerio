@@ -12,6 +12,10 @@ export const fetch_metadata = createAsyncThunk(`${PREFIX}/fetch_metadata`, async
   (await axios.get(api.metadata)).data
 ))
 
+export const fetch_translations = createAsyncThunk(`${PREFIX}/fetch_translations`, async (locale) => (
+  (await axios.get(`/i18n/kwerio/${locale}.json`)).data
+))
+
 const initialState = {
   user: {
     uuid: null,
@@ -76,6 +80,7 @@ const initialState = {
     open: false,
     data: [],
   },
+  t: {},
 }
 
 const slice = createSlice({
@@ -131,6 +136,16 @@ const slice = createSlice({
       state.user = action.payload.user
       state.theme.direction = action.payload.user.dir
     },
+
+    // fetch_translations
+    [fetch_translations.pending]: (state, action) => {
+    },
+    [fetch_translations.rejected]: (state, action) => {
+      console.error(action)
+    },
+    [fetch_translations.fulfilled]: (state, action) => {
+      state.t = action.payload
+    }
   },
 })
 

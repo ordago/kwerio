@@ -20,6 +20,7 @@ import _ from "lodash"
 
 import { notify } from "../../utils/errors"
 import useStyles from "./index.styles"
+import useT from "../../hooks/useT"
 
 function PaginatedTable({
   reducerName,                  // Reducer name.
@@ -38,7 +39,9 @@ function PaginatedTable({
     state = useSelector(state => state[reducerName]),
     { enqueueSnackbar } = useSnackbar(),
     selector = adapter.getSelectors(),
-    classes = useStyles()
+    classes = useStyles(),
+    translations = useSelector(state => state.app.t),
+    t = useT(translations)
 
   let data = selector.selectAll(state),
     offset = state.page * state.per_page
@@ -112,7 +115,7 @@ function PaginatedTable({
                         dispatch(asyncActions.index())
                       }}
                     >
-                      {col.label}
+                      {t(col.label)}
                     </TableSortLabel>
                   )}
                   {!col.sort && (col.label)}

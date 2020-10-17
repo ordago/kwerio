@@ -3,13 +3,13 @@ import "fontsource-roboto"
 import { BrowserRouter } from "react-router-dom"
 import { CssBaseline } from "@material-ui/core"
 import { Provider, useSelector, useDispatch } from "react-redux"
+import { SnackbarProvider } from "notistack"
 import { create } from "jss"
 import { jssPreset, StylesProvider, createMuiTheme, ThemeProvider } from "@material-ui/core/styles"
 import React from "react"
 import rtl from "jss-rtl"
-import { SnackbarProvider } from 'notistack'
 
-import { fetch_metadata } from "./App.slice"
+import { fetch_metadata, fetch_translations } from "./App.slice"
 import Main from "./components/Main"
 import useStyles from "./App.styles"
 
@@ -21,13 +21,16 @@ function InnerApp({ children }) {
     jss = create({ plugins: [...jssPreset().plugins, rtl()] })
 
   React.useEffect(() => {
-    dispatch(fetch_metadata()).then(action => {
-      const { user } = action.payload
+    dispatch(fetch_metadata())
+      .then(action => {
+        const { user } = action.payload
 
-      if (user.is_rtl) {
-        document.body.dir = user.dir
-      }
-    })
+        if (user.is_rtl) {
+          document.body.setAttribute("dir", user.dir)
+        }
+
+        dispatch(fetch_translations(user.locale))
+      })
   }, [])
 
   return (

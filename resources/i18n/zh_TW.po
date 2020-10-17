@@ -1,0 +1,133 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.1\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: zh_TW\n"
+
+msgid "Applications"
+msgstr "應用程式"
+
+msgid "Account"
+msgstr "帳戶"
+
+msgid "Permissions"
+msgstr "權限"
+
+msgid "Groups"
+msgstr "群組"
+
+msgid "Users"
+msgstr "使用者"
+
+msgid "Settings"
+msgstr "設定"
+
+msgid "Services"
+msgstr "服務"
+
+msgid "Styling"
+msgstr "樣式"
+
+msgid "Billing"
+msgstr "帳單"
+
+msgid "Profile"
+msgstr "個人資料"
+
+msgid "Logout"
+msgstr "登出"
+
+msgid "My Profile"
+msgstr "我的個人資料"
+
+msgid "Edit my data"
+msgstr "編輯我的個人資料"
+
+msgid "Email"
+msgstr "電子郵件"
+
+msgid "First name"
+msgstr "名字"
+
+msgid "Last name"
+msgstr "姓氏"
+
+msgid "Profile picture"
+msgstr "個人資料圖片"
+
+msgid "Upload profile picture"
+msgstr "上傳個人圖片"
+
+msgid "Language"
+msgstr "語言"
+
+msgid "Change password"
+msgstr "修改密碼"
+
+msgid "Current password"
+msgstr "當前密碼"
+
+msgid "New password"
+msgstr "新密碼"
+
+msgid "Title"
+msgstr "標題"
+
+msgid "Primary color"
+msgstr "主要顏色"
+
+msgid "Secondary color"
+msgstr "次要顏色"
+
+msgid "Logo"
+msgstr "商標"
+
+msgid "Upload logo"
+msgstr "上傳商標"
+
+msgid "Favicon"
+msgstr "網站圖標"
+
+msgid "Upload favicon"
+msgstr "上傳網站圖標"
+
+msgid "Default language"
+msgstr "預設值語言"
+
+msgid "User Management"
+msgstr "使用者管理"
+
+msgid "Add User"
+msgstr "新增使用者"
+
+msgid "Rows per page"
+msgstr "每頁行數"
+
+msgid "of"
+msgstr "頁碼"
+
+msgid "Role"
+msgstr "角色"
+
+msgid "Update user"
+msgstr "更新使用者。"
+
+msgid "Update"
+msgstr "更新"
+
+msgid "Save"
+msgstr "儲存"
+
+msgid "Groups Management"
+msgstr "群組管理員"
+
+msgid "Updated"
+msgstr "已更新"

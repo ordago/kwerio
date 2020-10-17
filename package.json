@@ -21,6 +21,7 @@
         "jest": "^26.5.3",
         "laravel-mix": "^5.0.7",
         "lodash": "^4.17.20",
+        "po2json": "^0.4.5",
         "resolve-url-loader": "^3.1.0"
     },
     "dependencies": {

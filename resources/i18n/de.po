@@ -1,0 +1,133 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.1\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: de\n"
+
+msgid "Applications"
+msgstr "Anwendungen"
+
+msgid "Account"
+msgstr "Konto"
+
+msgid "Permissions"
+msgstr "Berechtigungen"
+
+msgid "Groups"
+msgstr "Gruppen"
+
+msgid "Users"
+msgstr "Benutzer"
+
+msgid "Settings"
+msgstr "Einstellungen"
+
+msgid "Services"
+msgstr "Dienstleistungen"
+
+msgid "Styling"
+msgstr "Styling"
+
+msgid "Billing"
+msgstr "Rechnung"
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Logout"
+msgstr "Abmelden"
+
+msgid "My Profile"
+msgstr "Mein Profil"
+
+msgid "Edit my data"
+msgstr "Meine Daten bearbeiten"
+
+msgid "Email"
+msgstr "E-Mail"
+
+msgid "First name"
+msgstr "Vorname"
+
+msgid "Last name"
+msgstr "Nachname"
+
+msgid "Profile picture"
+msgstr "Profilbild"
+
+msgid "Upload profile picture"
+msgstr "Profilbild hochladen"
+
+msgid "Language"
+msgstr "Sprache"
+
+msgid "Change password"
+msgstr "Passwort ändern"
+
+msgid "Current password"
+msgstr "Aktuelles Passwort"
+
+msgid "New password"
+msgstr "Neues Passwort"
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "Primary color"
+msgstr "Primärfarbe"
+
+msgid "Secondary color"
+msgstr "Sekundäre Farbe"
+
+msgid "Logo"
+msgstr "Logo"
+
+msgid "Upload logo"
+msgstr "Logo hochladen"
+
+msgid "Favicon"
+msgstr "Favicon"
+
+msgid "Upload favicon"
+msgstr "favicon Hochladen"
+
+msgid "Default language"
+msgstr "Standardsprache"
+
+msgid "User Management"
+msgstr "Benutzerverwaltung"
+
+msgid "Add User"
+msgstr "Benutzer hinzufügen"
+
+msgid "Rows per page"
+msgstr "Reihen pro Seite"
+
+msgid "of"
+msgstr "von"
+
+msgid "Role"
+msgstr "Rolle"
+
+msgid "Update user"
+msgstr "Benutzer aktualisieren"
+
+msgid "Update"
+msgstr "Aktualisieren"
+
+msgid "Save"
+msgstr "Speichern"
+
+msgid "Groups Management"
+msgstr "Gruppenverwaltung"
+
+msgid "Updated"
+msgstr "Aktualisiert"

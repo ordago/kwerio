@@ -1,0 +1,133 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.1\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: th\n"
+
+msgid "Applications"
+msgstr "ใบสมัคร"
+
+msgid "Account"
+msgstr "บัญชี"
+
+msgid "Permissions"
+msgstr "สิทธิ์การเข้าถึง"
+
+msgid "Groups"
+msgstr "กลุ่ม"
+
+msgid "Users"
+msgstr "ผู้ใช้"
+
+msgid "Settings"
+msgstr "การตั้งค่า"
+
+msgid "Services"
+msgstr "บริการ"
+
+msgid "Styling"
+msgstr "การออกแบบ"
+
+msgid "Billing"
+msgstr "รายละเอียดการรับเค้ก"
+
+msgid "Profile"
+msgstr "ข้อมูลส่วนตัว"
+
+msgid "Logout"
+msgstr "ออกจากระบบ"
+
+msgid "My Profile"
+msgstr "ประวัติของฉัน"
+
+msgid "Edit my data"
+msgstr ""
+
+msgid "Email"
+msgstr "อีเมล"
+
+msgid "First name"
+msgstr "ชื่อ"
+
+msgid "Last name"
+msgstr "นามสกุล"
+
+msgid "Profile picture"
+msgstr "รูปโปรไฟล์"
+
+msgid "Upload profile picture"
+msgstr ""
+
+msgid "Language"
+msgstr "ภาษา"
+
+msgid "Change password"
+msgstr "เปลี่ยนรหัสผ่าน"
+
+msgid "Current password"
+msgstr "รหัสผ่านปัจจุบัน"
+
+msgid "New password"
+msgstr "รหัสผ่านใหม่"
+
+msgid "Title"
+msgstr "หัวข้อ"
+
+msgid "Primary color"
+msgstr "สีหลัก"
+
+msgid "Secondary color"
+msgstr "สีรอง"
+
+msgid "Logo"
+msgstr "โลโก้"
+
+msgid "Upload logo"
+msgstr "อัปโหลด โลโก้"
+
+msgid "Favicon"
+msgstr "ฟาวิคอน"
+
+msgid "Upload favicon"
+msgstr "Upload favicon"
+
+msgid "Default language"
+msgstr ""
+
+msgid "User Management"
+msgstr "การจัดการผู้ใช้"
+
+msgid "Add User"
+msgstr "เพิ่มผู้ใช้"
+
+msgid "Rows per page"
+msgstr ""
+
+msgid "of"
+msgstr "ของ"
+
+msgid "Role"
+msgstr "บทบาท"
+
+msgid "Update user"
+msgstr ""
+
+msgid "Update"
+msgstr "ปรับปรุง"
+
+msgid "Save"
+msgstr "บันทึก"
+
+msgid "Groups Management"
+msgstr ""
+
+msgid "Updated"
+msgstr "อัพเดท"

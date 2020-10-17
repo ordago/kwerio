@@ -1,0 +1,135 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.1\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: zh_CN\n"
+
+msgid "Applications"
+msgstr ""
+
+msgid "Account"
+msgstr "帐户"
+
+msgid "Permissions"
+msgstr "权限"
+
+msgid "Groups"
+msgstr "群组"
+
+msgid "Users"
+msgstr "用户"
+
+msgid "Settings"
+msgstr "设置"
+
+msgid "Services"
+msgstr "服务"
+
+msgid "Styling"
+msgstr "样式"
+
+msgid "Billing"
+msgstr "账单"
+
+msgid "Profile"
+msgstr "个人资料"
+
+msgid "Logout"
+msgstr "注销"
+
+msgid "My Profile"
+msgstr "我的资料"
+
+msgid "Edit my data"
+msgstr ""
+
+msgid "Email"
+msgstr "邮箱"
+
+msgid "First name"
+msgstr "名字"
+
+msgid "Last name"
+msgstr "姓"
+
+msgid "Profile picture"
+msgstr "资料图片"
+
+msgid "Upload profile picture"
+msgstr "上传的照片"
+
+msgid "Language"
+msgstr "语言"
+
+msgid "Change password"
+msgstr "修改密码"
+
+msgid "Current password"
+msgstr "当前密码"
+
+msgid "New password"
+msgstr "新密码"
+
+msgid "Title"
+msgstr "标题"
+
+msgid "Primary color"
+msgstr "原色"
+
+msgid "Secondary color"
+msgstr "次要颜色"
+
+#, fuzzy
+msgid "Logo"
+msgstr "Logo"
+
+#, fuzzy
+msgid "Upload logo"
+msgstr "上传 Logo"
+
+msgid "Favicon"
+msgstr "网站图标"
+
+msgid "Upload favicon"
+msgstr "上传图标"
+
+msgid "Default language"
+msgstr "默认语言"
+
+msgid "User Management"
+msgstr "用户管理"
+
+msgid "Add User"
+msgstr "添加用户"
+
+msgid "Rows per page"
+msgstr "每页行数"
+
+msgid "of"
+msgstr "的"
+
+msgid "Role"
+msgstr "角色"
+
+msgid "Update user"
+msgstr "更新用户"
+
+msgid "Update"
+msgstr "更新"
+
+msgid "Save"
+msgstr "保存"
+
+msgid "Groups Management"
+msgstr ""
+
+msgid "Updated"
+msgstr "更新"

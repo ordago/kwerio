@@ -1,0 +1,133 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.1\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr\n"
+
+msgid "Applications"
+msgstr "Applications"
+
+msgid "Account"
+msgstr "Compte"
+
+msgid "Permissions"
+msgstr "Permissions"
+
+msgid "Groups"
+msgstr "Groupes"
+
+msgid "Users"
+msgstr "Utilisateurs"
+
+msgid "Settings"
+msgstr "Préférences"
+
+msgid "Services"
+msgstr "Services"
+
+msgid "Styling"
+msgstr "Style"
+
+msgid "Billing"
+msgstr "Facturation"
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Logout"
+msgstr "Déconnexion"
+
+msgid "My Profile"
+msgstr "Mon profil"
+
+msgid "Edit my data"
+msgstr "Modifier mes données"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "First name"
+msgstr "Prénom"
+
+msgid "Last name"
+msgstr "Nom"
+
+msgid "Profile picture"
+msgstr "Photo de profil"
+
+msgid "Upload profile picture"
+msgstr "Charger photo de profil"
+
+msgid "Language"
+msgstr "Langue"
+
+msgid "Change password"
+msgstr "Changer le mot de passe"
+
+msgid "Current password"
+msgstr "Mot de passe actuel"
+
+msgid "New password"
+msgstr "Nouveau mot de passe"
+
+msgid "Title"
+msgstr "Titre"
+
+msgid "Primary color"
+msgstr "Couleur principale"
+
+msgid "Secondary color"
+msgstr "Couleur secondaire"
+
+msgid "Logo"
+msgstr "Logo"
+
+msgid "Upload logo"
+msgstr "Télécharger un logo"
+
+msgid "Favicon"
+msgstr "Favicon"
+
+msgid "Upload favicon"
+msgstr "Télécharger favicon"
+
+msgid "Default language"
+msgstr "Langue par défaut"
+
+msgid "User Management"
+msgstr "Gestion des utilisateurs"
+
+msgid "Add User"
+msgstr "Ajouter un utilisateur"
+
+msgid "Rows per page"
+msgstr "Lignes par page"
+
+msgid "of"
+msgstr "de"
+
+msgid "Role"
+msgstr "Rôle"
+
+msgid "Update user"
+msgstr "Mettre à jour l'utilisateur"
+
+msgid "Update"
+msgstr "Mettre à jour"
+
+msgid "Save"
+msgstr "Enregistrer"
+
+msgid "Groups Management"
+msgstr "Gestion des groupes"
+
+msgid "Updated"
+msgstr "Mis à jour"

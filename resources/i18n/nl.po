@@ -1,0 +1,133 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.1\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: nl\n"
+
+msgid "Applications"
+msgstr "Applicaties"
+
+msgid "Account"
+msgstr "Account"
+
+msgid "Permissions"
+msgstr "Rechten"
+
+msgid "Groups"
+msgstr "Groepen"
+
+msgid "Users"
+msgstr "Gebruikers"
+
+msgid "Settings"
+msgstr "Instellingen"
+
+msgid "Services"
+msgstr "Diensten"
+
+msgid "Styling"
+msgstr "Stijl"
+
+msgid "Billing"
+msgstr "Facturatie"
+
+msgid "Profile"
+msgstr "Profiel"
+
+msgid "Logout"
+msgstr "Uitloggen"
+
+msgid "My Profile"
+msgstr "Mijn profiel"
+
+msgid "Edit my data"
+msgstr "Mijn gegevens bewerken"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "First name"
+msgstr "Voornaam"
+
+msgid "Last name"
+msgstr "Achternaam"
+
+msgid "Profile picture"
+msgstr "Profielfoto"
+
+msgid "Upload profile picture"
+msgstr "Profiel foto uploaden"
+
+msgid "Language"
+msgstr "Taal"
+
+msgid "Change password"
+msgstr "Wachtwoord wijzigen"
+
+msgid "Current password"
+msgstr "Huidig wachtwoord"
+
+msgid "New password"
+msgstr "Nieuw wachtwoord"
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "Primary color"
+msgstr "Primaire kleur"
+
+msgid "Secondary color"
+msgstr "Secundaire kleur"
+
+msgid "Logo"
+msgstr "Logo"
+
+msgid "Upload logo"
+msgstr "Logo Uploaden"
+
+msgid "Favicon"
+msgstr "Favicon"
+
+msgid "Upload favicon"
+msgstr "Favicon uploaden"
+
+msgid "Default language"
+msgstr "Standaardtaal"
+
+msgid "User Management"
+msgstr "Gebruikers"
+
+msgid "Add User"
+msgstr "Gebruiker toevoegen"
+
+msgid "Rows per page"
+msgstr "Rijen per pagina"
+
+msgid "of"
+msgstr "van"
+
+msgid "Role"
+msgstr "Rol"
+
+msgid "Update user"
+msgstr "Gebruiker bijwerken"
+
+msgid "Update"
+msgstr "Bijwerken"
+
+msgid "Save"
+msgstr "Opslaan"
+
+msgid "Groups Management"
+msgstr "Groepsbeheer"
+
+msgid "Updated"
+msgstr "Bijgewerkt"

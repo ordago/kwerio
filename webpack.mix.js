@@ -1,6 +1,7 @@
 const mix = require('laravel-mix'),
   fs = require("fs")
 
+// -------------------------------------------------------------- Modules -- #
 mix.react("resources/js/index.jsx", "public/js/app.js")
 
 const modules_dir = fs.opendirSync("./modules")
@@ -15,6 +16,7 @@ while ((dirent = modules_dir.readSync()) !== null) {
 
 modules_dir.closeSync()
 
+// ----------------------------------------- Webpack Custom Configuration -- #
 mix.webpackConfig({
   watchOptions: {
     ignored: /node_modules/,
@@ -27,16 +29,16 @@ mix.webpackConfig({
   },
 })
 
-mix
-  .sourceMaps()
+mix.sourceMaps()
 
+if (mix.inProduction()) {
+  mix.version()
+}
+
+// ------------------------------------------------------------------ HMR -- #
 mix.options({
   hmrOptions: {
     host: '127.0.0.1',
     port: 8080,
   },
 })
-
-if (mix.inProduction()) {
-  mix.version()
-}

@@ -1,0 +1,133 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.1\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? 2 : 3);\n"
+"Language: he\n"
+
+msgid "Applications"
+msgstr "בקשות עבודה"
+
+msgid "Account"
+msgstr "חשבון"
+
+msgid "Permissions"
+msgstr "הרשאות"
+
+msgid "Groups"
+msgstr "קבוצות"
+
+msgid "Users"
+msgstr "משתמשים"
+
+msgid "Settings"
+msgstr "הגדרות"
+
+msgid "Services"
+msgstr "שירותים"
+
+msgid "Styling"
+msgstr "עיצוב"
+
+msgid "Billing"
+msgstr "חיוב"
+
+msgid "Profile"
+msgstr "פרופיל"
+
+msgid "Logout"
+msgstr "התנתק"
+
+msgid "My Profile"
+msgstr "הפרופיל שלי"
+
+msgid "Edit my data"
+msgstr ""
+
+msgid "Email"
+msgstr "אימייל"
+
+msgid "First name"
+msgstr "שם פרטי"
+
+msgid "Last name"
+msgstr "שם משפחה"
+
+msgid "Profile picture"
+msgstr "תמונת פרופיל"
+
+msgid "Upload profile picture"
+msgstr "העלאת תמונת פרופיל"
+
+msgid "Language"
+msgstr "שפה"
+
+msgid "Change password"
+msgstr "שנה/י סיסמה"
+
+msgid "Current password"
+msgstr "סיסמה נוכחית"
+
+msgid "New password"
+msgstr "סיסמה חדשה"
+
+msgid "Title"
+msgstr "כותרת"
+
+msgid "Primary color"
+msgstr "צבע ראשי"
+
+msgid "Secondary color"
+msgstr "צבע משני"
+
+msgid "Logo"
+msgstr "לוגו"
+
+msgid "Upload logo"
+msgstr ""
+
+msgid "Favicon"
+msgstr "פאביקון"
+
+msgid "Upload favicon"
+msgstr ""
+
+msgid "Default language"
+msgstr "ברירת מחדל"
+
+msgid "User Management"
+msgstr "משתמש"
+
+msgid "Add User"
+msgstr "הוסף משתמש"
+
+msgid "Rows per page"
+msgstr ""
+
+msgid "of"
+msgstr "מתוך"
+
+msgid "Role"
+msgstr "תפקיד"
+
+msgid "Update user"
+msgstr "עדכן משתמש"
+
+msgid "Update"
+msgstr "עדכון"
+
+msgid "Save"
+msgstr "שמור"
+
+msgid "Groups Management"
+msgstr ""
+
+msgid "Updated"
+msgstr "עודכן"

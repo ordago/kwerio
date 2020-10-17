@@ -1,0 +1,132 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.1\n"
+
+msgid "Applications"
+msgstr ""
+
+msgid "Account"
+msgstr ""
+
+msgid "Permissions"
+msgstr ""
+
+msgid "Groups"
+msgstr ""
+
+msgid "Users"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Services"
+msgstr ""
+
+msgid "Styling"
+msgstr ""
+
+msgid "Billing"
+msgstr ""
+
+msgid "Profile"
+msgstr ""
+
+msgid "Logout"
+msgstr ""
+
+msgid "My Profile"
+msgstr ""
+
+msgid "Edit my data"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "First name"
+msgstr ""
+
+msgid "Last name"
+msgstr ""
+
+msgid "Profile picture"
+msgstr ""
+
+msgid "Upload profile picture"
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "Change password"
+msgstr ""
+
+msgid "Current password"
+msgstr ""
+
+msgid "New password"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Primary color"
+msgstr ""
+
+msgid "Secondary color"
+msgstr ""
+
+msgid "Logo"
+msgstr ""
+
+msgid "Upload logo"
+msgstr ""
+
+msgid "Favicon"
+msgstr ""
+
+msgid "Upload favicon"
+msgstr ""
+
+msgid "Default language"
+msgstr ""
+
+msgid "User Management"
+msgstr ""
+
+msgid "Add User"
+msgstr ""
+
+msgid "Rows per page"
+msgstr ""
+
+msgid "of"
+msgstr ""
+
+msgid "Role"
+msgstr ""
+
+msgid "Update user"
+msgstr ""
+
+msgid "Update"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Groups Management"
+msgstr ""
+
+msgid "Updated"
+msgstr ""

@@ -1,0 +1,133 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.1\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: en\n"
+
+msgid "Applications"
+msgstr "Applications"
+
+msgid "Account"
+msgstr "Account"
+
+msgid "Permissions"
+msgstr "Permissions"
+
+msgid "Groups"
+msgstr "Groups"
+
+msgid "Users"
+msgstr "Users"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "Services"
+msgstr "Services"
+
+msgid "Styling"
+msgstr "Styling"
+
+msgid "Billing"
+msgstr "Billing"
+
+msgid "Profile"
+msgstr "Profile"
+
+msgid "Logout"
+msgstr "Logout"
+
+msgid "My Profile"
+msgstr "My Profile"
+
+msgid "Edit my data"
+msgstr "Edit my data"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "First name"
+msgstr "First name"
+
+msgid "Last name"
+msgstr "Last name"
+
+msgid "Profile picture"
+msgstr "Profile picture"
+
+msgid "Upload profile picture"
+msgstr "Upload profile picture"
+
+msgid "Language"
+msgstr "Language"
+
+msgid "Change password"
+msgstr "Change password"
+
+msgid "Current password"
+msgstr "Current password"
+
+msgid "New password"
+msgstr "New password"
+
+msgid "Title"
+msgstr "Title"
+
+msgid "Primary color"
+msgstr "Primary color"
+
+msgid "Secondary color"
+msgstr "Secondary color"
+
+msgid "Logo"
+msgstr "Logo"
+
+msgid "Upload logo"
+msgstr "Upload logo"
+
+msgid "Favicon"
+msgstr "Favicon"
+
+msgid "Upload favicon"
+msgstr "Upload favicon"
+
+msgid "Default language"
+msgstr "Default language"
+
+msgid "User Management"
+msgstr "User Management"
+
+msgid "Add User"
+msgstr "Add User"
+
+msgid "Rows per page"
+msgstr "Rows per page"
+
+msgid "of"
+msgstr "of"
+
+msgid "Role"
+msgstr "Role"
+
+msgid "Update user"
+msgstr "Update user"
+
+msgid "Update"
+msgstr "Update"
+
+msgid "Save"
+msgstr "Save"
+
+msgid "Groups Management"
+msgstr "Groups Management"
+
+msgid "Updated"
+msgstr "Updated"
