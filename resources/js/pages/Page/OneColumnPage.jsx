@@ -1,12 +1,15 @@
 import { Box, Grid, IconButton, Paper } from "@material-ui/core"
+import { makeStyles, createStyles } from "@material-ui/core/styles"
 import { useHistory } from "react-router-dom"
+import { useSelector } from "react-redux"
 import ArrowBackIcon from "@material-ui/icons/ArrowBack"
+import ArrowForwardIcon from "@material-ui/icons/ArrowForward"
 import React from "react"
-import { makeStyles, createStyles } from '@material-ui/core/styles'
 
 function OneColumnPaper({ children, className = null, back_to = null }) {
   const history = useHistory(),
-    classes = useStyles()
+    classes = useStyles(),
+    { user } = useSelector(state => state.app)
 
   return (
     <Box m={2}>
@@ -24,7 +27,8 @@ function OneColumnPaper({ children, className = null, back_to = null }) {
             className={classes.backIconBtn}
             size="medium"
           >
-            <ArrowBackIcon fontSize="inherit" />
+            {user.is_rtl && <ArrowForwardIcon fontSize="inherit" />}
+            {!user.is_rtl && <ArrowBackIcon fontSize="inherit" />}
           </IconButton>
 
           <Paper className={className}>

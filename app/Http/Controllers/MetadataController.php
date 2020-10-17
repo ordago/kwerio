@@ -16,8 +16,10 @@ class MetadataController extends Controller {
         $permissions_menu = $this->_get_permissions_menu();
         $settings_menu = $this->_get_settings_menu();
         $modules_menu = $this->_get_modules_menu();
+        $user_info = $this->_get_user_info();
 
         return [
+            "user" => $user_info,
             "menu" => [
                 "open" => false,
                 "data" => [
@@ -39,6 +41,31 @@ class MetadataController extends Controller {
                     ],
                 ],
             ],
+        ];
+    }
+
+    /**
+     * Get information about the currently authenticated user.
+     *
+     * @return array
+     */
+    private function _get_user_info() {
+        $user = request()->user();
+
+        return [
+            "uuid" => $user->uuid,
+            "owner_at" => $user->owner_at,
+            "is_owner" => $user->is_owner(),
+            "email" => $user->email,
+            "first_name" => $user->first_name ?? "",
+            "last_name" => $user->last_name ?? "",
+            "locale" => $user->locale,
+            "timezone" => $user->timezone,
+            "locale_iso_format" => $user->locale_iso_format,
+            "is_rtl" => (bool) $user->is_rtl,
+            "dir" => $user->is_rtl ? "rtl" : "ltr",
+            "groups" => $user->get_groups_ids(),
+            "modules" => $user->get_modules_ids(),
         ];
     }
 

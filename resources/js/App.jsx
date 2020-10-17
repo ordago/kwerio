@@ -21,7 +21,13 @@ function InnerApp({ children }) {
     jss = create({ plugins: [...jssPreset().plugins, rtl()] })
 
   React.useEffect(() => {
-    dispatch(fetch_metadata())
+    dispatch(fetch_metadata()).then(action => {
+      const { user } = action.payload
+
+      if (user.is_rtl) {
+        document.body.dir = user.dir
+      }
+    })
   }, [])
 
   return (

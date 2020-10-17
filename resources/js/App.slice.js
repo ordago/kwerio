@@ -13,6 +13,19 @@ export const fetch_metadata = createAsyncThunk(`${PREFIX}/fetch_metadata`, async
 ))
 
 const initialState = {
+  user: {
+    uuid: null,
+    owner_at: null,
+    is_owner: false,
+    email: "",
+    first_name: "",
+    last_name: "",
+    locale: "en",
+    timezone: "UTC",
+    locale_iso_format: "L",
+    is_rtl: false,
+    dir: "ltr",
+  },
   theme: {
     palette: {
       primary: blue,
@@ -115,6 +128,8 @@ const slice = createSlice({
     },
     [fetch_metadata.fulfilled]: (state, action) => {
       state.menu = action.payload.menu
+      state.user = action.payload.user
+      state.theme.direction = action.payload.user.dir
     },
   },
 })

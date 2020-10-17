@@ -76,4 +76,30 @@ class User extends Authenticatable {
     function groups() {
         return $this->belongsToMany(Group::class);
     }
+
+    /**
+     * Get ids of the groups that this user belongs to.
+     *
+     * @return array
+     */
+    function get_groups_ids() {
+        return $this->groups->pluck("uuid");
+    }
+
+    /**
+     * Get ids of the modules that this user has access to.
+     *
+     * @return array
+     */
+    function get_modules_ids() {
+        $ids = [];
+
+        foreach ($this->groups as $group) {
+            foreach ($group->modules as $module) {
+                $ids[] = $module->uid;
+            }
+        }
+
+        return $ids;
+    }
 }
