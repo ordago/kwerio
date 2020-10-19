@@ -3,43 +3,24 @@
 namespace App\Base;
 
 use Illuminate\Support\Facades\Cache;
-use Carbon\Language;
+use ResourceBundle;
+use Locale;
 
 class Languages {
     /**
-     * Get a list of supported languages.
+     * Get a list of all languages and there locale.
      *
      * @return array
      */
     function all() {
-        if ($languages = Cache::get("languages")) {
-            return $languages;
-        }
-
-        $languages = collect(Language::all())->map(function($item, $key) {
+        $locales = collect(ResourceBundle::getLocales(""))->map(function($locale) {
             return [
-                "locale" => $key,
-                "iso_name" => $item["isoName"],
-                "native_name" => $item["nativeName"],
+                "locale" => $locale,
+                "name" => Locale::getDisplayName($locale, "en"),
+                "native_name" => Locale::getDisplayName($locale, $locale),
             ];
-        })
-            ->values();
-
-        Cache::put("languages", $languages);
-
-        return $languages;
-    }
-
-    /**
-     * Check if the given locale exists in the list of supported languages.
-     *
-     * @param string $locale
-     * @return bool
-     */
-    function locale_exists(string $locale) {
-        return $this->all()->first(function($item) use($locale) {
-            if ($item["locale"] === $locale) return true;
-            return false;
         });
+
+        return $locales;
     }
 }

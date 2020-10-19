@@ -22,7 +22,7 @@ function I18n() {
         value={language.length > 0 ? language[0] : null}
         getOptionLabel={(option) => option.native_name}
         filterOptions={createFilterOptions({
-          stringify: option => `${option.iso_name} ${option.native_name}`,
+          stringify: option => `${option.name} ${option.native_name}`,
         })}
         onChange={(e, value) => {
           dispatch(actions.handleChange({
@@ -30,9 +30,7 @@ function I18n() {
             value: _.isNull(value) ? "" : value.locale,
           }))
         }}
-        renderOption={(option) => (
-          <>{option.iso_name} ({option.native_name})</>
-        )}
+        renderOption={(option) => option.name}
         renderInput={(params) => (
           <TextField
             {...params}

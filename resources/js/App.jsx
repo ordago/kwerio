@@ -14,7 +14,7 @@ import Main from "./components/Main"
 import useStyles from "./App.styles"
 
 function InnerApp({ children }) {
-  const { theme, config } = useSelector(state => state.app),
+  const { theme, config, user } = useSelector(state => state.app),
     dispatch = useDispatch(),
     classes = useStyles(),
     muiTheme = React.useMemo(() => createMuiTheme(theme), [theme]),
@@ -38,7 +38,10 @@ function InnerApp({ children }) {
       <ThemeProvider theme={muiTheme}>
         <SnackbarProvider
           maxSnack={3}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
           autoHideDuration={3000}
         >
           <div className={classes.root}>
