@@ -91,7 +91,8 @@ RUN set -ex \
         rewrite \
         proxy \
         proxy_http \
-        susbstitute
+        proxy_wstunnel \
+        substitute
 
 # ----------------------------------------------------------------------------
 #                                                                    Cleanup -
