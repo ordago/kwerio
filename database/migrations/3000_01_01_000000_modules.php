@@ -22,16 +22,13 @@ class Modules extends Migration {
 
         foreach($finder as $file) {
             $config = require $file->getPathInfo()->getPath() . "/../config/module.php";
+            preg_match("/\/modules\/.*/", $file->getPathname(), $m);
 
-            if ($config["is_tenant"]) {
-                preg_match("/\/modules\/.*/", $file->getPathname(), $m);
+            Artisan::call("migrate", [
+                "--path" => ltrim($m[0], "/"),
+            ]);
 
-                Artisan::call("migrate", [
-                    "--path" => ltrim($m[0], "/"),
-                ]);
-
-                echo Artisan::output();
-            }
+            echo Artisan::output();
         }
     }
 }
