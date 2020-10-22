@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux"
 import React from "react"
 
 import { asyncActions } from "./index.slice"
-import OneColumnPage from "../Page/OneColumnPage"
+import OneColumnPage from "../../components/OneColumnPage"
 import useStyles from "./index.styles"
 
 function Modules() {

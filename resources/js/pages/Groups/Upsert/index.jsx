@@ -22,7 +22,7 @@ import {
 } from "../../Modules/index.slice"
 import { notify } from "../../../utils/errors"
 import Header from "../Header"
-import OneColumnPage from "../../Page/OneColumnPage"
+import OneColumnPage from "../../../components/OneColumnPage"
 import useStyles from "./index.styles"
 
 function Upsert({ match }) {

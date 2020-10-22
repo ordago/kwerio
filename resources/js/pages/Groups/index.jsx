@@ -6,7 +6,7 @@ import React from "react"
 import { adapter, tableAsyncActions, actions } from "./index.slice"
 import { endpoints } from "../../routes/app"
 import Header from "./Header"
-import OneColumnPage from "../Page/OneColumnPage"
+import OneColumnPage from "../../components/OneColumnPage"
 import PaginatedTable from "../../components/PaginatedTable/index.jsx"
 import Toolbar from "./Toolbar"
 

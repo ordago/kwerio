@@ -21,7 +21,7 @@ import { notify } from "../../../utils/errors"
 import Groups from "./Groups"
 import Header from "../Header"
 import I18n from "./I18n"
-import OneColumnPage from "../../Page/OneColumnPage"
+import OneColumnPage from "../../../components/OneColumnPage"
 import PersonalInfo from "./PersonalInfo"
 
 function Upsert({ match }) {
