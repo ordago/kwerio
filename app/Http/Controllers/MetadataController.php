@@ -81,7 +81,7 @@ class MetadataController extends Controller {
             ->filter(function($item) use($user) {
                 if (
                     $user->can_access_module($item["module"]->uid)
-                    && $item["module"]->hidden !== false
+                    && (bool) $item["module"]->hidden === false
                 ) {
                     return true;
                 }
