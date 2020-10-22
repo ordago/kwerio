@@ -5,6 +5,7 @@ import React from "react"
 
 import { endpoints } from "../../routes/app"
 import useStyles from "./index.styles"
+import Suspense from '../../components/Suspense'
 
 const Groups = React.lazy(() => import("../Groups"))
 const GroupsUpsert = React.lazy(() => import("../Groups/Upsert"))
@@ -19,23 +20,15 @@ function Page() {
   return (
     <Box className={classes.root}>
       <Switch>
-        <Route exact path={endpoints.groups.create} render={props => WithSuspense(<GroupsUpsert {...props} />)} />
-        <Route exact path={endpoints.groups.index} render={props => WithSuspense(<Groups {...props} />)} />
-        <Route exact path={endpoints.groups.update} render={props => WithSuspense(<GroupsUpsert {...props} />)} />
-        <Route exact path={endpoints.modules.index} render={props => WithSuspense(<Modules {...props} />)} />
-        <Route exact path={endpoints.users.create} render={props => WithSuspense(<UsersUpsert {...props} />)} />
-        <Route exact path={endpoints.users.update} render={props => WithSuspense(<UsersUpsert {...props} />)} />
-        <Route exact path={endpoints.users.index} render={props => WithSuspense(<Users {...props} />)} />
+        <Route exact path={endpoints.groups.create} render={props => <Suspense component={<GroupsUpsert {...props} />} />} />
+        <Route exact path={endpoints.groups.index} render={props => <Suspense component={<Groups {...props} />} />} />
+        <Route exact path={endpoints.groups.update} render={props => <Suspense component={<GroupsUpsert {...props} />} />} />
+        <Route exact path={endpoints.modules.index} render={props => <Suspense component={<Modules {...props} />} />} />
+        <Route exact path={endpoints.users.create} render={props => <Suspense component={<UsersUpsert {...props} />} />} />
+        <Route exact path={endpoints.users.update} render={props => <Suspense component={<UsersUpsert {...props} />} />} />
+        <Route exact path={endpoints.users.index} render={props => Suspense(<Users {...props} />)} />
       </Switch>
     </Box>
-  )
-}
-
-function WithSuspense(component) {
-  return (
-    <React.Suspense fallback={<div />}>
-      {component}
-    </React.Suspense>
   )
 }
 
