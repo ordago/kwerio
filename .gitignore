@@ -21,3 +21,4 @@ tags.temp
 /public/hot
 core
 /public/i18n
+/public/*.js.LICENSE.txt
