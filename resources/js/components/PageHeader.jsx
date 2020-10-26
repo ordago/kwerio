@@ -26,6 +26,8 @@ const useStyles = makeStyles(theme => createStyles({
     justifyContent: "space-between",
     height: config => config.appbar_height,
     width: "100%",
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
   },
 }))
 
