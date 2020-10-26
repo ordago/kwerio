@@ -55,7 +55,6 @@ const initialState = {
         margin: "dense",
         size: "small",
         variant: "outlined",
-        // https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-autocomplete-new-password
         autoComplete: "new-password",
       },
       MuiButton: {

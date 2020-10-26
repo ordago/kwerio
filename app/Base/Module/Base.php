@@ -128,4 +128,14 @@ abstract class Base {
     function view(string $view) {
         return view($this->uid . "::{$view}");
     }
+
+    /**
+     * Get a gate name.
+     *
+     * @param string $name
+     * @return string
+     */
+    function gate(string $name) {
+        return "{$this->uid}__{$name}";
+    }
 }
