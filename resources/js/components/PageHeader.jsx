@@ -13,10 +13,7 @@ function PageHeader({ left = () => {}, right = () => {} }) {
     <Paper
       variant="outlined"
       square={true}
-      className={clsx(classes.root, {
-        [classes.rootLtr]: user.is_rtl === false,
-        [classes.rootRtl]: user.is_rtl,
-      })}
+      className={classes.root}
     >
       <Box>{left()}</Box>
       <Box>{right()}</Box>
@@ -35,16 +32,8 @@ const useStyles = makeStyles(theme => createStyles({
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
     zIndex: theme.zIndex.appBar - 1,
-  },
-
-  rootRtl: {
     marginLeft: 1,
     borderRight: "none",
-  },
-
-  rootLtr: {
-    marginRight: 1,
-    borderLeft: "none",
   },
 }))
 
