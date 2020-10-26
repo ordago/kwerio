@@ -56,8 +56,8 @@ const useStyles = makeStyles(theme => createStyles({
     textAlign: "center",
     margin: 0,
     padding: 0,
-    height: config => config.appbar_height,
-    lineHeight: config => `${config.appbar_height}px`,
+    height: config => config.appbar_height - 2,
+    lineHeight: config => `${config.appbar_height - 2}px`,
   },
 
   divider: {

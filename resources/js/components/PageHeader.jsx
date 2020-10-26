@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => createStyles({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    height: config => config.appbar_height + 1,
+    height: config => config.appbar_height,
     width: "100%",
   },
 }))
