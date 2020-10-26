@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => createStyles({
     width: config => `calc(100% - ${config.menu_width + 1}px)`,
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
-    zIndex: 9999,
+    zIndex: theme.zIndex.appBar - 1,
     marginLeft: 1,
   },
 }))
