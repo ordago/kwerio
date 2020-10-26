@@ -26,16 +26,15 @@ function PageWithFixedMenu({
         {menu()}
       </Paper>
 
-      <Box>
+      <Box
+        width={1}
+        className={clsx(classes.content, {
+          [classes.contentLtr]: !user.is_rtl,
+          [classes.contentRtl]: user.is_rtl,
+        })}
+      >
         {header()}
-        <Box
-          width={1}
-          p={2}
-          className={clsx(classes.content, {
-            [classes.contentLtr]: !user.is_rtl,
-            [classes.contentRtl]: user.is_rtl,
-          })}
-        >
+        <Box p={2}>
           {content()}
         </Box>
       </Box>

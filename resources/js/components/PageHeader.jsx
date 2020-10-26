@@ -3,12 +3,24 @@ import { makeStyles, createStyles } from "@material-ui/core/styles"
 import React from "react"
 
 function PageHeader({ left = () => {}, right = () => {} }) {
-  const classes = useStyles()
+  const config = useSelector(state => state.app.config),
+    classes = useStyles()
 
   return (
-    <Box display="flex" alignItems="center" justifyContent="space-between">
-      <Box>{left()}</Box>
-      <Box>{right()}</Box>
+    <Box
+      className={classes.root}
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between"
+    >
+      <Paper
+        vaiant="outlined"
+        square={true}
+        className={classes.paper}
+      >
+        <Box>{left()}</Box>
+        <Box>{right()}</Box>
+      </Paper>
     </Box>
   )
 }
@@ -16,7 +28,11 @@ function PageHeader({ left = () => {}, right = () => {} }) {
 const useStyles = makeStyles(theme => createStyles({
   root: {
 
-  }
+  },
+
+  paper: {
+    height: config => config.appbar_height,
+  },
 }))
 
 export default React.memo(PageHeader)
