@@ -51,6 +51,9 @@ const initialState = {
         color: "primary",
         size: "small",
       },
+      MuiAutocomplete: {
+        autoComplete: "new-password",
+      },
       MuiTextField: {
         margin: "dense",
         // https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-autocomplete-new-password
