@@ -26,9 +26,11 @@ const useStyles = makeStyles(theme => createStyles({
     alignItems: "center",
     justifyContent: "space-between",
     height: config => config.appbar_height,
-    width: config => `calc(100% - ${config.menu_width}px)`,
+    width: config => `calc(100% - ${config.menu_width + 1}px)`,
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
+    zIndex: 9999,
+    marginLeft: 1,
   },
 }))
 
