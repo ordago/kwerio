@@ -33,8 +33,8 @@ function PaginatedTable({
   onRowClick = () => { },       // Click event for the row.
   onSort = () => { },           // Callback to handle sorting.
   primaryKey = "uuid",          // Primary key used in the data as 'id'.
-  slugKey = "slug"              // Name of the slug key.
-  size = "small"
+  slugKey = "slug",             // Name of the slug key.
+  size = "small",               // Size of the table. (medium, small).
 }) {
   const dispatch = useDispatch(),
     state = useSelector(state => state[reducerName]),
