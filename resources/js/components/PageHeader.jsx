@@ -1,5 +1,6 @@
-import { Box } from "@material-ui/core"
+import { Box, Paper } from "@material-ui/core"
 import { makeStyles, createStyles } from "@material-ui/core/styles"
+import { useSelector } from "react-redux"
 import React from "react"
 
 function PageHeader({ left = () => {}, right = () => {} }) {
