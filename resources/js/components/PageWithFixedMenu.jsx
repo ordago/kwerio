@@ -16,7 +16,14 @@ function PageWithFixedMenu({
 
   return (
     <Box display="flex" width={1}>
-      <Paper variant="outlined" square={true} className={classes.paper}>
+      <Paper
+        variant="outlined"
+        square={true}
+        className={clsx(classes.paper, {
+          [classes.paperLtr]: user.is_rtl === false,
+          [classes.paperRtl]: user.is_rtl,
+        })}
+      >
         {title && (
           <>
             <Typography className={classes.typography} variant="h6">{title}</Typography>
@@ -29,7 +36,7 @@ function PageWithFixedMenu({
       <Box
         width={1}
         className={clsx(classes.content, {
-          [classes.contentLtr]: !user.is_rtl,
+          [classes.contentLtr]: user.is_rtl === false,
           [classes.contentRtl]: user.is_rtl,
         })}
       >
@@ -50,6 +57,14 @@ const useStyles = makeStyles(theme => createStyles({
   paper: {
     height: config => `calc(100vh - ${config.appbar_height}px)`,
     position: "fixed",
+  },
+
+  paperRtl: {
+    borderRight: "none",
+  },
+
+  paperLtr: {
+    borderLeft: "none",
   },
 
   typography: {
