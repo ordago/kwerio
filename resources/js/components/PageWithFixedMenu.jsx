@@ -2,6 +2,7 @@ import { Box, Divider, Paper, Typography } from "@material-ui/core"
 import { makeStyles, createStyles } from "@material-ui/core/styles"
 import { useSelector } from "react-redux"
 import React from "react"
+import clsx from "clsx"
 
 function PageWithFixedMenu({
   title = false,
@@ -9,6 +10,7 @@ function PageWithFixedMenu({
   content = () => {},
 }) {
   const config = useSelector(state => state.app.config),
+    user = useSelector(state => state.app.user),
     classes = useStyles(config)
 
   return (
@@ -23,7 +25,14 @@ function PageWithFixedMenu({
         {menu()}
       </Paper>
 
-      <Box width={1} p={2} className={classes.content}>
+      <Box
+        width={1}
+        p={2}
+        className={clsx(classes.content, {
+          [classes.contentLTR]: !user.is_rtl,
+          [classes.contentRTL]: user.is_rtl,
+        })}
+      >
         {content()}
       </Box>
     </Box>
@@ -58,7 +67,14 @@ const useStyles = makeStyles(theme => createStyles({
 
   content: {
     width: config => `calc(100% - ${config.menu_width}px)`,
+  },
+
+  contentLTR: {
     marginLeft: config => config.menu_width,
+  },
+
+  contentRtl: {
+    marginRight: config => config.width,
   },
 }))
 
