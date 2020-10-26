@@ -12,7 +12,7 @@ use Illuminate\Support\{
 
 class Maker {
     private $name = null;
-    private $middlewares = '["web"]';
+    private $middlewares = '["web", "auth"]';
     private $dependencies = '[]';
 
     /**

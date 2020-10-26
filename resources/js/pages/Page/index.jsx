@@ -26,7 +26,7 @@ function Page() {
         <Route exact path={endpoints.modules.index} render={props => <Suspense component={<Modules {...props} />} />} />
         <Route exact path={endpoints.users.create} render={props => <Suspense component={<UsersUpsert {...props} />} />} />
         <Route exact path={endpoints.users.update} render={props => <Suspense component={<UsersUpsert {...props} />} />} />
-        <Route exact path={endpoints.users.index} render={props => Suspense(<Users {...props} />)} />
+        <Route exact path={endpoints.users.index} render={props => <Suspense component={<Users {...props} />} />} />
       </Switch>
     </Box>
   )

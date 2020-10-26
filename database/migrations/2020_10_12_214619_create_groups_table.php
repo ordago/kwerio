@@ -17,7 +17,7 @@ class CreateGroupsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->uuid("uuid");
-            $table->string("name");
+            $table->string("name")->unique();
         });
     }
 
