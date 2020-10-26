@@ -34,6 +34,7 @@ function PaginatedTable({
   onSort = () => { },           // Callback to handle sorting.
   primaryKey = "uuid",          // Primary key used in the data as 'id'.
   slugKey = "slug"              // Name of the slug key.
+  size = "small"
 }) {
   const dispatch = useDispatch(),
     state = useSelector(state => state[reducerName]),
@@ -78,7 +79,7 @@ function PaginatedTable({
   return (
     <Box>
       <TableContainer className={classes.root}>
-        <Table size="small">
+        <Table size={size}>
           <TableHead>
             <TableRow>
               {canCheck && (
