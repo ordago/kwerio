@@ -5,13 +5,17 @@ import React from "react"
 
 function PageHeader({ left = () => {}, right = () => {} }) {
   const config = useSelector(state => state.app.config),
+    user = useSelector(state => state.app.user),
     classes = useStyles(config)
 
   return (
     <Paper
       variant="outlined"
       square={true}
-      className={classes.root}
+      className={clsx(classes.root, {
+        [classes.rootLtr]: user.is_rtl === false,
+        [classes.rootRtl]: user.is_rtl,
+      })}
     >
       <Box>{left()}</Box>
       <Box>{right()}</Box>
@@ -30,7 +34,16 @@ const useStyles = makeStyles(theme => createStyles({
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
     zIndex: theme.zIndex.appBar - 1,
+  },
+
+  rootRtl: {
+    marginRight: 1,
+    borderLeft: "none",
+  },
+
+  rootLtr: {
     marginLeft: 1,
+    borderRight: "none",
   },
 }))
 
