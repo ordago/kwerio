@@ -29,8 +29,8 @@ function PageWithFixedMenu({
         width={1}
         p={2}
         className={clsx(classes.content, {
-          [classes.contentLTR]: !user.is_rtl,
-          [classes.contentRTL]: user.is_rtl,
+          [classes.contentLtr]: !user.is_rtl,
+          [classes.contentRtl]: user.is_rtl,
         })}
       >
         {content()}
@@ -69,7 +69,7 @@ const useStyles = makeStyles(theme => createStyles({
     width: config => `calc(100% - ${config.menu_width}px)`,
   },
 
-  contentLTR: {
+  contentLtr: {
     marginLeft: config => config.menu_width,
   },
 
