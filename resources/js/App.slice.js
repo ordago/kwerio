@@ -52,6 +52,7 @@ const initialState = {
         size: "small",
       },
       MuiTextField: {
+        autoComplete: "off",
         margin: "dense",
         size: "small",
         variant: "outlined",
