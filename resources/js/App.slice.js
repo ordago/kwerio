@@ -38,6 +38,12 @@ const initialState = {
     },
     direction: "ltr",
     props: {
+      MuiListItem: {
+        dense: true,
+      },
+      MuiList: {
+        dense: true,
+      },
       MuiChip: {
         size: "small",
       },
