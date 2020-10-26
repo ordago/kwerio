@@ -19,10 +19,7 @@ function PageWithFixedMenu({
       <Paper
         variant="outlined"
         square={true}
-        className={clsx(classes.paper, {
-          [classes.paperLtr]: user.is_rtl === false,
-          [classes.paperRtl]: user.is_rtl,
-        })}
+        className={classes.paper}
       >
         {title && (
           <>
@@ -57,13 +54,6 @@ const useStyles = makeStyles(theme => createStyles({
   paper: {
     height: config => `calc(100vh - ${config.appbar_height}px)`,
     position: "fixed",
-  },
-
-  paperRtl: {
-    borderRight: "none",
-  },
-
-  paperLtr: {
     borderLeft: "none",
   },
 
