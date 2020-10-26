@@ -7,6 +7,7 @@ import clsx from "clsx"
 function PageWithFixedMenu({
   title = false,
   menu = () => {},
+  header = () => {},
   content = () => {},
 }) {
   const config = useSelector(state => state.app.config),
@@ -25,15 +26,18 @@ function PageWithFixedMenu({
         {menu()}
       </Paper>
 
-      <Box
-        width={1}
-        p={2}
-        className={clsx(classes.content, {
-          [classes.contentLtr]: !user.is_rtl,
-          [classes.contentRtl]: user.is_rtl,
-        })}
-      >
-        {content()}
+      <Box>
+        {header()}
+        <Box
+          width={1}
+          p={2}
+          className={clsx(classes.content, {
+            [classes.contentLtr]: !user.is_rtl,
+            [classes.contentRtl]: user.is_rtl,
+          })}
+        >
+          {content()}
+        </Box>
       </Box>
     </Box>
   )
