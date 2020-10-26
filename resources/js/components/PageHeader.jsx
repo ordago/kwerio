@@ -13,9 +13,10 @@ function PageHeader({ left = () => {}, right = () => {} }) {
       display="flex"
       alignItems="center"
       justifyContent="space-between"
+      width={1}
     >
       <Paper
-        vaiant="outlined"
+        variant="outlined"
         square={true}
         className={classes.paper}
       >
