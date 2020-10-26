@@ -7,7 +7,7 @@ import clsx from "clsx"
 function PageWithFixedMenu({
   title = false,
   menu = () => {},
-  header = () => {},
+  header = false,
   content = () => {},
 }) {
   const config = useSelector(state => state.app.config),
@@ -33,8 +33,8 @@ function PageWithFixedMenu({
           [classes.contentRtl]: user.is_rtl,
         })}
       >
-        {header()}
-        <Box p={2}>
+        {header && header()}
+        <Box p={2} className={clsx({ [classes.contentWithFixedHeader]: header !== false })}>
           {content()}
         </Box>
       </Box>
@@ -78,6 +78,10 @@ const useStyles = makeStyles(theme => createStyles({
 
   contentRtl: {
     marginRight: config => config.menu_width,
+  },
+
+  contentWithFixedHeader: {
+    marginTop: config => config.appbar_height,
   },
 }))
 
