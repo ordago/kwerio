@@ -74,7 +74,7 @@ const useStyles = makeStyles(theme => createStyles({
   },
 
   contentRtl: {
-    marginRight: config => config.width,
+    marginRight: config => config.menu_width,
   },
 }))
 
