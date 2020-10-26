@@ -53,6 +53,8 @@ const initialState = {
       },
       MuiTextField: {
         margin: "dense",
+        // https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-autocomplete-new-password
+        autoComplete: "new-password",
         size: "small",
         variant: "outlined",
       },
