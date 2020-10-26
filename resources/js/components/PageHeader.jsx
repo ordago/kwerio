@@ -38,13 +38,13 @@ const useStyles = makeStyles(theme => createStyles({
   },
 
   rootRtl: {
-    marginRight: 1,
-    borderLeft: "none",
+    marginLeft: 1,
+    borderRight: "none",
   },
 
   rootLtr: {
-    marginLeft: 1,
-    borderRight: "none",
+    marginRight: 1,
+    borderLeft: "none",
   },
 }))
 
