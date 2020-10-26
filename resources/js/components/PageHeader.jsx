@@ -8,32 +8,23 @@ function PageHeader({ left = () => {}, right = () => {} }) {
     classes = useStyles(config)
 
   return (
-    <Box
+    <Paper
+      variant="outlined"
+      square={true}
       className={classes.root}
-      display="flex"
-      alignItems="center"
-      justifyContent="space-between"
-      width={1}
     >
-      <Paper
-        variant="outlined"
-        square={true}
-        className={classes.paper}
-      >
-        <Box>{left()}</Box>
-        <Box>{right()}</Box>
-      </Paper>
-    </Box>
+      <Box>{left()}</Box>
+      <Box>{right()}</Box>
+    </Paper>
   )
 }
 
 const useStyles = makeStyles(theme => createStyles({
   root: {
-
-  },
-
-  paper: {
-    height: config => config.appbar_height,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    height: config => config.appbar_height + 1,
     width: "100%",
   },
 }))
