@@ -5,7 +5,7 @@ import React from "react"
 
 function PageHeader({ left = () => {}, right = () => {} }) {
   const config = useSelector(state => state.app.config),
-    classes = useStyles()
+    classes = useStyles(config)
 
   return (
     <Box
@@ -34,6 +34,7 @@ const useStyles = makeStyles(theme => createStyles({
 
   paper: {
     height: config => config.appbar_height,
+    width: "100%",
   },
 }))
 
