@@ -42,6 +42,7 @@ const initialState = {
         size: "small",
       },
       MuiCheckbox: {
+        color: "primary",
         size: "small",
       },
       MuiTextField: {

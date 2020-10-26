@@ -2,7 +2,7 @@ import { CssBaseline } from "@material-ui/core"
 import { render } from "react-dom"
 import React from "react"
 
-import Signup from "./Signup"
+import Signup from "./Signup/index.jsx"
 
 render(
   <div>

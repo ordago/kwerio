@@ -34,6 +34,7 @@
         "fontsource-roboto": "^3.0.3",
         "jss": "^10.4.0",
         "jss-rtl": "^0.3.0",
+        "nanoid": "^3.1.16",
         "notistack": "^1.0.1",
         "prop-types": "^15.7.2",
         "react": "^17.0.1",

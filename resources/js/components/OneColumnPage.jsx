@@ -6,7 +6,7 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack"
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward"
 import React from "react"
 
-function OneColumnPaper({ children, className = null, back_to = null }) {
+function OneColumnPage({ children, className = null, back_to = null }) {
   const history = useHistory(),
     classes = useStyles(),
     { user } = useSelector(state => state.app)
@@ -46,4 +46,4 @@ const useStyles = makeStyles(theme => createStyles({
   }
 }))
 
-export default OneColumnPaper
+export default OneColumnPage
