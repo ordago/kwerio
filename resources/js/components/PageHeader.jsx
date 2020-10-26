@@ -2,6 +2,7 @@ import { Box, Paper } from "@material-ui/core"
 import { makeStyles, createStyles } from "@material-ui/core/styles"
 import { useSelector } from "react-redux"
 import React from "react"
+import clsx from "clsx"
 
 function PageHeader({ left = () => {}, right = () => {} }) {
   const config = useSelector(state => state.app.config),
