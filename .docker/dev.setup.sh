@@ -13,56 +13,41 @@ groupmod --non-unique --gid $GROUP_ID www-data
 
 cd /var/www/html
 
-if [ -L public/storage ]; then
-    rm -f public/storage
+if [ ! -L public/storage ]; then
+    php artisan storage:link
+    chown -h www-data:www-data public/storage
 fi
 
-if [ -d node_modules ]; then
-    rm -rf node_modules
+if [ ! -d node_modules ]; then
+    npm install
+    rm -f public/*.js
+    rm -rf public/fonts
+    rm -rf public/js
+    npm run dev
 fi
 
-if [ -d vendor ]; then
-    rm -rf vendor
+if [ ! -d vendor ]; then
+    composer install
+    php artisan key:generate
 fi
-
-rm -f public/*.js
-rm -rf public/fonts
-rm -rf public/js
-
-npm install
-npm run prod
-
-composer install
-
-php artisan storage:link
-chown -h www-data:www-data public/storage
 
 if [ -n "$(ls -A storage/logs 2>/dev/null)" ]; then
     rm -rf storage/logs/*
 fi
 
-if [ ! -f .env ]; then
-    cp .env.example .env
-    php artisan key:generate
-fi
-
 chmod g+s storage/logs
-setfacl -d -m u::rwX,g::rwX,o::r- storage/logs
+setfacl -d -m u::rwX,g::rwX,o::r- storage/logs || true
 
-chown -R www-data:www-data /var/www/html
+chown -R www-data:www-data /var/www/html/public
 
-# for: php artisan tinker
 if [ ! -d /var/www/.config ]; then
     mkdir /var/www/.config
+    chown www-data:www-data /var/www/.config
 fi
 
-chown www-data:www-data /var/www/.config
-
-# for: npm
 if [ ! -d /var/www/.npm ]; then
     mkdir /var/www/.npm
+    chown www-data:www-data /var/www/.npm
 fi
-
-chown www-data:www-data /var/www/.npm
 
 apache2-foreground
