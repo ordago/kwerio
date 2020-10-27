@@ -11,7 +11,7 @@ class Table {
      * @return array
      */
     function response($items, $total) {
-        $page = request()->get("page");
+        $page = request()->get("page") + 1;
         $per_page = config("app.per_page");
         $last_page = max((int) ceil($total / $per_page), 1);
 
