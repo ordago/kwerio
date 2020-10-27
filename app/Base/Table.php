@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+namespace App\Base;
+
 class Table {
     /**
      * Prepare a table response.
