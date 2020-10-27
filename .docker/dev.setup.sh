@@ -13,22 +13,22 @@ groupmod --non-unique --gid $GROUP_ID www-data
 
 cd /var/www/html
 
+if [ ! -d /var/www/html/vendor ]; then
+    composer install
+    php artisan key:generate
+fi
+
 if [ ! -L public/storage ]; then
     php artisan storage:link
     chown -h www-data:www-data public/storage
 fi
 
-if [ ! -d node_modules ]; then
+if [ ! -d /var/www/html/node_modules ]; then
     npm install
     rm -f public/*.js
     rm -rf public/fonts
     rm -rf public/js
     npm run dev
-fi
-
-if [ ! -d vendor ]; then
-    composer install
-    php artisan key:generate
 fi
 
 if [ -n "$(ls -A storage/logs 2>/dev/null)" ]; then
