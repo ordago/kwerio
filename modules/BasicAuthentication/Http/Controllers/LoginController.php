@@ -7,6 +7,7 @@ use Modules\BasicAuthentication\Module;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Modules\Home\Module as HomeModule;
 
 class LoginController extends Controller {
     /**
@@ -26,9 +27,11 @@ class LoginController extends Controller {
      * @param Module  $module
      * @return Response
      */
-    function attempt(Request $request, Module $module) {
+    function attempt(Request $request, HomeModule $home_module) {
+        $intended = $request->session()->pull("url.intended", $home_module->route_prefix());
+
         if (Auth::attempt($request->only("email", "password"))) {
-            return response(null, 200);
+            return $intended;
         }
 
         abort(404);

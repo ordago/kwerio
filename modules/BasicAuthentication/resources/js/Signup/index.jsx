@@ -60,11 +60,11 @@ function Signup() {
 
     axios.post(`/_/basic-authentication/signup`, { email, password, password_confirmation })
       .then(response => {
-        if (response.status === 201) {
-          window.location.href = "/"
+        if (response.status === 200) {
+          window.location.href = response.data
         }
       })
-      .catch(e => console.error(e))
+      .catch(err => console.error(err))
   }
 
   return (

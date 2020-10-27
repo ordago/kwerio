@@ -10,9 +10,11 @@ function Login() {
   function submit() {
     axios.post("/_/basic-authentication/login", { email, password })
       .then(response => {
-        window.location.href = "/"
+        if (response.status === 200) {
+          window.location.href = response.data
+        }
       })
-      .catch(e => console.error(e))
+      .catch(err => console.error(err))
   }
 
   return (

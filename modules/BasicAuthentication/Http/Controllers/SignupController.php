@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Modules\Home\Module as HomeModule;
 
 class SignupController extends Controller {
     /**
@@ -27,7 +28,7 @@ class SignupController extends Controller {
      * @return integer
      * @throws Exception
      */
-    function store(Request $request) {
+    function store(Request $request, HomeModule $home_module) {
         $data = $request->validate([
             "email" => "required|unique:users,email",
             "password" => "required|confirmed",
@@ -41,6 +42,7 @@ class SignupController extends Controller {
 
         Auth::login($user);
 
-        return response(null, 201);
+        return $request->session()
+            ->pull("url.intended", $home_module->route_prefix());
     }
 }
