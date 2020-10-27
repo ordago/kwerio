@@ -1,3 +1,5 @@
+import { Box } from "@material-ui/core"
+import { Route } from "react-router-dom"
 import { render } from "react-dom"
 import React from "react"
 
@@ -9,8 +11,11 @@ const reducers = {
 }
 
 render(
-  <App store={createStore(reducers)}>
-    hi there
-  </App>,
+  <App
+    store={createStore(reducers)}
+    switchRoutes={() => (
+      <Route exact path="/" render={props => <Box>Home Module</Box>} />
+    )}
+  />,
   document.getElementById("root")
 )

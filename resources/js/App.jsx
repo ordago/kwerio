@@ -1,6 +1,6 @@
 import "fontsource-roboto"
 
-import { BrowserRouter } from "react-router-dom"
+import { BrowserRouter, Route, Switch } from "react-router-dom"
 import { CssBaseline } from "@material-ui/core"
 import { Provider, useSelector, useDispatch } from "react-redux"
 import { SnackbarProvider } from "notistack"
@@ -9,11 +9,21 @@ import { jssPreset, StylesProvider, createMuiTheme, ThemeProvider } from "@mater
 import React from "react"
 import rtl from "jss-rtl"
 
+import { endpoints } from "./routes/app"
 import { fetch_metadata, fetch_translations } from "./App.slice"
 import Main from "./components/Main"
+import Suspense from "./components/Suspense"
 import useStyles from "./App.styles"
 
-function InnerApp({ children }) {
+const Groups = React.lazy(() => import("./pages/Groups")),
+  GroupsUpsert = React.lazy(() => import("./pages/Groups/Upsert")),
+  Modules = React.lazy(() => import("./pages/Modules")),
+  Users = React.lazy(() => import("./pages/Users")),
+  UsersUpsert = React.lazy(() => import("./pages/Users/Upsert")),
+  Account = React.lazy(() => import("./pages/Account")),
+  Profile = React.lazy(() => import("./pages/Profile"))
+
+function InnerApp({ switchRoutes = () => {} }) {
   const { theme, config, user } = useSelector(state => state.app),
     dispatch = useDispatch(),
     classes = useStyles(),
@@ -47,7 +57,29 @@ function InnerApp({ children }) {
           <div className={classes.root}>
             <CssBaseline />
             <BrowserRouter>
-              <Main>{children}</Main>
+              <Main>
+                <Switch>
+
+                  {/* ACCOUNT / PERMISSIONS */}
+                  <Route exact path={endpoints.groups.create} render={props => <Suspense component={<GroupsUpsert {...props} />} />} />
+                  <Route exact path={endpoints.groups.index} render={props => <Suspense component={<Groups {...props} />} />} />
+                  <Route exact path={endpoints.groups.update} render={props => <Suspense component={<GroupsUpsert {...props} />} />} />
+                  <Route exact path={endpoints.modules.index} render={props => <Suspense component={<Modules {...props} />} />} />
+                  <Route exact path={endpoints.users.create} render={props => <Suspense component={<UsersUpsert {...props} />} />} />
+                  <Route exact path={endpoints.users.update} render={props => <Suspense component={<UsersUpsert {...props} />} />} />
+                  <Route exact path={endpoints.users.index} render={props => <Suspense component={<Users {...props} />} />} />
+
+                  {/* ACCOUNT / SETTINGS */}
+                  <Route exact path={endpoints.account.index} render={props => <Suspense component={<Account {...props} />} />} />
+
+                  {/* OTHERS */}
+                  <Route exact path={endpoints.profile.index} render={props => <Suspense component={<Profile {...props} />} />} />
+
+                  {/* MODULE ROUTES */}
+                  {switchRoutes()}
+
+                </Switch>
+              </Main>
             </BrowserRouter>
           </div>
         </SnackbarProvider>
@@ -56,11 +88,11 @@ function InnerApp({ children }) {
   )
 }
 
-function App({ store, children }) {
+function App({ store, switchRoutes = () => {} }) {
   return (
     <React.StrictMode>
       <Provider store={store}>
-        <InnerApp>{children}</InnerApp>
+        <InnerApp switchRoutes={switchRoutes} />
       </Provider>
     </React.StrictMode>
   )

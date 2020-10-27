@@ -27,4 +27,9 @@ export default makeStyles(theme => createStyles({
     display: "flex",
     alignItems: "center",
   },
+
+  avatar: {
+    width: theme.spacing(3.8),
+    height: theme.spacing(3.8),
+  },
 }))

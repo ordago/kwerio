@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\{
     MetadataController,
+    LogoutController,
+    ProfileController,
     Account\Permissions\UserController,
     Account\Permissions\GroupController,
     Account\Settings\AccountController,
@@ -9,6 +11,12 @@ use App\Http\Controllers\{
 };
 
 Route::middleware(["auth"])->group(function() {
+
+    // -------------------------------------------------------------- WEB -- #
+    Route::get("/logout", [LogoutController::class, "logout"]);
+    Route::get("/profile", [ProfileController::class, "show_page"]);
+
+    // -------------------------------------------------------------- API -- #
     Route::prefix("api")->group(function() {
         Route::get("/metadata", [MetadataController::class, "index"]);
     });
@@ -42,17 +50,21 @@ Route::middleware(["auth", "owner-only"])->group(function() {
     // -------------------------------------------------------------- API -- #
     Route::prefix("api")->group(function() {
         Route::prefix("account")->group(function() {
-            Route::post("/permissions/groups", [GroupController::class, "index"]);
-            Route::post("/permissions/groups/create", [GroupController::class, "create"]);
-            Route::post("/permissions/groups/update", [GroupController::class, "update"]);
-            Route::post("/permissions/groups/fetch-by-uuid", [GroupController::class, "fetch_by_uuid"]);
-            Route::post("/permissions/groups/all", [GroupController::class, "all"]);
 
-            Route::post("/permissions/users", [UserController::class, "index"]);
-            Route::post("/permissions/users/create", [UserController::class, "create"]);
-            Route::post("/permissions/users/update", [UserController::class, "update"]);
-            Route::post("/permissions/users/fetch-by-uuid", [UserController::class, "fetch_by_uuid"]);
-            Route::post("/permissions/users/metadata", [UserController::class, "metadata"]);
+            // ------------------------------------ ACCOUNT / PERMISSIONS -- #
+            Route::prefix("permissions")->group(function() {
+                Route::post("/groups", [GroupController::class, "index"]);
+                Route::post("/groups/create", [GroupController::class, "create"]);
+                Route::post("/groups/update", [GroupController::class, "update"]);
+                Route::post("/groups/fetch-by-uuid", [GroupController::class, "fetch_by_uuid"]);
+                Route::post("/groups/all", [GroupController::class, "all"]);
+
+                Route::post("/users", [UserController::class, "index"]);
+                Route::post("/users/create", [UserController::class, "create"]);
+                Route::post("/users/update", [UserController::class, "update"]);
+                Route::post("/users/fetch-by-uuid", [UserController::class, "fetch_by_uuid"]);
+                Route::post("/users/metadata", [UserController::class, "metadata"]);
+            });
         });
 
         Route::prefix("modules")->group(function() {

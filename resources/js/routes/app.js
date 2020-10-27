@@ -9,6 +9,10 @@ const SETTINGS_ENDPOINT = `${ENDPOINT}/account/settings`
 const MODULES_ENDPOINT = `${ENDPOINT}/modules`
 
 export const endpoints = {
+  logout: `${ENDPOINT}/logout`,
+  profile: {
+    index: `${ENDPOINT}/profile`,
+  },
   groups: {
     index: `${PERMISSIONS_ENDPOINT}/groups`,
     create: `${PERMISSIONS_ENDPOINT}/groups/create`,
