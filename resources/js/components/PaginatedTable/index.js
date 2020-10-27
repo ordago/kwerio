@@ -164,7 +164,7 @@ export default function(PREFIX, api, adapter) {
       }
 
       if (_.hasIn(action.payload, "next_page")) {
-        state.rsc.page = action.payload.next_page
+        state.rsc.page = action.payload.next_page - 1
       }
     }
   }
