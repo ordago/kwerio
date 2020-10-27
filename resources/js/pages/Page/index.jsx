@@ -7,11 +7,12 @@ import { endpoints } from "../../routes/app"
 import useStyles from "./index.styles"
 import Suspense from '../../components/Suspense'
 
-const Groups = React.lazy(() => import("../Groups"))
-const GroupsUpsert = React.lazy(() => import("../Groups/Upsert"))
-const Modules = React.lazy(() => import("../Modules"))
-const Users = React.lazy(() => import("../Users"))
-const UsersUpsert = React.lazy(() => import("../Users/Upsert"))
+const Groups = React.lazy(() => import("../Groups")),
+  GroupsUpsert = React.lazy(() => import("../Groups/Upsert")),
+  Modules = React.lazy(() => import("../Modules")),
+  Users = React.lazy(() => import("../Users")),
+  UsersUpsert = React.lazy(() => import("../Users/Upsert")),
+  Account = React.lazy(() => import("../Account"))
 
 function Page() {
   const config = useSelector(state => state.app.config),
@@ -27,6 +28,7 @@ function Page() {
         <Route exact path={endpoints.users.create} render={props => <Suspense component={<UsersUpsert {...props} />} />} />
         <Route exact path={endpoints.users.update} render={props => <Suspense component={<UsersUpsert {...props} />} />} />
         <Route exact path={endpoints.users.index} render={props => <Suspense component={<Users {...props} />} />} />
+        <Route exact path={endpoints.account.index} render={props => <Suspense component={<Account {...props} />} />} />
       </Switch>
     </Box>
   )

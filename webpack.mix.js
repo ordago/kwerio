@@ -2,7 +2,7 @@ const mix = require('laravel-mix'),
   fs = require("fs")
 
 // -------------------------------------------------------------- Modules -- #
-mix.react("resources/js/index.jsx", "public/js/app.js")
+mix.react("resources/js/index.jsx", "public/js/kwerio.js")
 
 const modules_dir = fs.opendirSync("./modules")
 

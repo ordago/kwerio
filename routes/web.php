@@ -4,6 +4,7 @@ use App\Http\Controllers\{
     MetadataController,
     Account\Permissions\UserController,
     Account\Permissions\GroupController,
+    Account\Settings\AccountController,
     Account\ModuleController,
 };
 
@@ -16,13 +17,22 @@ Route::middleware(["auth"])->group(function() {
 Route::middleware(["auth", "owner-only"])->group(function() {
     // -------------------------------------------------------------- WEB -- #
     Route::prefix("account")->group(function() {
-        Route::get("/permissions/groups", [GroupController::class, "show_page"]);
-        Route::get("/permissions/groups/create", [GroupController::class, "show_create_page"]);
-        Route::get("/permissions/groups/{uuid}", [GroupController::class, "show_update_page"]);
 
-        Route::get("/permissions/users", [UserController::class, "show_page"]);
-        Route::get("/permissions/users/create", [GroupController::class, "show_create_page"]);
-        Route::get("/permissions/users/{uuid}", [GroupController::class, "show_update_page"]);
+        // ---------------------------------------- ACCOUNT / PERMISSIONS -- #
+        Route::prefix("permissions")->group(function() {
+            Route::get("/groups", [GroupController::class, "show_page"]);
+            Route::get("/groups/create", [GroupController::class, "show_create_page"]);
+            Route::get("/groups/{uuid}", [GroupController::class, "show_update_page"]);
+
+            Route::get("/users", [UserController::class, "show_page"]);
+            Route::get("/users/create", [GroupController::class, "show_create_page"]);
+            Route::get("/users/{uuid}", [GroupController::class, "show_update_page"]);
+        });
+
+        // ------------------------------------------- ACCOUNT - SETTINGS -- #
+        Route::prefix("settings")->group(function() {
+            Route::get("/account", [AccountController::class, "show_page"]);
+        });
     });
 
     Route::prefix("modules")->group(function() {

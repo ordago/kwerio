@@ -5,6 +5,7 @@ const API_PERMISSIONS_ENDPOINT = `${API_ENDPOINT}/account/permissions`
 const API_MODULES_ENDPOINT = `${API_ENDPOINT}/modules`
 
 const PERMISSIONS_ENDPOINT = `${ENDPOINT}/account/permissions`
+const SETTINGS_ENDPOINT = `${ENDPOINT}/account/settings`
 const MODULES_ENDPOINT = `${ENDPOINT}/modules`
 
 export const endpoints = {
@@ -20,6 +21,9 @@ export const endpoints = {
   },
   modules: {
     index: `${MODULES_ENDPOINT}`,
+  },
+  account: {
+    index: `${SETTINGS_ENDPOINT}/account`,
   },
 }
 
