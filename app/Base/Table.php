@@ -13,17 +13,12 @@ class Table {
     function response($items, $total) {
         $page = request()->get("page");
         $per_page = config("app.per_page");
-
-        if ($total < $per_page) {
-            $next_page = $page - 1;
-        } else {
-            $next_page = $page;
-        }
+        $last_page = max((int) ceil($total / $per_page), 1);
 
         return [
             "total" => $total,
             "items" => $items,
-            "next_page" => $next_page < 0 ? 0 : $next_page,
+            "next_page" => $page > $last_page ? $last_page : $page,
         ];
     }
 }
