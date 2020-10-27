@@ -21,7 +21,7 @@ class Table {
         return [
             "total" => $total,
             "items" => $items,
-            "next_page" = $next_page < 0 ? 0 : $next_page,
+            "next_page" => $next_page < 0 ? 0 : $next_page,
         ];
     }
 }
