@@ -57,6 +57,9 @@ const initialState = {
         variant: "outlined",
         autoComplete: "new-password",
       },
+      MuiFab: {
+        size: "small",
+      },
       MuiButton: {
         size: "small",
         variant: "contained",
