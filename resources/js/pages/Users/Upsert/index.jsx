@@ -16,9 +16,10 @@ import _ from "lodash"
 import { actions, adapter, asyncActions } from "../index.slice"
 import { endpoints } from "../../../routes/app"
 import { notify } from "../../../utils/errors"
-import AccountPage from "../../../components/AccountPage"
+import AccountMenu from "../../../components/Menus/AccountMenu"
 import Groups from "./Groups"
 import I18n from "./I18n"
+import Page from "../../../components/Page"
 import PersonalInfo from "./PersonalInfo"
 import useT from "../../../hooks/useT"
 
@@ -50,8 +51,9 @@ function Upsert({ match }) {
   }, [])
 
   return (
-    <AccountPage
+    <Page
       loading={state.loading}
+      menu={() => <AccountMenu match={match} />}
       title={t("Users")}
       content={() => (
         <Card>

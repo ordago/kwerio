@@ -11,6 +11,7 @@ function AccountPage({
   title = "",
   header = false,
   loading = false,
+  menu = () => {},
   content = () => {},
 }) {
   const config = useSelector(state => state.app.config),
@@ -21,7 +22,7 @@ function AccountPage({
       title={title}
       menu={() => (
         <Box className={classes.menu}>
-          <Menu only={["Account"]} hasLogo={false} />
+          {menu()}
         </Box>
       )}
       header={() => (

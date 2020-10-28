@@ -19,7 +19,8 @@ import {
   asyncActions as modulesAsyncActions
 } from "../../Modules/index.slice"
 import { notify } from "../../../utils/errors"
-import AccountPage from "../../../components/AccountPage"
+import AccountMenu from "../../../components/Menus/AccountMenu"
+import Page from "../../../components/Page"
 import useStyles from "./index.styles"
 import useT from "../../../hooks/useT"
 
@@ -63,9 +64,10 @@ function Upsert({ match }) {
   }, [])
 
   return (
-    <AccountPage
+    <Page
       title={t("Groups")}
       loading={state.loading}
+      menu={() => <AccountMenu match={match} />}
       content={() => (
         <Card>
           <CardContent>

@@ -5,13 +5,14 @@ import React from "react"
 
 import { actions, adapter, tableAsyncActions } from "./index.slice"
 import { endpoints } from "../../routes/app"
-import AccountPage from "../../components/AccountPage"
+import Page from "../../components/Page"
 import PaginatedTable from "../../components/PaginatedTable/index.jsx"
 import Toolbar from "../../components/PaginatedTable/Toolbar"
 import useStyles from "./index.styles"
 import useT from "../../hooks/useT"
+import AccountMenu from '../../components/Menus/AccountMenu'
 
-function Users() {
+function Users({ match }) {
   const classes = useStyles(),
     state = useSelector(state => state.users),
     history = useHistory(),
@@ -20,9 +21,10 @@ function Users() {
     loading = useSelector(state => state.users.loading)
 
   return (
-    <AccountPage
+    <Page
       loading={loading}
       title={t("Users")}
+      menu={() => <AccountMenu match={match} />}
       content={() => (
         <Paper>
           <Toolbar
