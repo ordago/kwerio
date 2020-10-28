@@ -7,7 +7,10 @@ import _ from "lodash"
 import MenuItem from "./MenuItem"
 import useStyles from "./Menu.styles"
 
-function Menu(props) {
+function Menu({
+  only = false,
+  hasLogo = true,
+}) {
   const { data } = useSelector((state) => state.app.menu),
     config = useSelector((state) => state.app.config),
     classes = useStyles(config),
@@ -15,33 +18,39 @@ function Menu(props) {
 
   return (
     <div className={classes.root}>
-      <div className={classes.logo}></div>
-      {data.map((menu) => (
-        <List key={menu.id} dense={true} disablePadding={true} subheader={
-          <ListSubheader>{menu.text.toUpperCase()}</ListSubheader>
-        }>
-          {menu.children.map((item) => {
-            let node = []
-            let has_childrens = !_.isUndefined(item.children) && item.children.length > 0
+      {hasLogo && <div className={classes.logo}></div>}
+      {data.map((menu) => {
+        if (only !== false && only.indexOf(menu.text) === -1) {
+          return []
+        }
 
-            node.push(<MenuItem key={item.id} hasChildrens={has_childrens} item={item} level={0} />)
+        return (
+          <List key={menu.id} dense={true} disablePadding={true} subheader={
+            <ListSubheader>{menu.text.toUpperCase()}</ListSubheader>
+          }>
+            {menu.children.map((item) => {
+              let node = []
+              let has_childrens = !_.isUndefined(item.children) && item.children.length > 0
 
-            if (has_childrens) {
-              node.push(
-                <Collapse key={`${item.id}${item.id}`} timeout="auto" in={item.open} unmountOnExit>
-                  <List disablePadding>
-                    {item.children.map((item) => (
-                      <MenuItem hasChildrens={false}  key={item.id} item={item} level={1} />
-                    ))}
-                  </List>
-                </Collapse>
-              )
-            }
+              node.push(<MenuItem key={item.id} hasChildrens={has_childrens} item={item} level={0} />)
 
-            return node
-          })}
-        </List>
-      ))}
+              if (has_childrens) {
+                node.push(
+                  <Collapse key={`${item.id}${item.id}`} timeout="auto" in={item.open} unmountOnExit>
+                    <List disablePadding>
+                      {item.children.map((item) => (
+                        <MenuItem hasChildrens={false}  key={item.id} item={item} level={1} />
+                      ))}
+                    </List>
+                  </Collapse>
+                )
+              }
+
+              return node
+            })}
+          </List>
+        )
+      })}
     </div>
   )
 }

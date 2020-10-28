@@ -21,7 +21,6 @@ import {
   asyncActions as modulesAsyncActions
 } from "../../Modules/index.slice"
 import { notify } from "../../../utils/errors"
-import Header from "../Header"
 import OneColumnPage from "../../../components/OneColumnPage"
 import useStyles from "./index.styles"
 
@@ -64,8 +63,6 @@ function Upsert({ match }) {
 
   return (
     <Box>
-      <Header RightComponent={<HeaderRight loading={state.loading || modulesState.loading} />} />
-
       <OneColumnPage className={classes.root}>
         <Card>
           <CardContent>
@@ -125,16 +122,6 @@ function Upsert({ match }) {
           </CardActions>
         </Card>
       </OneColumnPage>
-    </Box>
-  )
-}
-
-function HeaderRight({ loading }) {
-  return (
-    <Box>
-      {loading && (
-        <CircularProgress size={20} />
-      )}
     </Box>
   )
 }

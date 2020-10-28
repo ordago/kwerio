@@ -4,7 +4,10 @@ import { useSelector } from "react-redux"
 import React from "react"
 import clsx from "clsx"
 
-function PageHeader({ left = () => {}, right = () => {} }) {
+function PageHeader({
+  left = () => {},
+  right = () => {},
+}) {
   const config = useSelector(state => state.app.config),
     user = useSelector(state => state.app.user),
     classes = useStyles(config)

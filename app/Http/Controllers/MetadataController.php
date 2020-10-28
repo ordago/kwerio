@@ -15,7 +15,6 @@ class MetadataController extends Controller {
         $applications_menu = $this->_get_applications_menu();
         $permissions_menu = $this->_get_permissions_menu();
         $settings_menu = $this->_get_settings_menu();
-        $modules_menu = $this->_get_modules_menu();
         $user_info = $this->_get_user_info();
 
         return [
@@ -34,7 +33,6 @@ class MetadataController extends Controller {
                         "children" => array_values(array_filter([
                             $permissions_menu,
                             $settings_menu,
-                            $modules_menu,
                         ], function($menu) {
                             return !empty($menu);
                         })),
@@ -164,23 +162,5 @@ class MetadataController extends Controller {
                 ]
             ],
         ];
-    }
-
-    /**
-     * Get accessable modules menu.
-     *
-     * @return array
-     */
-    private function _get_modules_menu() {
-        // if (request()->user()->is_owner()) {
-        //     return [
-        //         "id" => Str::uuid(),
-        //         "text" => "Modules",
-        //         "icon" => "widgets",
-        //         "link" => "/modules",
-        //     ];
-        // }
-
-        return [];
     }
 }

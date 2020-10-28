@@ -19,7 +19,6 @@ import { actions, adapter, asyncActions } from "../index.slice"
 import { endpoints } from "../../../routes/app"
 import { notify } from "../../../utils/errors"
 import Groups from "./Groups"
-import Header from "../Header"
 import I18n from "./I18n"
 import OneColumnPage from "../../../components/OneColumnPage"
 import PersonalInfo from "./PersonalInfo"
@@ -51,8 +50,6 @@ function Upsert({ match }) {
 
   return (
     <Box>
-      <Header RightComponent={<HeaderRight loading={state.loading} />} />
-
       <OneColumnPage>
         <Card>
           <CardContent>
@@ -84,16 +81,6 @@ function Upsert({ match }) {
           </CardActions>
         </Card>
       </OneColumnPage>
-    </Box>
-  )
-}
-
-function HeaderRight({ loading }) {
-  return (
-    <Box>
-      {loading && (
-        <CircularProgress size={20} />
-      )}
     </Box>
   )
 }

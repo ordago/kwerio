@@ -17,7 +17,6 @@ import useStyles from "./App.styles"
 
 const Groups = React.lazy(() => import("./pages/Groups")),
   GroupsUpsert = React.lazy(() => import("./pages/Groups/Upsert")),
-  Modules = React.lazy(() => import("./pages/Modules")),
   Users = React.lazy(() => import("./pages/Users")),
   UsersUpsert = React.lazy(() => import("./pages/Users/Upsert")),
   Account = React.lazy(() => import("./pages/Account")),
@@ -64,7 +63,7 @@ function InnerApp({ switchRoutes = () => {} }) {
                   <Route exact path={endpoints.groups.create} render={props => <Suspense component={<GroupsUpsert {...props} />} />} />
                   <Route exact path={endpoints.groups.index} render={props => <Suspense component={<Groups {...props} />} />} />
                   <Route exact path={endpoints.groups.update} render={props => <Suspense component={<GroupsUpsert {...props} />} />} />
-                  <Route exact path={endpoints.modules.index} render={props => <Suspense component={<Modules {...props} />} />} />
+
                   <Route exact path={endpoints.users.create} render={props => <Suspense component={<UsersUpsert {...props} />} />} />
                   <Route exact path={endpoints.users.update} render={props => <Suspense component={<UsersUpsert {...props} />} />} />
                   <Route exact path={endpoints.users.index} render={props => <Suspense component={<Users {...props} />} />} />
