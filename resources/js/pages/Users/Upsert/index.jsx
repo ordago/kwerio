@@ -1,10 +1,8 @@
 import {
-  Box,
   Button,
   Card,
   CardActions,
   CardContent,
-  CircularProgress,
   Divider
 } from "@material-ui/core"
 import { is_disabled } from "@euvoor/form"
@@ -18,10 +16,11 @@ import _ from "lodash"
 import { actions, adapter, asyncActions } from "../index.slice"
 import { endpoints } from "../../../routes/app"
 import { notify } from "../../../utils/errors"
+import AccountPage from "../../../components/AccountPage"
 import Groups from "./Groups"
 import I18n from "./I18n"
-import OneColumnPage from "../../../components/OneColumnPage"
 import PersonalInfo from "./PersonalInfo"
+import useT from "../../../hooks/useT"
 
 function Upsert({ match }) {
   const state = useSelector(state => state.users),
@@ -29,7 +28,9 @@ function Upsert({ match }) {
     { enqueueSnackbar } = useSnackbar(),
     dispatch = useDispatch(),
     { email, first_name, last_name, locale } = state.upsert,
-    history = useHistory()
+    history = useHistory(),
+    translations = useSelector(state => state.app.t),
+    t = useT(translations)
 
   React.useEffect(() => {
     const uuid = _.get(match, "params.uuid"),
@@ -49,8 +50,10 @@ function Upsert({ match }) {
   }, [])
 
   return (
-    <Box>
-      <OneColumnPage>
+    <AccountPage
+      loading={state.loading}
+      title={t("Users")}
+      content={() => (
         <Card>
           <CardContent>
             <PersonalInfo />
@@ -80,8 +83,8 @@ function Upsert({ match }) {
             </Button>
           </CardActions>
         </Card>
-      </OneColumnPage>
-    </Box>
+      )}
+    />
   )
 }
 
