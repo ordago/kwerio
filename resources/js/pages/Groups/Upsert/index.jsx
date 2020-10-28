@@ -1,11 +1,9 @@
 import { Autocomplete } from "@material-ui/lab"
 import {
-  Box,
   Button,
   Card,
   CardActions,
   CardContent,
-  CircularProgress,
   TextField
 } from "@material-ui/core"
 import { is_disabled } from "@euvoor/form"
@@ -21,8 +19,9 @@ import {
   asyncActions as modulesAsyncActions
 } from "../../Modules/index.slice"
 import { notify } from "../../../utils/errors"
-import OneColumnPage from "../../../components/OneColumnPage"
+import AccountPage from "../../../components/AccountPage"
 import useStyles from "./index.styles"
+import useT from "../../../hooks/useT"
 
 function Upsert({ match }) {
   const state = useSelector(state => state.groups),
@@ -34,7 +33,9 @@ function Upsert({ match }) {
     { enqueueSnackbar } = useSnackbar(),
     history = useHistory(),
     selector = adapter.getSelectors(),
-    modules_data = modulesSelector.selectAll(modulesState)
+    modules_data = modulesSelector.selectAll(modulesState),
+    translations = useSelector(state => state.app.t),
+    t = useT(translations)
 
   let modules_value = []
 
@@ -62,8 +63,10 @@ function Upsert({ match }) {
   }, [])
 
   return (
-    <Box>
-      <OneColumnPage className={classes.root}>
+    <AccountPage
+      title={t("Groups")}
+      loading={state.loading}
+      content={() => (
         <Card>
           <CardContent>
             <TextField
@@ -121,8 +124,8 @@ function Upsert({ match }) {
             </Button>
           </CardActions>
         </Card>
-      </OneColumnPage>
-    </Box>
+      )}
+    />
   )
 }
 
