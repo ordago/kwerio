@@ -38,7 +38,14 @@ function PageWithFixedMenu({
         })}
       >
         {header && header()}
-        <Box p={2} className={clsx({ [classes.contentWithFixedHeader]: header !== false })}>
+        <Box
+          p={2}
+          className={clsx({
+            [classes.contentWithFixedHeader]: header !== false,
+            [classes.contentHeight]: header === false,
+            [classes.contentHeightMinusHeader]: header !== false,
+          })}
+        >
           {content()}
         </Box>
       </Box>
@@ -75,6 +82,7 @@ const useStyles = makeStyles(theme => createStyles({
 
   content: {
     width: config => `calc(100% - ${config.menu_width}px)`,
+    minHeight: config => window.innerHeight - config.appbar_height,
   },
 
   contentLtr: {
@@ -87,6 +95,14 @@ const useStyles = makeStyles(theme => createStyles({
 
   contentWithFixedHeader: {
     marginTop: config => config.appbar_height,
+  },
+
+  contentHeight: {
+    height: "100%",
+  },
+
+  contentHeightMinusHeader: {
+    height: config => `calc(100% - ${config.appbar_height}px)`,
   },
 }))
 
