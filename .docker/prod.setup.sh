@@ -8,9 +8,6 @@ rm -rf /var/lib/apt/lists/*
 
 hostname -I | awk -F "." '{ print $1"."$2"."$3".1 host.docker.internal" }' >> /etc/hosts
 
-usermod --non-unique --uid $USER_ID www-data
-groupmod --non-unique --gid $GROUP_ID www-data
-
 cd /var/www/html
 
 if [ ! -d /var/www/html/vendor ]; then
