@@ -24,3 +24,8 @@ exec:
 		bash
 
 # ------------------------------------------------------------ PRODUCTION -- #
+prod:
+	docker-compose --file docker-compose.prod.yml up \
+		--build \
+		--abort-on-container-exit \
+		--remove-orphans
