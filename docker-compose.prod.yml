@@ -13,7 +13,7 @@ services:
     volumes:
       - ./:/var/www/html
     ports:
-      - 8000:80
+      - ${DOCKER_HTTP_PORT}:80
     networks:
       kwerio:
         ipv4_address: ${DOCKER_APP_IPV4}
