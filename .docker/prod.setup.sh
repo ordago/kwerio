@@ -39,7 +39,7 @@ chmod g+s storage/logs
 chmod 775 storage/logs
 setfacl -d -m u::rwX,g::rwX,o::r- storage/logs || true
 
-chown -R www-data:www-data storage/logs
+chown -R www-data:www-data storage
 chown -R www-data:www-data /var/www/html/public
 
 if [ ! -d /var/www/.config ]; then
