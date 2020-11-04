@@ -1,5 +1,6 @@
 .PHONY: up
 
+# ----------------------------------------------------------- DEVELOPMENT -- #
 up:
 	docker-compose --file docker-compose.dev.yml up \
 		--build \
@@ -21,3 +22,5 @@ exec:
 		-w /var/www/html \
 		app \
 		bash
+
+# ------------------------------------------------------------ PRODUCTION -- #

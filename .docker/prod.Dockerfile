@@ -78,8 +78,8 @@ RUN set -ex \
 # ----------------------------------------------------------------------------
 #                                                      Apache2 configuration -
 #
-COPY .docker/dev.kwerio.conf /etc/apache2/sites-available/000-default.conf
-COPY .docker/dev.setup.sh /root/setup.sh
+COPY .docker/prod.kwerio.conf /etc/apache2/sites-available/000-default.conf
+COPY .docker/prod.setup.sh /root/setup.sh
 
 RUN set -ex \
     && a2enmod deflate \

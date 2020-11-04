@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: .docker/prod.Dockerfile
+    container_name: kwerio
+    tty: true
+    stdin_open: true
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - 8000:80
+    networks:
+      kwerio:
+        ipv4_address: ${DOCKER_APP_IPV4}
+    environment:
+      USER_ID: ${DOCKER_USER_ID}
+      GROUP_ID: ${DOCKER_GROUP_ID}
+      APP_URL: ${APP_URL}
+    command: /root/setup.sh
+
+networks:
+  kwerio:
+    ipam:
+      driver: default
+      config:
+        - subnet: ${DOCKER_NETWORK_SUBNET}
