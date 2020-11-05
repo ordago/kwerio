@@ -13,10 +13,11 @@ cd /var/www/html
 if [ ! -d /var/www/html/vendor ]; then
     composer install --optimize-autoloader --no-dev
     php artisan key:generate
-    php artisan config:cache
-    php artisan route:cache
-    php artisan view:cache
 fi
+
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 
 if [ ! -L public/storage ]; then
     php artisan storage:link
