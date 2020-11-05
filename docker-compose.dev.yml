@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: .docker/dev.Dockerfile
-    container_name: kwerio
+    container_name: ${DOCKER_CONTAINER_NAME}
     tty: true
     stdin_open: true
     working_dir: /var/www/html
@@ -25,6 +25,7 @@ services:
 
 networks:
   kwerio:
+    name: ${DOCKER_NETWORK_NAME}
     ipam:
       driver: default
       config:

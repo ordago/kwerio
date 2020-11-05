@@ -4,6 +4,17 @@ return [
 
     "per_page" => 20,
 
+    "root_user" => [
+        "email" => env("ROOT_USER_EMAIL", "euvoor@gmail.com"),
+        "password" => env("ROOT_USER_PASSWORD", "secret"),
+        "first_name" => env("ROOT_USER_FIRST_NAME", "Oussama"),
+        "last_name" => env("ROOT_USER_LAST_NAME", "Elgoumri"),
+        "locale" => env("ROOT_USER_LOCALE", "en"),
+        "is_rtl" => env("ROOT_USER_IS_RTL", false),
+        "timezone" => env("ROOT_USER_TIMEZONE", "UTC"),
+        "locale_iso_format" => env("ROOT_USER_LOCALE_ISO_FORMAT", "L"),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

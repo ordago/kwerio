@@ -23,6 +23,12 @@ exec:
 		app \
 		bash
 
+refresh:
+	docker-compose --file docker-compose.dev.yml \
+		exec \
+		app \
+		php artisan migrate:fresh --seed
+
 # ------------------------------------------------------------ PRODUCTION -- #
 prod:
 	docker-compose --file docker-compose.prod.yml up \
