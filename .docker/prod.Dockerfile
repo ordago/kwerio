@@ -85,7 +85,8 @@ RUN set -ex \
     && a2enmod deflate \
         mime \
         rewrite \
-        headers
+        headers \
+        http2
 
 # ----------------------------------------------------------------------------
 #                                                                    Cleanup -
