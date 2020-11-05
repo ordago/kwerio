@@ -1,13 +1,9 @@
-<?php declare(strict_types=1);
-
-use Modules\BasicAuthentication\Module;
-
-$module = resolve(Module::class);
+<?php
 
 return [
     "depends_on" => [],
     "router" => [
-        "prefix" => $module->route_prefix(),
+        "prefix" => "/_/basic-authentication",
         "namespace" => "\Modules\BasicAuthentication\Http\Controllers",
         "middleware" => ["web"],
     ],
