@@ -67,6 +67,22 @@ abstract class Base {
     }
 
     /**
+     * Serialize module configuration.
+     *
+     * @param array $an_array
+     * @return self
+     */
+    public static function __set_state($an_array) {
+        $module = new static;
+
+        foreach ($an_array as $prop => $value) {
+            $module->{$prop} = $value;
+        }
+
+        return $module;
+    }
+
+    /**
      * Overwrite the default property values, by the one provided by the model.
      *
      * @param object $model
