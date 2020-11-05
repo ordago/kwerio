@@ -30,8 +30,7 @@ prod:
 		--abort-on-container-exit \
 		--remove-orphans
 
-deploy:
-	git pull
+rebuild:
 	composer install --optimize-autoloader --no-dev
 	php artisan migrate
 	php artisan config:cache
