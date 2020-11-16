@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Database\Seeder;
+use App\Models\Module;
 
 class ModulesTableSeeder extends Seeder
 {
@@ -23,24 +24,10 @@ class ModulesTableSeeder extends Seeder
             $path = base_path("modules/{$module}");
 
             if (file_exists($path)) {
-                Artisan::call("module:install", [
-                    "--path" => base_path("modules/{$module}"),
+                Module::create([
+                    "uid" => $module,
                 ]);
             }
         }
-
-        $this->_generate_fake_modules();
-    }
-
-    private function _generate_fake_modules() {
-        //$faker = \Faker\Factory::create();
-
-        //foreach (range(1, 10) as $_) {
-        //    $name = "Test " . $faker->words(mt_rand(2, 5), true);
-
-        //    Artisan::call("module:install", [
-        //        "name" => $name,
-        //    ]);
-        //}
     }
 }
