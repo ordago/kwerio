@@ -15,12 +15,7 @@ class CreateModulesTable extends Migration
     {
         Schema::create('modules', function (Blueprint $table) {
             $table->id();
-            $table->string("name")->unique();
             $table->string("uid")->unique();
-            $table->string("slug")->unique();
-            $table->string("icon")->nullable();
-            $table->integer("position")->default(9999);
-            $table->boolean("hidden")->default(false);
             $table->timestamps();
         });
     }

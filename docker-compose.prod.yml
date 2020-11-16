@@ -19,6 +19,13 @@ services:
         ipv4_address: ${DOCKER_APP_IPV4}
     environment:
       APP_URL: ${APP_URL}
+      DEBIAN_FRONTEND: noninteractive
+      GROUP_ID: ${DOCKER_GROUP_ID}
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+      TERN: xterm
+      TZ: UTC
+      USER_ID: ${DOCKER_USER_ID}
     command: /root/setup.sh
 
 networks:

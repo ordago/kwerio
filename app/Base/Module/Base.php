@@ -3,7 +3,6 @@
 namespace App\Base\Module;
 
 use Illuminate\Support\Str;
-use App\Models\Module as ModuleModel;
 
 abstract class Base {
     /**
@@ -64,36 +63,6 @@ abstract class Base {
         }
 
         return $this->{$name};
-    }
-
-    /**
-     * Serialize module configuration.
-     *
-     * @param array $an_array
-     * @return self
-     */
-    public static function __set_state($an_array) {
-        $module = new static;
-
-        foreach ($an_array as $prop => $value) {
-            $module->{$prop} = $value;
-        }
-
-        return $module;
-    }
-
-    /**
-     * Overwrite the default property values, by the one provided by the model.
-     *
-     * @param object $model
-     */
-    function overwrite_with_db_values($model) {
-        $this->name = $model->name;
-        $this->uid = $model->uid;
-        $this->slug = $model->slug;
-        $this->icon = $model->icon;
-        $this->position = $model->position;
-        $this->hidden = $model->hidden;
     }
 
     /**

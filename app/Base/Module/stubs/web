@@ -1,7 +1,0 @@
-<?php declare(strict_types=1);
-
-use Modules\%NS%\Http\Controllers\{
-    Controller,
-};
-
-Route::get("/", [Controller::class, "index"]);
