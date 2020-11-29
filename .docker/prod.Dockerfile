@@ -42,7 +42,8 @@ RUN set -eux \
         libjpeg-dev \
         libpng-dev \
         tzdata \
-        pwgen
+        pwgen \
+        dos2unix
 
 # ----------------------------------------------------------------------------
 #                                                           Install binaries -
@@ -92,6 +93,7 @@ RUN set -eux \
 #
 COPY .docker/prod.kwerio.conf /etc/apache2/sites-available/000-default.conf
 COPY .docker/prod.setup.sh /root/setup.sh
+RUN dos2unix /root/setup.sh
 
 RUN set -eux \
     && a2enmod deflate \
