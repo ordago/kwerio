@@ -22,3 +22,4 @@ tags.temp
 core
 /public/i18n
 /public/*.js.LICENSE.txt
+/public/images

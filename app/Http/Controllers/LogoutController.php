@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use Modules\BasicAuthentication\Module;
+use Modules\Login\Module;
 
 class LogoutController extends Controller {
     /**
@@ -16,6 +16,6 @@ class LogoutController extends Controller {
     function logout(Module $module) {
         Auth::logout();
 
-        return redirect()->to($module->route_prefix("/login"));
+        return redirect()->to($module->route_prefix());
     }
 }

@@ -13,8 +13,6 @@ const theme = createMuiTheme({
   }
 })
 
-console.log(theme)
-
 render(
   <ThemeProvider theme={theme}>
     <SnackbarProvider maxSnack={3} anchorOrigin={{

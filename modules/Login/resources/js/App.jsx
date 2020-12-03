@@ -9,7 +9,8 @@ import {
   Hidden,
   Link,
   TextField,
-  Typography
+  Typography,
+  Paper,
 } from "@material-ui/core"
 import { useSnackbar  } from "notistack"
 import LockIcon from "@material-ui/icons/Lock"
@@ -57,67 +58,70 @@ function App() {
         flexDirection="column"
         alignItems="center"
         flexGrow={1}
+        mt={3}
       >
-        <Box display="flex" flexDirection="column" p={2} width="400px">
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            width={1}
-            mt={5}
-            mb={5}
-            flexDirection="column"
-          >
-            <Fab className={classes.fab} size="medium" disableFocusRipple disableRipple color="primary">
-              <LockIcon />
-            </Fab>
-            <Typography variant="h6">Sign in</Typography>
-          </Box>
-
-          <TextField
-            label="Email address *"
-            name="email"
-            variant="outlined"
-            onChange={e => setEmail(e.target.value)}
-            className={classes.email}
-          />
-
-          <TextField
-            label="Password *"
-            name="password"
-            type="password"
-            variant="outlined"
-            onChange={e => setPassword(e.target.value)}
-            className={classes.password}
-          />
-
-          <FormControlLabel
-            label="Remember me"
-            className={classes.rememberMe}
-            control={<Checkbox color="primary" checked={remember_me} onChange={e => setRememberMe(e.target.checked)} />}
-          />
-
-          <Box className={classes.loginBtnWrapper}>
-            <Button
-              color="primary"
-              className={clsx(classes.loginBtn, {
-                [classes.loginBtnSuccess]: success,
-              })}
-              size="large"
-              variant="contained"
-              disabled={loading}
-              onClick={submit}
+        <Paper>
+          <Box display="flex" flexDirection="column" p={2} width="400px">
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              width={1}
+              mt={5}
+              mb={5}
+              flexDirection="column"
             >
-              Sign In
-            </Button>
+              <Fab className={classes.fab} size="medium" disableFocusRipple disableRipple color="primary">
+                <LockIcon />
+              </Fab>
+              <Typography variant="h6">Sign in</Typography>
+            </Box>
 
-            {loading && <CircularProgress className={classes.loginBtnProgress} size={24} />}
+            <TextField
+              label="Email address *"
+              name="email"
+              variant="outlined"
+              onChange={e => setEmail(e.target.value)}
+              className={classes.email}
+            />
+
+            <TextField
+              label="Password *"
+              name="password"
+              type="password"
+              variant="outlined"
+              onChange={e => setPassword(e.target.value)}
+              className={classes.password}
+            />
+
+            <FormControlLabel
+              label="Remember me"
+              className={classes.rememberMe}
+              control={<Checkbox color="primary" checked={remember_me} onChange={e => setRememberMe(e.target.checked)} />}
+            />
+
+            <Box className={classes.loginBtnWrapper}>
+              <Button
+                color="primary"
+                className={clsx(classes.loginBtn, {
+                  [classes.loginBtnSuccess]: success,
+                })}
+                size="large"
+                variant="contained"
+                disabled={loading}
+                onClick={submit}
+              >
+                Sign In
+              </Button>
+
+              {loading && <CircularProgress className={classes.loginBtnProgress} size={24} />}
+            </Box>
+
+            <Link href="#" color="primary">
+              Forget Password
+            </Link>
           </Box>
-
-          <Link href="#" color="primary">
-            Forget Password
-          </Link>
-        </Box>
+        </Paper>
       </Box>
     </Box>
   )
