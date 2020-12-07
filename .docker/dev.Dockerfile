@@ -20,7 +20,6 @@ RUN ln -nfs /usr/share/zoneinfo/$TZ /etc/localtime \
 
 # ----------------------------------------------------------------------------
 #                                                       Install dependencies -
-#
 RUN set -eux \
     && apt-get update && apt-get upgrade -y
 
@@ -47,7 +46,6 @@ RUN set -eux \
 
 # ----------------------------------------------------------------------------
 #                                                           Install binaries -
-#
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 COPY --from=node /usr/local/bin/node /usr/local/bin/node
 COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
@@ -58,7 +56,6 @@ RUN set -eux \
 
 # ----------------------------------------------------------------------------
 #                                              Install/Enable php extensions -
-#
 RUN set -eux \
     && docker-php-ext-configure gd \
         --with-jpeg
@@ -86,7 +83,7 @@ RUN set -eux \
 
 # Install xdebug
 RUN set -eux \
-    && git clone -b 3.0.0RC1 --depth 1 https://github.com/xdebug/xdebug.git /usr/src/php/ext/xdebug \
+    && git clone -b 3.0.1 --depth 1 https://github.com/xdebug/xdebug.git /usr/src/php/ext/xdebug \
     && docker-php-ext-configure xdebug --enable-xdebug-dev \
     && docker-php-ext-install xdebug
 
@@ -97,7 +94,6 @@ RUN set -eux \
 
 # ----------------------------------------------------------------------------
 #                                                      Apache2 configuration -
-#
 COPY .docker/dev.kwerio.conf /etc/apache2/sites-available/000-default.conf
 COPY .docker/dev.setup.sh /root/setup.sh
 RUN dos2unix /root/setup.sh
@@ -113,7 +109,6 @@ RUN set -eux \
 
 # ----------------------------------------------------------------------------
 #                                                                    Cleanup -
-#
 RUN set -eux \
     && rm -rf /tmp/* \
     && rm -rf /var/lib/apt/lists/*

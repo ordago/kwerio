@@ -1,5 +1,5 @@
-FROM composer:2.0.6 as composer
-FROM node:15.2.0-buster AS node
+FROM composer:2.0.7 as composer
+FROM node:15.3.0-buster AS node
 FROM php:7.4.12-apache-buster
 
 LABEL maintainer="Oussama Elgoumri <euvoor@gmail.com>"
@@ -20,7 +20,6 @@ RUN ln -nfs /usr/share/zoneinfo/$TZ /etc/localtime \
 
 # ----------------------------------------------------------------------------
 #                                                       Install dependencies -
-#
 RUN set -eux \
     && apt-get update && apt-get upgrade -y
 
@@ -47,7 +46,6 @@ RUN set -eux \
 
 # ----------------------------------------------------------------------------
 #                                                           Install binaries -
-#
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 COPY --from=node /usr/local/bin/node /usr/local/bin/node
 COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
@@ -58,7 +56,6 @@ RUN set -eux \
 
 # ----------------------------------------------------------------------------
 #                                              Install/Enable php extensions -
-#
 RUN set -eux \
     && docker-php-ext-configure gd \
         --with-jpeg
@@ -90,7 +87,6 @@ RUN set -eux \
 
 # ----------------------------------------------------------------------------
 #                                                      Apache2 configuration -
-#
 COPY .docker/prod.kwerio.conf /etc/apache2/sites-available/000-default.conf
 COPY .docker/prod.setup.sh /root/setup.sh
 RUN dos2unix /root/setup.sh
@@ -114,7 +110,6 @@ RUN set -eux \
 
 # ----------------------------------------------------------------------------
 #                                                                    Cleanup -
-#
 RUN set -eux \
     && rm -rf /tmp/* \
     && rm -rf /var/lib/apt/lists/*
