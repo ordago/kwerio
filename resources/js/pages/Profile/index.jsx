@@ -13,7 +13,6 @@ function Profile({ match }) {
   return (
     <Page
       title={t("Profile")}
-      menu={() => <AccountMenu match={match} />}
       content={() => (
         <Card>
           <CardContent>User Profile</CardContent>

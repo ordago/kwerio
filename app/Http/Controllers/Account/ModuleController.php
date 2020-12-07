@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Account;
 
+use Illuminate\Support\Facades\Config;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\{
@@ -14,11 +15,6 @@ class ModuleController extends Controller {
      */
     private $columns = [
         "uid",
-        "name",
-        "slug",
-        "icon",
-        "position",
-        "hidden",
         "created_at",
         "updated_at",
     ];

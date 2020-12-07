@@ -5,9 +5,6 @@ namespace App\Base\Module;
 use Symfony\Component\Finder\Finder;
 use Illuminate\Support\Arr;
 use App\Base\Module\Base as Module;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 
 class Loader {
     /**
@@ -85,23 +82,6 @@ class Loader {
         if (!in_array($module["basename"], $in)) {
             $modules[] = $module;
             $in[] = $module["basename"];
-        }
-    }
-
-    /**
-     * Add to the list of modules to be loaded.
-     *
-     * @param array   $modules
-     * @param Module  $module
-     * @param integer $idx
-     */
-    private function _add(&$modules, $module, $idx) {
-        foreach ($modules as $i => $m) {
-            if ($m["basename"] === $module["basename"]) {
-                unset($modules[$i]);
-                array_splice($modules, $idx, 0, [$module]);
-                break;
-            }
         }
     }
 }

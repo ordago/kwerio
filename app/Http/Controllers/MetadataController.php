@@ -76,25 +76,22 @@ class MetadataController extends Controller {
         $user = request()->user();
 
         return collect(config("modules"))
-            ->filter(function($item) use($user) {
-                if (
-                    $user->can_access_module($item["module"]->uid)
-                    && (bool) $item["module"]->hidden === false
-                ) {
+            ->filter(function($module) use($user) {
+                if ($user->can_access_module($module["uid"]) && (bool) $module["hidden"] === false) {
                     return true;
                 }
 
                 return false;
             })
-            ->map(function($item) {
+            ->map(function($module) {
                 return [
                     "id" => Str::uuid(),
-                    "position" => $item["module"]->position,
-                    "uid" => $item["module"]->uid,
-                    "text" => $item["module"]->name,
-                    "link" => $item["module"]->route_prefix(),
-                    "hidden" => $item["module"]->hidden,
-                    "icon" => $item["module"]->icon,
+                    "position" => $module["position"],
+                    "uid" => $module["uid"],
+                    "text" => $module["name"],
+                    "link" => $module["slug"],
+                    "hidden" => $module["hidden"],
+                    "icon" => $module["icon"],
                 ];
             })
             ->sortBy("position")

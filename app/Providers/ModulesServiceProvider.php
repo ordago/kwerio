@@ -7,6 +7,7 @@ use Symfony\Component\Finder\Finder;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Arr;
 use App\Base\Module\Loader;
+use App\Models\Module;
 
 class ModulesServiceProvider extends ServiceProvider
 {
@@ -30,10 +31,25 @@ class ModulesServiceProvider extends ServiceProvider
      * @return void
      */
     function boot() {
-        Config::set("modules", $this->modules);
+        $modules = [];
 
         foreach ($this->modules as $module) {
-            Config::set($module["module"]->uid, $module["module"]);
+            if (Module::whereUid($module["uid"])->exists()) {
+                $inner = $module["module"];
+
+                $modules[] = $item = [
+                    "uid" => $inner->uid,
+                    "name" => $inner->name,
+                    "position" => $inner->position,
+                    "slug" => $inner->slug,
+                    "icon" => $inner->icon,
+                    "hidden" => $inner->hidden,
+                ];
+
+                Config::set($inner->uid, $item);
+            }
         }
+
+        Config::set("modules", $modules);
     }
 }
