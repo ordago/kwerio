@@ -54,6 +54,7 @@ class UserUpsertTest extends TestCase {
             ->token()
             ->make([
                 "groups" => [],
+                "payload" => null,
             ]);
 
         $response = $this->post("/api/account/permissions/users/create", $user->toArray())
@@ -66,7 +67,6 @@ class UserUpsertTest extends TestCase {
                         "locale" => $user->locale,
                         "timezone" => $user->timezone,
                         "locale_iso_format" => $user->locale_iso_format,
-                        "payload" => $user->payload,
                     ],
                 ],
                 "total" => 2,
@@ -75,7 +75,10 @@ class UserUpsertTest extends TestCase {
             ->assertStatus(200);
 
         $data = $response->json()["items"][0];
-        $this->assertDatabaseHas("users", ["uuid" => $data["uuid"]]);
+        $this->assertDatabaseHas("users", [
+            "uuid" => $data["uuid"],
+            "payload" => json_encode($data["payload"]),
+        ]);
     }
 
     /** @test */

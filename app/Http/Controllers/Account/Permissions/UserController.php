@@ -20,6 +20,8 @@ use App\Models\{
 };
 
 class UserController extends Controller {
+    use Normalize;
+
     /**
      * Show users page.
      *
@@ -73,7 +75,7 @@ class UserController extends Controller {
 
         $items = $query->paginate(config("app.per_page"));
 
-        return $this->_normalize($items);
+        return $this->normalize($items);
     }
 
     /**
@@ -81,7 +83,7 @@ class UserController extends Controller {
      *
      * @return array
      */
-    function metadata(Languages $languages) {
+    function metadata() {
         return [
             "languages" => all_languages(),
             "timezones" => timezone_identifiers_list(),
@@ -101,7 +103,7 @@ class UserController extends Controller {
 
         $users = UserModel::whereUuid($data["uuid"])->get();
 
-        return $this->_normalize($users);
+        return $this->normalize($users);
     }
 
     /**
@@ -153,7 +155,7 @@ class UserController extends Controller {
 
             DB::commit();
 
-            return $this->_normalize(UserModel::whereUuid($user->uuid)->get());
+            return $this->normalize(UserModel::whereUuid($user->uuid)->get());
         }
 
         catch (\Throwable $e) {

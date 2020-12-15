@@ -9,6 +9,9 @@ import { rsc_catched_error, show_under_form_fields } from "../../utils/errors"
 
 export const PREFIX = "USERS"
 
+/**
+ * Fetch metadata
+ */
 export const metadata = createAsyncThunk(`${PREFIX}/metadata`, async (uuid, { getState, dispatch, rejectWithValue }) => {
   try {
     const state = getState().users
@@ -61,7 +64,7 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
       uuid, email, first_name, last_name,
       locale, timezone, locale_iso_format,
       password, password_confirmation,
-      groups,
+      groups, type,
     } = getState().users.upsert
 
     let endpoint = api.users.update
@@ -72,6 +75,7 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
 
     const response = await axios.post(endpoint, {
       uuid,
+      type: type.value,
       email: email.value,
       first_name: first_name.value,
       last_name: last_name.value,

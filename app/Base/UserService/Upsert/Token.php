@@ -4,6 +4,7 @@ namespace Kwerio\UserService\Upsert;
 
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class Token extends AUser {
     const TYPE = "Token";
@@ -20,6 +21,9 @@ class Token extends AUser {
      */
     function create(Request $request) {
         $data = $request->validate($this->rules);
+        $data["payload"] = [
+            "token" => Str::random(64),
+        ];
 
         return $this->upsert($data);
     }
