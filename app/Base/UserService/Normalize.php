@@ -14,12 +14,12 @@ trait Normalize {
     function normalize($users) {
         $items = $users->map(function($user) {
             $groups = $user->groups->pluck("uuid")->toArray();
-
             return array_merge(
                 ["groups" => $groups],
                 $user->only([
                     "uuid",
                     "type",
+                    "payload",
                     "email",
                     "first_name",
                     "last_name",

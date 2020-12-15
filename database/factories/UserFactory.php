@@ -6,6 +6,10 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Kwerio\UserService\Upsert\{
+    Web as UserWeb,
+    Token as UserToken,
+};
 
 class UserFactory extends Factory {
     protected $model = User::class;
@@ -26,10 +30,21 @@ class UserFactory extends Factory {
         ];
     }
 
+    function token() {
+        return $this->state(function($attributes) {
+            return [
+                "type" => UserToken::TYPE,
+                "payload" => [
+                    "token" => Str::random(64),
+                ],
+            ];
+        });
+    }
+
     function web() {
         return $this->state(function($attributes) {
             return [
-                "type" => "Web",
+                "type" => UserWeb::TYPE,
                 "password" => Hash::make("secret"),
                 "first_name" => $this->faker->firstName,
                 "last_name" => $this->faker->lastName,

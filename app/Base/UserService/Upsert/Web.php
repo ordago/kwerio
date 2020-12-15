@@ -12,7 +12,7 @@ class Web extends AUser {
     /**
      * {@inheritdoc}
      */
-    function set_rules(array $rules) {
+    function set_rules() {
         $this->rules += [
             "first_name" => "nullable",
             "last_name" => "nullable",
@@ -26,7 +26,7 @@ class Web extends AUser {
     function create(Request $request) {
         $data = $request->validate($this->rules);
 
-        return $this->_upsert($this->_prepare($data));
+        return $this->upsert($this->_prepare($data));
     }
 
     /**
@@ -40,10 +40,10 @@ class Web extends AUser {
                 "required",
                 "email",
                 Rule::unique("users")->ignore($request->get("uuid"), "uuid"),
-            ]
+            ],
         ] + $this->rules);
 
-        return $this->_upsert($this->_prepare($data));
+        return $this->upsert($this->_prepare($data));
     }
 
     /**

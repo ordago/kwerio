@@ -23,13 +23,14 @@ abstract class AUser {
 
     protected $rules = [];
 
-    abstract function set_rules(array $rules);
+    abstract function set_rules();
     abstract function create(Request $request);
     abstract function update(Request $request);
 
     function __construct() {
         $this->rules = [
             "uuid" => "nullable",
+            "payload" => "nullable",
             "email" => "required|unique:users,email|email",
             "locale" => [ "nullable", Rule::in(collect(all_languages())->pluck("locale")) ],
             "timezone" => [ "nullable", Rule::in(timezone_identifiers_list()) ],
@@ -50,7 +51,7 @@ abstract class AUser {
      * @Param array $data
      * @return array
      */
-    protected function _upsert(array $data) {
+    protected function upsert(array $data) {
         DB::beginTransaction();
 
         try {

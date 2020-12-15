@@ -16,6 +16,7 @@ class User extends Authenticatable {
     protected $with = ["groups"];
 
     protected $casts = [
+        "payload" => "json",
         'email_verified_at' => 'datetime',
     ];
 

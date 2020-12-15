@@ -6,14 +6,80 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
-use Kwerio\UserService\Upsert\Web;
 use Illuminate\Support\Facades\Hash;
+
+use Kwerio\UserService\Upsert\{
+    Web as UserWeb,
+    Token as UserToken,
+};
 
 class UserUpsertTest extends TestCase {
     use WithFaker, RefreshDatabase;
 
     /** @test */
-    function update_web_user() {
+    function token_update() {
+        $this->login_as_owner();
+        $user = User::factory()->web()->create();
+        $userMake = User::factory()
+            ->token()
+            ->make([
+                "uuid" => $user->uuid,
+                "groups" => [],
+            ]);
+
+        $response = $this->post("/api/account/permissions/users/update", $userMake->toArray())
+            ->assertJson([
+                "items" => [
+                    [
+                        "uuid" => $user->uuid,
+                        "groups" => [],
+                        "type" => UserToken::TYPE,
+                        "email" => $userMake->email,
+                        "locale" => $userMake->locale,
+                        "timezone" => $userMake->timezone,
+                        "locale_iso_format" => $userMake->locale_iso_format,
+                        "payload" => $userMake->payload,
+                    ],
+                ],
+                "total" => 2,
+                "next_page" => null,
+            ])
+            ->assertStatus(200);
+    }
+
+    /** @test */
+    function token_create() {
+        $this->login_as_owner();
+        $user = User::factory()
+            ->token()
+            ->make([
+                "groups" => [],
+            ]);
+
+        $response = $this->post("/api/account/permissions/users/create", $user->toArray())
+            ->assertJson([
+                "items" => [
+                    [
+                        "groups" => [],
+                        "type" => UserToken::TYPE,
+                        "email" => $user->email,
+                        "locale" => $user->locale,
+                        "timezone" => $user->timezone,
+                        "locale_iso_format" => $user->locale_iso_format,
+                        "payload" => $user->payload,
+                    ],
+                ],
+                "total" => 2,
+                "next_page" => null,
+            ])
+            ->assertStatus(200);
+
+        $data = $response->json()["items"][0];
+        $this->assertDatabaseHas("users", ["uuid" => $data["uuid"]]);
+    }
+
+    /** @test */
+    function web_update() {
         $this->login_as_owner();
         $user = User::factory()->web()->create();
         $userMake = User::factory()
@@ -29,8 +95,9 @@ class UserUpsertTest extends TestCase {
             ->assertJson([
                 "items" => [
                     [
+                        "uuid" => $user->uuid,
                         "groups" => [],
-                        "type" => Web::TYPE,
+                        "type" => UserWeb::TYPE,
                         "email" => $userMake->email,
                         "first_name" => $userMake->first_name,
                         "last_name" => $userMake->last_name,
@@ -49,7 +116,7 @@ class UserUpsertTest extends TestCase {
     }
 
     /** @test */
-    function create_web_user() {
+    function web_create() {
         $this->login_as_owner();
         $user = User::factory()
             ->web()
@@ -65,7 +132,7 @@ class UserUpsertTest extends TestCase {
                 "items" => [
                     [
                         "groups" => [],
-                        "type" => Web::TYPE,
+                        "type" => UserWeb::TYPE,
                         "email" => $user->email,
                         "first_name" => $user->first_name,
                         "last_name" => $user->last_name,
