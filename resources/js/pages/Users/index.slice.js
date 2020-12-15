@@ -11,6 +11,7 @@ export const adapter = createEntityAdapter({
 
 export const form = Form({
   /* REQUIRED */
+  type: {},
   email: {
     validator: {
       type: types.email,

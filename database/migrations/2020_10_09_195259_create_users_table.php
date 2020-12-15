@@ -17,11 +17,19 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->timestamps();
             $table->uuid("uuid");
-            $table->timestamp("owner_at")->nullable();
             $table->string("email")->unique();
-            $table->string("password");
+            $table->string("type");
+
+            // ---------------------------------------------- Daemon User -- #
+            $table->json("payload")->nullable();
+
+            // ------------------------------------------------- Web User -- #
+            $table->timestamp("owner_at")->nullable();
+            $table->string("password")->nullable();
             $table->string("first_name")->nullable();
             $table->string("last_name")->nullable();
+
+            // --------------------------------------------------- Common -- #
             $table->string("locale")->default("en");
             $table->boolean("is_rtl")->default(false);
             $table->string("timezone")->default("UTC");

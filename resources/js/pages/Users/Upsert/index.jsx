@@ -3,7 +3,9 @@ import {
   Card,
   CardActions,
   CardContent,
-  Divider
+  Divider,
+  TextField,
+  MenuItem,
 } from "@material-ui/core"
 import { is_disabled } from "@euvoor/form"
 import { useDispatch, useSelector } from "react-redux"
@@ -28,7 +30,7 @@ function Upsert({ match }) {
     selector = adapter.getSelectors(),
     { enqueueSnackbar } = useSnackbar(),
     dispatch = useDispatch(),
-    { email, first_name, last_name, locale } = state.upsert,
+    { type, email, first_name, last_name, locale } = state.upsert,
     history = useHistory(),
     translations = useSelector(state => state.app.t),
     t = useT(translations)
@@ -43,6 +45,7 @@ function Upsert({ match }) {
       dispatch(actions.fillUpsert(item))
     } else {
       dispatch(actions.resetUpsert())
+      dispatch(actions.handleChange({ name: "type", value: "Web" }))
     }
   }, [])
 
@@ -58,6 +61,22 @@ function Upsert({ match }) {
       content={() => (
         <Card>
           <CardContent>
+
+            {/* Type */}
+            <TextField
+              select
+              label="Type"
+              name="type"
+              value={type.value}
+              onChange={e => dispatch(actions.handleChange({ name: e.target.name, value: e.target.value }))}
+            >
+              {["Web", "Token"].map(item => (
+                <MenuItem key={item} value={item}>{t(item)}</MenuItem>
+              ))}
+            </TextField>
+
+            <Divider />
+
             <PersonalInfo />
             <Divider />
 

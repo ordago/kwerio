@@ -1,5 +1,48 @@
 <?php declare(strict_types=1);
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
+
+if (!function_exists("get_locale_iso_formats")) {
+    /**
+     * Get a list of supported locale iso formats.
+     *
+     * @return array
+     */
+    function get_locale_iso_formats() {
+        $iso_formats = resolve(Carbon::class)->getIsoFormats();
+        $locale_iso_formats = [];
+
+        foreach ($iso_formats as $key => $value) {
+            $locale_iso_formats[] = [
+                "label" => $key,
+                "example" => now()->isoFormat($key),
+            ];
+        }
+
+        return $locale_iso_formats;
+    }
+}
+
+if (!function_exists("all_languages")) {
+    /**
+     * Get a list of all languages and there locale.
+     *
+     * @return array
+     */
+    function all_languages() {
+        $locales = collect(ResourceBundle::getLocales(""))->map(function($locale) {
+            return [
+                "locale" => $locale,
+                "name" => Locale::getDisplayName($locale, "en"),
+                "native_name" => Locale::getDisplayName($locale, $locale),
+            ];
+        });
+
+        return $locales;
+    }
+}
+
 if (!function_exists("rsc")) {
     /**
      * A replace for mix() function that resolves assets based on the environment.

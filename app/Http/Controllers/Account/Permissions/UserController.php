@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Account\Permissions;
 
-use App\Base\Languages;
+use Kwerio\UserService\Normalize;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Kwerio\UserService\Upsert\AUser as UserUpsert;
 
 use Illuminate\Support\Facades\{
     DB,
@@ -19,38 +20,6 @@ use App\Models\{
 };
 
 class UserController extends Controller {
-    private $columns = [
-        "uuid",
-        "email",
-        "first_name",
-        "last_name",
-        "locale",
-        "timezone",
-        "locale_iso_format",
-        "created_at",
-        "updated_at",
-    ];
-
-    private $rules = [];
-
-    /**
-     * Initialize constructor.
-     *
-     * @param Languages $languages
-     */
-    function __construct(Languages $languages) {
-        $this->rules = [
-            "email" => "required|unique:users,email|email",
-            "first_name" => "nullable",
-            "last_name" => "nullable",
-            "locale" => [ "nullable", Rule::in(collect($languages->all())->pluck("locale")) ],
-            "timezone" => [ "nullable", Rule::in(timezone_identifiers_list()) ],
-            "locale_iso_format" => [ "nullable", Rule::in(collect($this->_get_locale_iso_formats())->pluck("label")) ],
-            "password" => "required|confirmed|min:6",
-            "groups" => "nullable",
-        ];
-    }
-
     /**
      * Show users page.
      *
@@ -114,9 +83,9 @@ class UserController extends Controller {
      */
     function metadata(Languages $languages) {
         return [
-            "languages" => $languages->all(),
+            "languages" => all_languages(),
             "timezones" => timezone_identifiers_list(),
-            "localeIsoFormats" => $this->_get_locale_iso_formats(),
+            "localeIsoFormats" => get_locale_iso_formats(),
         ];
     }
 
@@ -141,10 +110,8 @@ class UserController extends Controller {
      * @param Request   $request
      * @return array
      */
-    function create(Request $request) {
-        $data = $request->validate($this->rules);
-
-        return $this->_upsert($data);
+    function create(Request $request, UserUpsert $userUpsert) {
+        return $userUpsert->create($request);
     }
 
     /**
@@ -153,18 +120,8 @@ class UserController extends Controller {
      * @param Request $request
      * @return array
      */
-    function update(Request $request) {
-        $data = $request->validate(array_merge($this->rules, [
-            "uuid" => "required|exists:users,uuid",
-            "password" => "nullable|confirmed|min:6",
-            "email" => [
-                "required",
-                "email",
-                Rule::unique("users")->ignore($request->get("uuid"), "uuid"),
-            ],
-        ]));
-
-        return $this->_upsert($data);
+    function update(Request $request, UserUpsert $userUpsert) {
+        return $userUpsert->update($request);
     }
 
     /**
@@ -205,50 +162,5 @@ class UserController extends Controller {
         }
 
         abort(403);
-    }
-
-    /**
-     * Get a list of supported locale iso formats.
-     *
-     * @return array
-     */
-    private function _get_locale_iso_formats() {
-        $iso_formats = resolve(Carbon::class)->getIsoFormats();
-        $locale_iso_formats = [];
-
-        foreach ($iso_formats as $key => $value) {
-            $locale_iso_formats[] = [
-                "label" => $key,
-                "example" => now()->isoFormat($key),
-            ];
-        }
-
-        return $locale_iso_formats;
-    }
-
-    /**
-     * Normalize the users.
-     *
-     * @param Collection $users
-     * @return array
-     */
-    private function _normalize($users) {
-        $items = $users->map(function($user) {
-            $groups = $user->groups->pluck("uuid")->toArray();
-
-            return array_merge(
-                ["groups" => $groups],
-                $user->only($this->columns)
-            );
-        });
-
-        $total = UserModel::count();
-        $page = request()->get("page");
-
-        return [
-            "items" => $items,
-            "total" => $total,
-            "next_page" => $total === config("app.per_page") ? $page + 1 : $page,
-        ];
     }
 }

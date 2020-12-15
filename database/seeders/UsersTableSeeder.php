@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use App\Models\User as UserModel;
 
 class UsersTableSeeder extends Seeder
 {
@@ -14,8 +14,9 @@ class UsersTableSeeder extends Seeder
      * @return void
      */
     public function run() {
-        User::create([
+        UserModel::create([
             "owner_at" => now(),
+            "type" => "Web",
             "email" => config("app.root_user.email"),
             "password" => Hash::make(config("app.root_user.password")),
             "first_name" => config("app.root_user.first_name"),
