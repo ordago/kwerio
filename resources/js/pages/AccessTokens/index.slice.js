@@ -15,6 +15,9 @@ const initialState = adapter.getInitialState({
   loading: false,
   upsert: {
     uuid: null,
+    name: "",
+    is_hashed: false,
+    expired_at: "",
   },
   columns: [
     { slug: "email", label: "Created by", sort: true, sortDirection: "asc", sortOrder: 4 },
@@ -29,10 +32,18 @@ const slice = createSlice({
   initialState,
   reducers: {
     ...paginatedTable.reducers,
-    setLoading: (state, action) => { state.loading = action.payload },
+    handleChange: (state, action) => {
+      state.upsert = {
+        ...state.upsert,
+        [action.payload.name]: action.payload.value
+      }
+    },
     resetUpsert: (state, action) => {
       state.upsert = {
         uuid: null,
+        name: "",
+        is_hashed: false,
+        expired_at: "",
       }
     },
   },

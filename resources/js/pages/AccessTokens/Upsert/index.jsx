@@ -1,4 +1,13 @@
-import { Button, Card, CardActions, CardContent } from "@material-ui/core"
+import { Alert } from "@material-ui/lab"
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  FormControlLabel,
+  Switch,
+  TextField
+} from "@material-ui/core"
 import { useDispatch, useSelector } from "react-redux"
 import { useSnackbar } from "notistack"
 import React from "react"
@@ -26,6 +35,37 @@ function Upsert({ match }) {
       content={() => (
         <Card>
           <CardContent>
+
+            {/* NAME */}
+            <TextField
+              label={t("Name")}
+              value={state.upsert.name}
+              onChange={e => dispatch(actions.handleChange({ name: "name", value: e.target.value }))}
+              fullWidth
+            />
+
+            {/* IS HASHED */}
+            <FormControlLabel
+              label={t("Is hashed")}
+              control={
+                <Switch
+                  checked={state.upsert.is_hashed}
+                  onChange={e => dispatch(actions.handleChange({ name: "is_hashed", value: e.target.checked }))}
+                />
+              }
+            />
+
+            {state.upsert.is_hashed && (
+              <Alert severity="warning">{t("Hashed tokens can only be copied once.")}</Alert>
+            )}
+
+            {/* Expired at */}
+            <TextField
+              label={t("Expired after")}
+              value={state.upsert.expired_at}
+              onChange={e => dispatch(actions.handleChange({ name: "expired_at", value: e.target.value }))}
+              fullWidth
+            />
           </CardContent>
 
           <CardActions>

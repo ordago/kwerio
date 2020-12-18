@@ -9,7 +9,12 @@ export const PREFIX = "ACCESS_TOKENS"
 
 export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch, getState, rejectWithValue }) => {
   try {
-    const { uuid } = getState()["accessTokens"].upsert
+    const {
+      uuid,
+      name,
+      is_hashed,
+      expired_at,
+    } = getState()["accessTokens"].upsert
 
     let endpoint = api.accessTokens.update
 
@@ -17,7 +22,7 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
       endpoint = api.accessTokens.create
     }
 
-    const response = await axios.post(endpoint)
+    const response = await axios.post(endpoint, { uuid, name, is_hashed, expired_at })
 
     if (response.status === 200) {
       dispatch(actions.upsertOne({

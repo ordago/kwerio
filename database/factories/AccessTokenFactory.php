@@ -25,6 +25,7 @@ class AccessTokenFactory extends Factory {
             "name" => $this->faker->sentence,
             "is_hashed" => $is_hashed,
             "token" => $token,
+            "expired_at" => null,
         ];
     }
 }

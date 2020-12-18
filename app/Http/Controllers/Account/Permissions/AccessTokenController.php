@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Account\Permissions;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -83,6 +84,7 @@ class AccessTokenController extends Controller {
             "uuid" => "nullable",
             "name" => "nullable",
             "is_hashed" => "required|boolean",
+            "expired_at" => "nullable",
         ]);
 
         return $this->_upsert($data);
@@ -99,6 +101,7 @@ class AccessTokenController extends Controller {
             "uuid" => "required|exists:access_tokens,uuid",
             "name" => "nullable",
             "is_hashed" => "required|boolean",
+            "expired_at" => "nullable",
         ]);
 
         return $this->_upsert($data);
@@ -117,9 +120,19 @@ class AccessTokenController extends Controller {
             $token = hash("sha256", $token);
         }
 
+        if (!empty($data["expired_at"])) {
+            $expired_at = strtotime("+ " . $data["expired_at"]);
+
+            if ($expired_at) {
+                $data["expired_at"] = Carbon::createFromTimestamp($expired_at);
+            }
+        }
+
         $accessToken = AccessToken::updateOrCreate(["uuid" => $data["uuid"]], [
             "user_id" => Auth::id(),
+            "is_hashed" => $data["is_hashed"],
             "name" => $data["name"],
+            "expired_at" => $data["expired_at"],
             "token" => $token,
         ]);
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -26,15 +27,37 @@ class CreateAccessTokenTest extends TestCase {
             "q" => "",
             "sorts" => [],
         ])
-            ->dump();
+            ->assertStatus(200);
+    }
+
+    /** @test */
+    function create_with_expired_at() {
+        $this->login_as_owner();
+        $at = AccessToken::factory()->make([
+            "uuid" => null,
+            "expired_at" => "3 days",
+        ]);
+
+        $data = $this->post("{$this->api_endpoint}/create", $at->only("name", "is_hashed", "uuid", "expired_at"))
+            ->assertStatus(200)
+            ->json();
+
+        $item = $data["items"][0];
+        $now = date("Y-m-d");
+        $expired_at = Carbon::create($item["expired_at"])->subDays(3)->format("Y-m-d");
+
+        $this->assertEquals($now, $expired_at);
     }
 
     /** @test */
     function create() {
         $this->login_as_owner();
-        $at = AccessToken::factory()->make(["is_hashed" => false, "uuid" => null]);
+        $at = AccessToken::factory()->make([
+            "is_hashed" => true,
+            "uuid" => null,
+        ]);
 
-        $data = $this->post("{$this->api_endpoint}/create", $at->only("name", "is_hashed", "uuid"))
+        $data = $this->post("{$this->api_endpoint}/create", $at->only("name", "is_hashed", "uuid", "expired_at"))
             ->assertStatus(200)
             ->json();
 
@@ -52,7 +75,7 @@ class CreateAccessTokenTest extends TestCase {
             "is_hashed" => true,
         ]);
 
-        $data = $this->post("{$this->api_endpoint}/update", $at->only("name", "is_hashed", "uuid"))
+        $data = $this->post("{$this->api_endpoint}/update", $at->only("name", "is_hashed", "uuid", "expired_at"))
             ->assertStatus(200)
             ->json();
 
