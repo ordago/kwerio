@@ -32,23 +32,32 @@ class CreateAccessTokenTest extends TestCase {
     /** @test */
     function create() {
         $this->login_as_owner();
+        $at = AccessToken::factory()->make(["is_hashed" => false, "uuid" => null]);
 
-        $this->post("{$this->api_endpoint}/create")
-            ->assertStatus(200);
+        $data = $this->post("{$this->api_endpoint}/create", $at->only("name", "is_hashed", "uuid"))
+            ->assertStatus(200)
+            ->json();
+
+        $item = $data["items"][0];
+
+        $this->assertEquals($at->name, $item["name"]);
+        $this->assertEquals($at->is_hashed, $item["is_hashed"]);
     }
 
     /** @test */
     function update() {
         $this->login_as_owner();
-        $accessToken = AccessToken::factory()->create(["user_id" => Auth::id()]);
+        $at = AccessToken::factory()->create([
+            "user_id" => Auth::id(),
+            "is_hashed" => true,
+        ]);
 
-        $data = $this->post("{$this->api_endpoint}/update", [
-            "uuid" => $accessToken->uuid,
-        ])
+        $data = $this->post("{$this->api_endpoint}/update", $at->only("name", "is_hashed", "uuid"))
             ->assertStatus(200)
             ->json();
 
-        $this->assertEquals($accessToken->uuid, $data["items"][0]["uuid"]);
-        $this->assertNotEquals($accessToken->token, hash("sha256", $data["items"][0]["token"]));
+        $item = $data["items"][0];
+        $this->assertEquals($at->uuid, $item["uuid"]);
+        $this->assertNotEquals($at->token, hash("sha256", $item["token"]));
     }
 }

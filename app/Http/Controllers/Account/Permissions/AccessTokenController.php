@@ -79,7 +79,13 @@ class AccessTokenController extends Controller {
      * @return array
      */
     function create(Request $request) {
-        return $this->_upsert($request->get("uuid"));
+        $data = $request->validate([
+            "uuid" => "nullable",
+            "name" => "nullable",
+            "is_hashed" => "required|boolean",
+        ]);
+
+        return $this->_upsert($data);
     }
 
     /**
@@ -91,9 +97,11 @@ class AccessTokenController extends Controller {
     function update(Request $request) {
         $data = $request->validate([
             "uuid" => "required|exists:access_tokens,uuid",
+            "name" => "nullable",
+            "is_hashed" => "required|boolean",
         ]);
 
-        return $this->_upsert($data["uuid"]);
+        return $this->_upsert($data);
     }
 
     /**
@@ -102,12 +110,17 @@ class AccessTokenController extends Controller {
      * @param string|null $uuid
      * @return array
      */
-    private function _upsert(?string $uuid) {
+    private function _upsert($data) {
         $token = Str::random(48);
 
-        $accessToken = AccessToken::updateOrCreate(["uuid" => $uuid], [
+        if ($data["is_hashed"]) {
+            $token = hash("sha256", $token);
+        }
+
+        $accessToken = AccessToken::updateOrCreate(["uuid" => $data["uuid"]], [
             "user_id" => Auth::id(),
-            "token" => hash("sha256", $token),
+            "name" => $data["name"],
+            "token" => $token,
         ]);
 
         return $this->_normalize(
@@ -125,6 +138,8 @@ class AccessTokenController extends Controller {
         $items = $accessTokens->map(function($accessToken) {
             return [
                 "uuid" => $accessToken->uuid,
+                "name" => $accessToken->name,
+                "is_hashed" => (bool) $accessToken->is_hashed,
                 "token" => $accessToken->token,
                 "email" => $accessToken->user->email,
                 "created_at" => $accessToken->created_at,

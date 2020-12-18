@@ -16,9 +16,15 @@ class AccessTokenFactory extends Factory {
      */
     public function definition()
     {
+        $is_hashed = (bool) mt_rand(0, 1);
+        $token = Str::random(48);
+        $token = $is_hashed ? hash("sha256", $token) : $token;
+
         return [
             "uuid" => (string) Str::uuid(),
-            "token" => hash("sha256", Str::random(48)),
+            "name" => $this->faker->sentence,
+            "is_hashed" => $is_hashed,
+            "token" => $token,
         ];
     }
 }
