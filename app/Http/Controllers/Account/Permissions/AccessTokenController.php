@@ -40,6 +40,33 @@ class AccessTokenController extends Controller {
     }
 
     /**
+     * Get tokens.
+     *
+     * @return array
+     */
+    function index(Request $request) {
+        $data = $request->validate([
+            "page" => "required|numeric",
+            "sorts" => "array",
+            "q" => "nullable",
+        ]);
+
+        $query = AccessToken::query();
+
+        if (!empty($data["q"])) {
+
+        }
+
+        foreach ($data["sorts"] as $sort) {
+            $query->orderBy($sort["name"], $sort["dir"]);
+        }
+
+        $items = $query->paginate(config("app.per_page"));
+
+        return $this->_normalize($items);
+    }
+
+    /**
      * Create new access token.
      *
      * @param Request $request
@@ -77,9 +104,41 @@ class AccessTokenController extends Controller {
             "token" => hash("sha256", $token),
         ]);
 
+        return $this->_normalize(
+            $accessToken->whereUuid($accessToken->uuid)->get()
+        );
+    }
+
+    /**
+     * Normalize access token data.
+     *
+     * @param LengthAwarePaginator|Collect $accessTokens
+     * @return array
+     */
+    private function _normalize($accessTokens) {
+        $items = $accessTokens->map(function($accessToken) {
+            return [
+                "uuid" => $accessToken->uuid,
+                "token" => $accessToken->token,
+                "email" => $accessToken->user->email,
+                "created_at" => $accessToken->created_at,
+                "updated_at" => $accessToken->udpated_at,
+                "expired_at" => $accessToken->expired_at,
+            ];
+        });
+
+        if (method_exists($accessTokens, "total")) {
+            $total = $accessTokens->total();
+        } else {
+            $total = AccessToken::count();
+        }
+
+        $page = request()->get("page") ?? 1;
+
         return [
-            "uuid" => $accessToken->uuid,
-            "token" => $token,
+            "items" => $items,
+            "total" => $total,
+            "next_page" => $total === config("app.per_page") ? $page + 1 : $page,
         ];
     }
 }

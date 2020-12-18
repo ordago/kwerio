@@ -14,11 +14,26 @@ class CreateAccessTokenTest extends TestCase {
     protected $api_endpoint = "/api/account/permissions/access-tokens";
 
     /** @test */
+    function index() {
+        $this->login_as_owner();
+
+        AccessToken::factory(20)->create([
+            "user_id" => Auth::id(),
+        ]);
+
+        $this->post($this->api_endpoint, [
+            "page" => 1,
+            "q" => "",
+            "sorts" => [],
+        ])
+            ->dump();
+    }
+
+    /** @test */
     function create() {
         $this->login_as_owner();
 
         $this->post("{$this->api_endpoint}/create")
-            ->assertJsonStructure(["uuid", "token"])
             ->assertStatus(200);
     }
 
@@ -30,11 +45,10 @@ class CreateAccessTokenTest extends TestCase {
         $data = $this->post("{$this->api_endpoint}/update", [
             "uuid" => $accessToken->uuid,
         ])
-            ->assertJsonStructure(["uuid", "token"])
             ->assertStatus(200)
             ->json();
 
-        $this->assertEquals($accessToken->uuid, $data["uuid"]);
-        $this->assertNotEquals($accessToken->token, hash("sha256", $data["token"]));
+        $this->assertEquals($accessToken->uuid, $data["items"][0]["uuid"]);
+        $this->assertNotEquals($accessToken->token, hash("sha256", $data["items"][0]["token"]));
     }
 }

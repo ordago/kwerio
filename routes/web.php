@@ -70,6 +70,7 @@ Route::middleware(["auth", "owner-only"])->group(function() {
                 Route::post("/users/fetch-by-uuid", [UserController::class, "fetch_by_uuid"]);
                 Route::post("/users/metadata", [UserController::class, "metadata"]);
 
+                Route::post("/access-tokens", [AccessTokenController::class, "index"]);
                 Route::post("/access-tokens/create", [AccessTokenController::class, "create"]);
                 Route::post("/access-tokens/update", [AccessTokenController::class, "update"]);
             });
