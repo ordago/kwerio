@@ -27,28 +27,9 @@ class UserFactory extends Factory {
             "is_rtl" => is_rtl($locale),
             "timezone" => $timezones[mt_rand(0, count($timezones) - 1)],
             "locale_iso_format" => $locale_iso_format[mt_rand(0, count($locale_iso_format) - 1)],
+            "password" => Hash::make("secret"),
+            "first_name" => $this->faker->firstName,
+            "last_name" => $this->faker->lastName,
         ];
-    }
-
-    function token() {
-        return $this->state(function($attributes) {
-            return [
-                "type" => UserToken::TYPE,
-                "payload" => [
-                    "token" => Str::random(64),
-                ],
-            ];
-        });
-    }
-
-    function web() {
-        return $this->state(function($attributes) {
-            return [
-                "type" => UserWeb::TYPE,
-                "password" => Hash::make("secret"),
-                "first_name" => $this->faker->firstName,
-                "last_name" => $this->faker->lastName,
-            ];
-        });
     }
 }

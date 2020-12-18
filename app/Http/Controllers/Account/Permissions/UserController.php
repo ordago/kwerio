@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Account\Permissions;
 
-use Kwerio\UserService\Normalize;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Kwerio\UserService\Upsert\AUser as UserUpsert;
 
 use Illuminate\Support\Facades\{
     DB,
@@ -20,7 +18,37 @@ use App\Models\{
 };
 
 class UserController extends Controller {
-    use Normalize;
+    private $columns = [
+        "uuid",
+        "email",
+        "first_name",
+        "last_name",
+        "locale",
+        "timezone",
+        "locale_iso_format",
+        "created_at",
+        "updated_at",
+    ];
+
+    private $rules = [];
+
+    /**
+     * Initialize constructor.
+     *
+     * @param Languages $languages
+     */
+    function __construct() {
+        $this->rules = [
+            "email" => "required|unique:users,email|email",
+            "first_name" => "nullable",
+            "last_name" => "nullable",
+            "locale" => [ "nullable", Rule::in(collect(all_languages())->pluck("locale")) ],
+            "timezone" => [ "nullable", Rule::in(timezone_identifiers_list()) ],
+            "locale_iso_format" => [ "nullable", Rule::in(collect(get_locale_iso_formats())->pluck("label")) ],
+            "password" => "required|confirmed|min:6",
+            "groups" => "nullable",
+        ];
+    }
 
     /**
      * Show users page.
@@ -75,7 +103,7 @@ class UserController extends Controller {
 
         $items = $query->paginate(config("app.per_page"));
 
-        return $this->normalize($items);
+        return $this->_normalize($items);
     }
 
     /**
@@ -83,7 +111,7 @@ class UserController extends Controller {
      *
      * @return array
      */
-    function metadata() {
+    function metadata(Languages $languages) {
         return [
             "languages" => all_languages(),
             "timezones" => timezone_identifiers_list(),
@@ -103,7 +131,7 @@ class UserController extends Controller {
 
         $users = UserModel::whereUuid($data["uuid"])->get();
 
-        return $this->normalize($users);
+        return $this->_normalize($users);
     }
 
     /**
@@ -112,8 +140,10 @@ class UserController extends Controller {
      * @param Request   $request
      * @return array
      */
-    function create(Request $request, UserUpsert $userUpsert) {
-        return $userUpsert->create($request);
+    function create(Request $request) {
+        $data = $request->validate($this->rules);
+
+        return $this->_upsert($data);
     }
 
     /**
@@ -122,8 +152,18 @@ class UserController extends Controller {
      * @param Request $request
      * @return array
      */
-    function update(Request $request, UserUpsert $userUpsert) {
-        return $userUpsert->update($request);
+    function update(Request $request) {
+        $data = $request->validate(array_merge($this->rules, [
+            "uuid" => "required|exists:users,uuid",
+            "password" => "nullable|confirmed|min:6",
+            "email" => [
+                "required",
+                "email",
+                Rule::unique("users")->ignore($request->get("uuid"), "uuid"),
+            ],
+        ]));
+
+        return $this->_upsert($data);
     }
 
     /**
@@ -155,7 +195,7 @@ class UserController extends Controller {
 
             DB::commit();
 
-            return $this->normalize(UserModel::whereUuid($user->uuid)->get());
+            return $this->_normalize(UserModel::whereUuid($user->uuid)->get());
         }
 
         catch (\Throwable $e) {
@@ -164,5 +204,31 @@ class UserController extends Controller {
         }
 
         abort(403);
+    }
+
+    /**
+     * Normalize the users.
+     *
+     * @param Collection $users
+     * @return array
+     */
+    private function _normalize($users) {
+        $items = $users->map(function($user) {
+            $groups = $user->groups->pluck("uuid")->toArray();
+
+            return array_merge(
+                ["groups" => $groups],
+                $user->only($this->columns)
+            );
+        });
+
+        $total = UserModel::count();
+        $page = request()->get("page");
+
+        return [
+            "items" => $items,
+            "total" => $total,
+            "next_page" => $total === config("app.per_page") ? $page + 1 : $page,
+        ];
     }
 }

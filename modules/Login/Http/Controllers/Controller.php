@@ -28,7 +28,11 @@ class Controller extends BaseController {
         $intended = $request->session()
             ->pull("url.intended", $home_module->route_prefix("/"));
 
-        if (Auth::attempt($request->only("email", "password"), $request->get("remember_me"))) {
+        $credentials = $request->only("email", "password");
+
+        if (Auth::guard("web")->attempt($credentials, $request->get("remember_me"))) {
+            $request->session()->regenerate();
+
             return $intended;
         }
 

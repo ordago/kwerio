@@ -16,7 +16,6 @@ class UsersTableSeeder extends Seeder
     public function run() {
         UserModel::create([
             "owner_at" => now(),
-            "type" => "Web",
             "email" => config("app.root_user.email"),
             "password" => Hash::make(config("app.root_user.password")),
             "first_name" => config("app.root_user.first_name"),
