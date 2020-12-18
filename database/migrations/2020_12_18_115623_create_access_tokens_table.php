@@ -18,7 +18,7 @@ class CreateAccessTokensTable extends Migration
             $table->timestamps();
             $table->uuid("uuid");
             $table->unsignedBigInteger("user_id");
-            $table->string("token");
+            $table->string("token")->unique();
             $table->timestamp("expired_at")->nullable();
             $table->timestamp("last_used_at")->nullable();
 

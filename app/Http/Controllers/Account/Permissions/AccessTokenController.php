@@ -22,6 +22,24 @@ class AccessTokenController extends Controller {
     }
 
     /**
+     * Show create access tokens page.
+     *
+     * @return View
+     */
+    function show_create_page() {
+        return view("account.permissions.access-tokens");
+    }
+
+    /**
+     * Show update access tokens page.
+     *
+     * @return View
+     */
+    function show_update_page() {
+        return view("account.permissions.access-tokens");
+    }
+
+    /**
      * Create new access token.
      *
      * @param Request $request

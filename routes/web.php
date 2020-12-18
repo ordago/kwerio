@@ -38,6 +38,8 @@ Route::middleware(["auth", "owner-only"])->group(function() {
             Route::get("/users/{uuid}", [GroupController::class, "show_update_page"]);
 
             Route::get("/access-tokens", [AccessTokenController::class, "show_index_page"]);
+            Route::get("/access-tokens/create", [AccessTokenController::class, "show_create_page"]);
+            Route::get("/access-tokens/{uuid}", [AccessTokenController::class, "show_update_page"]);
         });
 
         // ------------------------------------------- ACCOUNT - SETTINGS -- #
