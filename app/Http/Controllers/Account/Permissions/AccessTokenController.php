@@ -58,7 +58,13 @@ class AccessTokenController extends Controller {
         }
 
         foreach ($data["sorts"] as $sort) {
-            $query->orderBy($sort["name"], $sort["dir"]);
+            if (in_array($sort["name"], ["email"])) {
+                $query->with(["user" => function($query) use($sort) {
+                    $query->orderBy($sort["name"], $sort["dir"]);
+                }]);
+            } else {
+                $query->orderBy($sort["name"], $sort["dir"]);
+            }
         }
 
         $items = $query->paginate(config("app.per_page"));

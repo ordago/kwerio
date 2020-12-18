@@ -10,6 +10,7 @@ class AccessToken extends Model {
     use HasFactory, Traits\LocalizeDatetimeAttributes;
 
     protected $guarded = [];
+    protected $with = ["user"];
 
     public static function boot() {
         parent::boot();

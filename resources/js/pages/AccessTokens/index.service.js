@@ -5,7 +5,7 @@ import { api } from "../../routes/app"
 import { rsc_catched_error } from "../../utils/errors"
 import { actions } from './index.slice.js'
 
-export const PREFIX = "ACCESS_TOKEKNS"
+export const PREFIX = "ACCESS_TOKENS"
 
 export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch, getState, rejectWithValue }) => {
   try {
@@ -17,19 +17,19 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
       endpoint = api.accessTokens.create
     }
 
-    dispatch(actions.setLoading(true))
-
     const response = await axios.post(endpoint)
 
-    console.log(response)
+    if (response.status === 200) {
+      dispatch(actions.upsertOne({
+        ...response.data.items[0],
+        touched_at: Date.now(),
+      }))
+    }
+
+    return rejectWithValue(response.data)
   }
 
   catch (err) {
-    console.error(err)
     return rsc_catched_error(err, rejectWithValue)
-  }
-
-  finally {
-    dispatch(actions.setLoading(false))
   }
 })

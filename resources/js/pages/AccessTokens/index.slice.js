@@ -8,22 +8,27 @@ export const adapter = createEntityAdapter({
   selectId: accessToken => accessToken.uuid,
 })
 
+const paginatedTable = PaginatedTable(PREFIX, api.accessTokens, adapter)
+
 const initialState = adapter.getInitialState({
+  ...paginatedTable.initialState,
   loading: false,
   upsert: {
     uuid: null,
   },
   columns: [
-
+    { slug: "email", label: "Created by", sort: true, sortDirection: "asc", sortOrder: 4 },
+    { slug: "expired_at", label: "Expired at", sort: true, sortDirection: "desc", sortOrder: 3 },
+    { slug: "created_at", label: "Created at", sort: true, sortDirection: "desc", sortOrder: 2 },
+    { slug: "updated_at", label: "Updated at", sort: true, sortDirection: "desc", sortOrder: 1 },
   ],
 })
-
-const paginatedTable = PaginatedTable(PREFIX, api.accessTokens, adapter)
 
 const slice = createSlice({
   name: PREFIX,
   initialState,
   reducers: {
+    ...paginatedTable.reducers,
     setLoading: (state, action) => { state.loading = action.payload },
     resetUpsert: (state, action) => {
       state.upsert = {
@@ -32,7 +37,23 @@ const slice = createSlice({
     },
   },
   extraReducers: {
+    ...paginatedTable.extraReducers,
 
+    // upsert
+    [upsert.pending]: (state, action) => {
+      state.loading = true
+      state.error = false
+    },
+    [upsert.rejected]: (state, action) => {
+      state.loading = false
+      state.error = true
+      console.error(action)
+    },
+    [upsert.fulfilled]: (state, action) => {
+      state.loading = false
+      state.error = false
+      console.log(action)
+    }
   },
 })
 
