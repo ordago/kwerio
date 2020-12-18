@@ -55,9 +55,6 @@ export const api = {
   accessTokens: {
     index: `${API_PERMISSIONS_ENDPOINT}/access-tokens`,
     create: `${API_PERMISSIONS_ENDPOINT}/access-tokens/create`,
-    update: `${API_PERMISSIONS_ENDPOINT}/access-tokens/update`,
-    fetch_by_uuid: `${API_PERMISSIONS_ENDPOINT}/access-tokens/fetch-by-uuid`,
-    metadata: `${API_PERMISSIONS_ENDPOINT}/access-tokens/metadata`,
   },
   modules: {
     index: `${API_MODULES_ENDPOINT}/modules`,

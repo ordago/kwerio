@@ -69,8 +69,6 @@ function InnerApp({ switchRoutes = () => {} }) {
                   <Route exact path={endpoints.users.update} render={props => <Suspense component={<UsersUpsert {...props} />} />} />
                   <Route exact path={endpoints.users.index} render={props => <Suspense component={<Users {...props} />} />} />
 
-                  {/* <Route exact path={endpoints.accessTokens.create} render={props => <Suspense component={<AccessTokensUpsert {...props} />} />} />
-                  <Route exact path={endpoints.accessTokens.update} render={props => <Suspense component={<AccessTokensUpsert {...props} />} />} /> */}
                   <Route exact path={endpoints.accessTokens.index} render={props => <Suspense component={<AccessTokens {...props} />} />} />
 
                   {/* ACCOUNT / SETTINGS */}

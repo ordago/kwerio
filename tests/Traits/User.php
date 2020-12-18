@@ -13,7 +13,6 @@ trait User {
 
     function get_user_owner() {
         return UserModel::factory()
-            ->web()
             ->create(["owner_at" => now()])
             ->fresh();
     }
