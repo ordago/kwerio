@@ -6,9 +6,11 @@ import React from "react"
 import _ from "lodash"
 
 import { actions, adapter, tableAsyncActions } from "./index.slice"
+import { endpoints } from "../../routes/app"
 import AccountMenu from "../../components/Menus/AccountMenu"
 import Page from "../../components/Page"
 import PaginatedTable from "../../components/PaginatedTable/index.jsx"
+import Toolbar from "../../components/PaginatedTable/Toolbar"
 import useStyles from "./index.styles"
 import useT from "../../hooks/useT"
 
@@ -43,6 +45,12 @@ function AccessTokens({ match }) {
       menu={() => <AccountMenu match={match} />}
       content={() => (
         <Paper>
+          <Toolbar
+            actions={actions}
+            tableAsyncActions={tableAsyncActions}
+            onAddButtonClick={() => history.push(endpoints.accessTokens.create)}
+          />
+
           <PaginatedTable
             reducerName="accessTokens"
             adapter={adapter}
