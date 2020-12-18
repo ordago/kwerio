@@ -23,6 +23,11 @@ export const endpoints = {
     create: `${PERMISSIONS_ENDPOINT}/users/create`,
     update: `${PERMISSIONS_ENDPOINT}/users/:uuid`
   },
+  accessTokens: {
+    index: `${PERMISSIONS_ENDPOINT}/access-tokens`,
+    create: `${PERMISSIONS_ENDPOINT}/access-tokens/create`,
+    update: `${PERMISSIONS_ENDPOINT}/access-tokens/:uuid`,
+  },
   modules: {
     index: `${MODULES_ENDPOINT}`,
   },
@@ -46,6 +51,13 @@ export const api = {
     update: `${API_PERMISSIONS_ENDPOINT}/users/update`,
     fetch_by_uuid: `${API_PERMISSIONS_ENDPOINT}/users/fetch-by-uuid`,
     metadata: `${API_PERMISSIONS_ENDPOINT}/users/metadata`,
+  },
+  accessTokens: {
+    index: `${API_PERMISSIONS_ENDPOINT}/access-tokens`,
+    create: `${API_PERMISSIONS_ENDPOINT}/access-tokens/create`,
+    update: `${API_PERMISSIONS_ENDPOINT}/access-tokens/update`,
+    fetch_by_uuid: `${API_PERMISSIONS_ENDPOINT}/access-tokens/fetch-by-uuid`,
+    metadata: `${API_PERMISSIONS_ENDPOINT}/access-tokens/metadata`,
   },
   modules: {
     index: `${API_MODULES_ENDPOINT}/modules`,

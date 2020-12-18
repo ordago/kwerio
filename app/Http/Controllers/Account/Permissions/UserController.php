@@ -55,7 +55,7 @@ class UserController extends Controller {
      *
      * @return View
      */
-    function show_page() {
+    function show_index_page() {
         return view("account.permissions.users");
     }
 

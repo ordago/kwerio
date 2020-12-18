@@ -5,6 +5,7 @@ use App\Http\Controllers\{
     LogoutController,
     ProfileController,
     Account\Permissions\UserController,
+    Account\Permissions\AccessTokenController,
     Account\Permissions\GroupController,
     Account\Settings\AccountController,
     Account\ModuleController,
@@ -28,13 +29,15 @@ Route::middleware(["auth", "owner-only"])->group(function() {
 
         // ---------------------------------------- ACCOUNT / PERMISSIONS -- #
         Route::prefix("permissions")->group(function() {
-            Route::get("/groups", [GroupController::class, "show_page"]);
+            Route::get("/groups", [GroupController::class, "show_index_page"]);
             Route::get("/groups/create", [GroupController::class, "show_create_page"]);
             Route::get("/groups/{uuid}", [GroupController::class, "show_update_page"]);
 
-            Route::get("/users", [UserController::class, "show_page"]);
+            Route::get("/users", [UserController::class, "show_index_page"]);
             Route::get("/users/create", [GroupController::class, "show_create_page"]);
             Route::get("/users/{uuid}", [GroupController::class, "show_update_page"]);
+
+            Route::get("/access-tokens", [AccessTokenController::class, "show_index_page"]);
         });
 
         // ------------------------------------------- ACCOUNT - SETTINGS -- #

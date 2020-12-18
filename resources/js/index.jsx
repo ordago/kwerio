@@ -7,10 +7,12 @@ import groups from "Kwerio/pages/Groups/index.slice"
 import modules from "Kwerio/pages/Modules/index.slice"
 import profile from "Kwerio/pages/Profile/index.slice"
 import users from "Kwerio/pages/Users/index.slice"
+import accessTokens from "Kwerio/pages/AccessTokens/index.slice"
 
 const reducers = {
   groups,
   users,
+  accessTokens,
   modules,
   profile,
 }

@@ -122,6 +122,11 @@ class MetadataController extends Controller {
                         "text" => "Users",
                         "link" => "/account/permissions/users",
                     ],
+                    [
+                        "id" => Str::uuid(),
+                        "text" => "Access Tokens",
+                        "link" => "/account/permissions/access-tokens",
+                    ],
                 ],
             ];
         }
