@@ -35,8 +35,20 @@ class ModuleController extends Controller {
      */
     function all() {
         $total = ModuleModel::count();
+        $modules = config("modules");
 
-        $items = ModuleModel::get($this->columns);
+        $items = ModuleModel::get($this->columns)->map(function($item) use($modules) {
+            $module = array_values(array_filter($modules, function($inner) use($item) {
+                return $inner["uid"] === $item->uid;
+            }))[0];
+
+            return [
+                "uid" => $item->uid,
+                "name" => $module["name"],
+                "created_at" => $item->created_at,
+                "updated_at" => $item->updated_at,
+            ];
+        });
 
         return [
             "items" => $items,

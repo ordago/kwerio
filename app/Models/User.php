@@ -12,7 +12,7 @@ use Illuminate\Support\Arr;
 class User extends Authenticatable {
     use HasFactory, Notifiable, Traits\LocalizeDatetimeAttributes;
 
-    protected $guarded = [ ];
+    protected $guarded = [];
     protected $with = ["groups"];
 
     protected $casts = [

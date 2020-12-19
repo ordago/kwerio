@@ -16,7 +16,7 @@ class ModulesTableSeeder extends Seeder
     public function run() {
         $core_modules = [
             "About",
-            "BasicAuthentication",
+            "Login",
             "Home",
         ];
 
