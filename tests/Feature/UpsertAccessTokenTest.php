@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\AccessToken;
 use Illuminate\Support\Str;
 
-class CreateAccessTokenTest extends TestCase {
+class UpsertAccessTokenTest extends TestCase {
     use WithFaker, RefreshDatabase;
 
     protected $api_endpoint = "/api/account/permissions/access-tokens";
