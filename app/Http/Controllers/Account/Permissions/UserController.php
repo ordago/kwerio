@@ -26,6 +26,7 @@ class UserController extends Controller {
         "locale",
         "timezone",
         "locale_iso_format",
+        "can_create_tokens",
         "created_at",
         "updated_at",
     ];
@@ -34,8 +35,6 @@ class UserController extends Controller {
 
     /**
      * Initialize constructor.
-     *
-     * @param Languages $languages
      */
     function __construct() {
         $this->rules = [
@@ -46,6 +45,7 @@ class UserController extends Controller {
             "timezone" => [ "nullable", Rule::in(timezone_identifiers_list()) ],
             "locale_iso_format" => [ "nullable", Rule::in(collect(get_locale_iso_formats())->pluck("label")) ],
             "password" => "required|confirmed|min:6",
+            "can_create_tokens" => "required|boolean",
             "groups" => "nullable",
         ];
     }
@@ -111,7 +111,7 @@ class UserController extends Controller {
      *
      * @return array
      */
-    function metadata(Languages $languages) {
+    function metadata() {
         return [
             "languages" => all_languages(),
             "timezones" => timezone_identifiers_list(),
@@ -185,6 +185,7 @@ class UserController extends Controller {
                 "locale_iso_format" => $data["locale_iso_format"],
                 "password" => empty($data["password"]) ? null : Hash::make($data["password"]),
                 "is_rtl" => empty($data["locale"]) ? null : is_rtl($data["locale"]),
+                "can_create_tokens" => $data["can_create_tokens"],
             ], function($value) {
                 return !is_null($value);
             }))

@@ -25,6 +25,7 @@ class UsersTableSeeder extends Seeder
             "timezone" => config("app.root_user.timezone"),
             "locale_iso_format" => config("app.root_user.locale_iso_format"),
             "email_verified_at" => now(),
+            "can_create_tokens" => true,
         ]);
     }
 }

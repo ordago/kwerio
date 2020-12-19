@@ -9,9 +9,6 @@ import { rsc_catched_error, show_under_form_fields } from "../../utils/errors"
 
 export const PREFIX = "USERS"
 
-/**
- * Fetch metadata
- */
 export const metadata = createAsyncThunk(`${PREFIX}/metadata`, async (uuid, { getState, dispatch, rejectWithValue }) => {
   try {
     const state = getState().users
@@ -39,12 +36,10 @@ export const fetch_by_uuid = createAsyncThunk(`${PREFIX}/fetch_by_uuid`, async (
   try {
     const response = await axios.post(api.users.fetch_by_uuid, { uuid })
 
-    if (response.status === 200 && _.hasIn(response.data, "total") && _.hasIn(response.data, "items")) {
-      if (response.data.items.length === 1) {
+    if (response.status === 200 ) {
         dispatch(actions.upsertOne({ ...response.data.items[0] }))
         dispatch(actions.fillUpsert(response.data.items[0]))
         return response.data
-      }
     }
 
     return rejectWithValue(response.data)
@@ -64,7 +59,7 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
       uuid, email, first_name, last_name,
       locale, timezone, locale_iso_format,
       password, password_confirmation,
-      groups, type,
+      groups, can_create_tokens,
     } = getState().users.upsert
 
     let endpoint = api.users.update
@@ -75,7 +70,6 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
 
     const response = await axios.post(endpoint, {
       uuid,
-      type: type.value,
       email: email.value,
       first_name: first_name.value,
       last_name: last_name.value,
@@ -85,6 +79,7 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
       password: password.value,
       password_confirmation: password_confirmation.value,
       groups: groups.value,
+      can_create_tokens: can_create_tokens.value,
     })
 
     if (response.status === 200 && _.hasIn(response.data, "total") && _.hasIn(response.data, "items")) {

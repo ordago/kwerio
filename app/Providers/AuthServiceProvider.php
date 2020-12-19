@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
+use Kwerio\AccessTokenGuard;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\{
+    Gate,
+    Auth,
+};
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -29,6 +33,10 @@ class AuthServiceProvider extends ServiceProvider
             if ($user->is_owner()) {
                 return true;
             }
+        });
+
+        Auth::extend("access-token", function($app, $name, array $config) {
+            return new AccessTokenGuard();
         });
     }
 }

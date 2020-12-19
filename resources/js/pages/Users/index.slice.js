@@ -11,7 +11,6 @@ export const adapter = createEntityAdapter({
 
 export const form = Form({
   /* REQUIRED */
-  type: {},
   email: {
     validator: {
       type: types.email,
@@ -48,6 +47,13 @@ export const form = Form({
   },
   groups: {
     value: [],
+    validator: {
+      required: false,
+    },
+  },
+
+  can_create_tokens: {
+    value: false,
     validator: {
       required: false,
     },
@@ -104,6 +110,7 @@ const slice = createSlice({
       state.upsert.timezone.value = item.timezone
       state.upsert.locale_iso_format.value = item.locale_iso_format
       state.upsert.groups.value = item.groups
+      state.upsert.can_create_tokens.value = item.can_create_tokens
     },
   },
   extraReducers: {

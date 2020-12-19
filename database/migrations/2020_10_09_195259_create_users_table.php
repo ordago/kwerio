@@ -29,6 +29,8 @@ class CreateUsersTable extends Migration
             $table->string("timezone")->default("UTC");
             $table->timestamp("email_verified_at")->nullable();
 
+            $table->boolean("can_create_tokens")->default(false);
+
             // @see Carbon\Traits\Date@getIsoFormats()
             $table->enum("locale_iso_format", ["LT", "LTS", "L", "LL", "LLL", "LLLL"])
                 ->default("L");

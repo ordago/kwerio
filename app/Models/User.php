@@ -17,7 +17,8 @@ class User extends Authenticatable {
 
     protected $casts = [
         "payload" => "json",
-        'email_verified_at' => 'datetime',
+        "email_verified_at" => "datetime",
+        "can_create_tokens" => "boolean",
     ];
 
     public static function boot() {
