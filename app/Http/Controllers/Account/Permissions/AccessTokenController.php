@@ -13,6 +13,9 @@ use App\Models\{
 };
 
 class AccessTokenController extends Controller {
+    private $carry_token = false;
+    private $token = null;
+
     /**
      * Show access tokens page.
      *
@@ -55,7 +58,8 @@ class AccessTokenController extends Controller {
         $query = AccessToken::query();
 
         if (!empty($data["q"])) {
-
+            $query->where("name", "like", "%{$data['q']}%")
+                ->orWhere("token", "like", "%{$data['q']}%");
         }
 
         foreach ($data["sorts"] as $sort) {
@@ -87,6 +91,8 @@ class AccessTokenController extends Controller {
             "expired_at" => "nullable",
         ]);
 
+        $this->carry_token = true;
+
         return $this->_upsert($data);
     }
 
@@ -102,6 +108,7 @@ class AccessTokenController extends Controller {
             "name" => "nullable",
             "is_hashed" => "required|boolean",
             "expired_at" => "nullable",
+            "original_token" => "nullable",
         ]);
 
         return $this->_upsert($data);
@@ -114,10 +121,24 @@ class AccessTokenController extends Controller {
      * @return array
      */
     private function _upsert($data) {
-        $token = Str::random(48);
+        $token = $this->token = Str::random(48);
+
+        if (!empty($data["original_token"])) {
+            $this->carry_token = true;
+            $this->token = $data["original_token"];
+        }
 
         if ($data["is_hashed"]) {
             $token = hash("sha256", $token);
+        }
+
+        if (!empty($data["uuid"])) {
+            $item = AccessToken::whereUuid($data["uuid"])->firstOrFail();
+            $token = $item->token;
+
+            if ($data["is_hashed"] && !$item->is_hashed) {
+                $token = hash("sha256", $item->token);
+            }
         }
 
         if (!empty($data["expired_at"])) {
@@ -164,6 +185,7 @@ class AccessTokenController extends Controller {
                 "name" => $accessToken->name,
                 "is_hashed" => (bool) $accessToken->is_hashed,
                 "token" => $accessToken->token,
+                "original_token" => $this->carry_token ? $this->token : null,
                 "email" => $accessToken->user->email,
                 "created_at" => $accessToken->created_at,
                 "updated_at" => $accessToken->udpated_at,

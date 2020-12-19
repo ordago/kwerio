@@ -36,7 +36,9 @@ function Upsert({ match }) {
   function _get_token() {
     const item = selector.selectById(state, uuid)
 
-    if (item && item.is_hashed) {
+    if (item && !_.isNull(item.original_token)) {
+      return item.original_token
+    } else if (item && item.is_hashed) {
       return "<YOUR TOKEN>"
     } else if (item && !item.is_hashed) {
       return item.token
@@ -102,12 +104,21 @@ function Upsert({ match }) {
             <Button
               disabled={state.loading}
               onClick={() => {
-                dispatch(asyncActions.upsert())
+                let original_token = null
+
+                if (!_.isUndefined(uuid)) {
+                  const item = selector.selectById(state, uuid)
+                  if (!_.isUndefined(item)) original_token = item.original_token
+                }
+
+                dispatch(asyncActions.upsert(original_token))
                   .then(action => notify(action, enqueueSnackbar))
                   .then(action => {
                     if (!_.isUndefined(action)) {
                       enqueueSnackbar("Success", { variant: "success" })
                     }
+
+                    return action
                   })
                   .then(action => {
                     if (_.isUndefined(uuid)) {

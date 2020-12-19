@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AccessToken;
+use Illuminate\Support\Str;
 
 class CreateAccessTokenTest extends TestCase {
     use WithFaker, RefreshDatabase;
@@ -35,8 +36,8 @@ class CreateAccessTokenTest extends TestCase {
         $this->login_as_owner();
         $at = AccessToken::factory()->create(["user_id" => Auth::id()]);
 
-        $data = $this->post("{$this->api_endpoint}/fetch-by-uuid", $at->only("uuid"))
-            ->dump();
+        $this->post("{$this->api_endpoint}/fetch-by-uuid", $at->only("uuid"))
+            ->assertStatus(200);
     }
 
     /** @test */
@@ -84,12 +85,69 @@ class CreateAccessTokenTest extends TestCase {
             "is_hashed" => true,
         ]);
 
-        $data = $this->post("{$this->api_endpoint}/update", $at->only("name", "is_hashed", "uuid", "expired_at"))
+        $data = ["original_token" => null] + $at->only("name", "is_hashed", "uuid", "expired_at");
+        $data = $this->post("{$this->api_endpoint}/update", $data)
             ->assertStatus(200)
             ->json();
 
         $item = $data["items"][0];
         $this->assertEquals($at->uuid, $item["uuid"]);
-        $this->assertNotEquals($at->token, hash("sha256", $item["token"]));
+        $this->assertEquals(hash("sha256", $at->token), hash("sha256", $item["token"]));
+    }
+
+    /** @test */
+    function update_unhashed_token() {
+        $this->login_as_owner();
+        $at = AccessToken::factory()->create([
+            "user_id" => Auth::id(),
+            "is_hashed" => false,
+            "token" => Str::random(48),
+        ]);
+
+        $data = ["original_token" => null] + $at->only("name", "is_hashed", "uuid", "expired_at");
+        $data = $this->post("{$this->api_endpoint}/update", $data)
+            ->assertStatus(200)
+            ->json();
+
+        $item = $data["items"][0];
+        $this->assertEquals($at->token, $item["token"]);
+    }
+
+    /** @test */
+    function update_hash_token() {
+        $this->login_as_owner();
+        $at = AccessToken::factory()->create([
+            "user_id" => Auth::id(),
+            "is_hashed" => false,
+            "token" => Str::random(48),
+        ]);
+
+        $data = ["is_hashed" => true, "original_token" => null] + $at->only("name", "is_hashed", "uuid", "expired_at");
+        $data = $this->post("{$this->api_endpoint}/update", $data)
+            ->assertStatus(200)
+            ->json();
+
+        $item = $data["items"][0];
+        $this->assertEquals(hash("sha256", $at->token), $item["token"]);
+    }
+
+    /** @test */
+    function update_with_original_token_included() {
+        $this->login_as_owner();
+        $at = AccessToken::factory()->create([
+            "user_id" => Auth::id(),
+            "is_hashed" => false,
+            "token" => Str::random(48),
+        ]);
+
+        $data = $at->only("name", "is_hashed", "uuid", "expired_at");
+        $data = ["original_token" => $at->token] + $data;
+
+        $data = $this->post("{$this->api_endpoint}/update", $data)
+            ->assertStatus(200)
+            ->json();
+
+        $item = $data["items"][0];
+        $this->assertEquals($item["original_token"], $at->token);
     }
 }
