@@ -73,6 +73,7 @@ Route::middleware(["auth", "owner-only"])->group(function() {
                 Route::post("/access-tokens", [AccessTokenController::class, "index"]);
                 Route::post("/access-tokens/create", [AccessTokenController::class, "create"]);
                 Route::post("/access-tokens/update", [AccessTokenController::class, "update"]);
+                Route::post("/access-tokens/fetch-by-uuid", [AccessTokenController::class, "fetch_by_uuid"]);
             });
         });
 

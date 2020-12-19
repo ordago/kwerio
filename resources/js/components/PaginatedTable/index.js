@@ -29,7 +29,7 @@ export default function(PREFIX, api, adapter) {
         const state = getState()[reducer_name]
 
         let sorts = state.columns
-            .filter(col => _.hasIn(col, "sort"))
+            .filter(col => _.hasIn(col, "sort") && col.sort === true)
             .sort((left, right) => {
               if (left.sortOrder > right.sortOrder) return 1
               else if (left.sortOrder < right.sortOrder) return -1

@@ -31,6 +31,15 @@ class CreateAccessTokenTest extends TestCase {
     }
 
     /** @test */
+    function fetch_by_uuid() {
+        $this->login_as_owner();
+        $at = AccessToken::factory()->create(["user_id" => Auth::id()]);
+
+        $data = $this->post("{$this->api_endpoint}/fetch-by-uuid", $at->only("uuid"))
+            ->dump();
+    }
+
+    /** @test */
     function create_with_expired_at() {
         $this->login_as_owner();
         $at = AccessToken::factory()->make([

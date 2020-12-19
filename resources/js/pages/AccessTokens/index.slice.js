@@ -1,6 +1,6 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit"
 
-import { PREFIX, upsert } from "./index.service"
+import { PREFIX, fetch_by_uuid, upsert } from "./index.service"
 import { api } from "../../routes/app"
 import PaginatedTable from "../../components/PaginatedTable"
 
@@ -20,6 +20,8 @@ const initialState = adapter.getInitialState({
     expired_at: "",
   },
   columns: [
+    { slug: "name", label: "Name", sort: false, sortDirection: "asc", sortOrder: 5 },
+    { slug: "token", label: "Token" },
     { slug: "email", label: "Created by", sort: true, sortDirection: "asc", sortOrder: 4 },
     { slug: "expired_at", label: "Expired at", sort: true, sortDirection: "desc", sortOrder: 3 },
     { slug: "created_at", label: "Created at", sort: true, sortDirection: "desc", sortOrder: 2 },
@@ -32,6 +34,16 @@ const slice = createSlice({
   initialState,
   reducers: {
     ...paginatedTable.reducers,
+    upsertOne: adapter.upsertOne,
+    fillUpsert: (state, action) => {
+      state.upsert = {
+        ...state.upsert,
+        uuid: action.payload.uuid,
+        name: action.payload.name || "",
+        is_hashed: action.payload.is_hashed,
+        expired_at: action.payload.expired_at || "",
+      }
+    },
     handleChange: (state, action) => {
       state.upsert = {
         ...state.upsert,
@@ -63,7 +75,6 @@ const slice = createSlice({
     [upsert.fulfilled]: (state, action) => {
       state.loading = false
       state.error = false
-      console.log(action)
     }
   },
 })
@@ -73,6 +84,7 @@ export const tableAsyncActions = paginatedTable.asyncActions("accessTokens", act
 
 export const asyncActions = {
   upsert,
+  fetch_by_uuid,
 }
 
 export default slice.reducer

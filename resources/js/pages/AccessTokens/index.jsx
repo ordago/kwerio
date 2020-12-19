@@ -31,6 +31,16 @@ function AccessTokens({ match }) {
       )
     }
 
+    if (col.slug === "token") {
+      if (row.is_hashed) {
+        return (
+          <TableCell key={col.slug}>
+            <Typography variant="caption">{t("hashed")}</Typography>
+          </TableCell>
+        )
+      }
+    }
+
     return (
       <TableCell key={col.slug}>
         {row[col.slug]}
@@ -57,6 +67,7 @@ function AccessTokens({ match }) {
             actions={actions}
             asyncActions={tableAsyncActions}
             renderCell={_renderCell}
+            onRowClick={row => history.push(endpoints.accessTokens.update.replace(/:uuid/, row.uuid))}
           />
         </Paper>
       )}

@@ -7,6 +7,24 @@ import { actions } from './index.slice.js'
 
 export const PREFIX = "ACCESS_TOKENS"
 
+export const fetch_by_uuid = createAsyncThunk(`${PREFIX}/fetch-by-uuid`, async (uuid, { dispatch, getState, rejectWithValue }) => {
+  try {
+    const response = await axios.post(api.accessTokens.fetch_by_uuid, { uuid })
+
+    if (response.status === 200) {
+      dispatch(actions.upsertOne({ ...response.data.items[0] }))
+      dispatch(actions.fillUpsert(response.data.items[0]))
+      return response.data
+    }
+
+    return rejectWithValue(response.data)
+  }
+
+  catch (err) {
+    return rsc_catched_error(err, rejectWithValue)
+  }
+})
+
 export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch, getState, rejectWithValue }) => {
   try {
     const {
@@ -18,7 +36,7 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
 
     let endpoint = api.accessTokens.update
 
-    if (_.isNull(uuid)) {
+    if (!uuid) {
       endpoint = api.accessTokens.create
     }
 
@@ -29,6 +47,10 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
         ...response.data.items[0],
         touched_at: Date.now(),
       }))
+
+      dispatch(actions.fillUpsert(response.data.items[0]))
+
+      return response.data
     }
 
     return rejectWithValue(response.data)

@@ -141,6 +141,16 @@ class AccessTokenController extends Controller {
         );
     }
 
+    function fetch_by_uuid(Request $request) {
+        $data = $request->validate([
+            "uuid" => "required|exists:access_tokens,uuid",
+        ]);
+
+        return $this->_normalize(
+            AccessToken::whereUuid($data["uuid"])->get()
+        );
+    }
+
     /**
      * Normalize access token data.
      *

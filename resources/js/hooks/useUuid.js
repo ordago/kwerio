@@ -10,7 +10,7 @@ export default function({ reducer, match, adapter, asyncActions, actions }) {
   const uuid = _.get(match, "params.uuid"),
     state = useSelector(state => state[reducer]),
     selector = adapter.getSelectors(),
-    enqueueSnackbar = useSnackbar(),
+    { enqueueSnackbar } = useSnackbar(),
     item = selector.selectById(state, uuid),
     dispatch = useDispatch()
 
