@@ -64,6 +64,7 @@ class MetadataController extends Controller {
             "dir" => $user->is_rtl ? "rtl" : "ltr",
             "groups" => $user->get_groups_ids(),
             "modules" => $user->get_modules_ids(),
+            "can_create_tokens" => $user->can_create_tokens,
         ];
     }
 

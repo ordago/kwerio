@@ -13,15 +13,7 @@ function Abilities() {
 
   return (
     <Box>
-      <FormControlLabel
-        label={t("Can create tokens")}
-        control={
-          <Switch
-            checked={state.upsert.can_create_tokens.value}
-            onChange={e => dispatch(actions.handleChange({ name: "can_create_tokens", value: e.target.checked }))}
-          />
-        }
-      />
+      Abilities
     </Box>
   )
 }

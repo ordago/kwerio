@@ -7,6 +7,9 @@ use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Modules\About\Module;
 use Modules\About\Http\Middleware\Access;
 use Illuminate\Routing\Router;
+use Modules\About\Policies\{
+    ViewPolicy,
+};
 
 class ServiceProvider extends BaseServiceProvider {
     /**
@@ -30,6 +33,8 @@ class ServiceProvider extends BaseServiceProvider {
 
     /**
      * Register module routes.
+     *
+     * @param Module $module
      */
     function _register_routes(Module $module) {
         Route::group([

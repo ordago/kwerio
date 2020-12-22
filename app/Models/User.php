@@ -10,7 +10,9 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
 
 class User extends Authenticatable {
-    use HasFactory, Notifiable, Traits\LocalizeDatetimeAttributes;
+    use HasFactory,
+        Notifiable,
+        Traits\LocalizeDatetimeAttributes;
 
     protected $guarded = [];
     protected $with = ["groups"];
@@ -29,6 +31,10 @@ class User extends Authenticatable {
                 $model->uuid = Str::uuid();
             }
         });
+    }
+
+    function abilities() {
+        return $this->belongsToMany(Ability::class);
     }
 
     /**

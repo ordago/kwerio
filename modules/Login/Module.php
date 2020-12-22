@@ -1,8 +1,8 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace Modules\Login;
 
-use App\Base\Module\Base as BaseModule;
+use Kwerio\Module\Base as BaseModule;
 
 class Module extends BaseModule {
     public $name = "Login";

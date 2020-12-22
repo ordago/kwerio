@@ -64,5 +64,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
         'owner-only' => \App\Http\Middleware\OwnerOnly::class,
+        'webapi' => \App\Http\Middleware\WebApi::class,
     ];
 }

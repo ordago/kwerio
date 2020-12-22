@@ -5,7 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 
 class ProfileController extends Controller {
-    function show_page() {
+    /**
+     * Show profile index page.
+     *
+     * @return View
+     */
+    function show_index_page() {
         return view("profile.index");
     }
 }

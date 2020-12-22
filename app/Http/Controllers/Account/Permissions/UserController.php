@@ -116,6 +116,7 @@ class UserController extends Controller {
             "languages" => all_languages(),
             "timezones" => timezone_identifiers_list(),
             "localeIsoFormats" => get_locale_iso_formats(),
+            "abilities" => Ability::get(["id", "name", "description"]),
         ];
     }
 

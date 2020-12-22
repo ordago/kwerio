@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User as UserModel;
+use App\Models\Ability;
 
 class UsersTableSeeder extends Seeder
 {
@@ -14,7 +15,7 @@ class UsersTableSeeder extends Seeder
      * @return void
      */
     public function run() {
-        UserModel::create([
+        $root = UserModel::create([
             "owner_at" => now(),
             "email" => config("app.root_user.email"),
             "password" => Hash::make(config("app.root_user.password")),
@@ -25,7 +26,8 @@ class UsersTableSeeder extends Seeder
             "timezone" => config("app.root_user.timezone"),
             "locale_iso_format" => config("app.root_user.locale_iso_format"),
             "email_verified_at" => now(),
-            "can_create_tokens" => true,
         ]);
+
+        $root->abilities()->attach(Ability::get(["id"]));
     }
 }

@@ -1,10 +1,16 @@
-<?php declare(strict_types=1);
+<?php
 
-namespace App\Base\Module;
+namespace Kwerio\Module;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\{
+    Gate,
+    Auth,
+};
 
 abstract class Base {
+    use Authorization;
+
     /**
      * REQUIRED
      *
@@ -112,15 +118,5 @@ abstract class Base {
      */
     function view(string $view) {
         return view($this->uid . "::{$view}");
-    }
-
-    /**
-     * Get a gate name.
-     *
-     * @param string $name
-     * @return string
-     */
-    function gate(string $name) {
-        return "{$this->uid}__{$name}";
     }
 }

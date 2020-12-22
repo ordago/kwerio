@@ -2,8 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Group;
 use Illuminate\Database\Seeder;
+use App\Models\{
+    Group,
+    Module as ModuleModel,
+};
 
 class GroupsTableSeeder extends Seeder
 {
@@ -13,7 +16,7 @@ class GroupsTableSeeder extends Seeder
      * @return void
      */
     public function run() {
-        Group::create([
+        $root = Group::create([
             "name" => "root",
         ]);
     }

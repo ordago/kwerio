@@ -29,11 +29,11 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::before(function($user) {
-            if ($user->is_owner()) {
-                return true;
-            }
-        });
+        // Gate::before(function($user) {
+        //     if ($user->is_owner()) {
+        //         return true;
+        //     }
+        // });
 
         Auth::extend("access-token", function($app, $name, array $config) {
             return new AccessTokenGuard();
