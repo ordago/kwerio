@@ -105,34 +105,30 @@ class MetadataController extends Controller {
      * @return array
      */
     private function _get_permissions_menu() {
-        if (request()->user()->is_owner()) {
-            return [
-                "id" => Str::uuid(),
-                "text" => "Permissions",
-                "icon" => "lock",
-                "link" => "#",
-                "open" => false,
-                "children" => [
-                    [
-                        "id" => Str::uuid(),
-                        "text" => "Groups",
-                        "link" => "/account/permissions/groups",
-                    ],
-                    [
-                        "id" => Str::uuid(),
-                        "text" => "Users",
-                        "link" => "/account/permissions/users",
-                    ],
-                    [
-                        "id" => Str::uuid(),
-                        "text" => "Access Tokens",
-                        "link" => "/account/permissions/access-tokens",
-                    ],
+        return [
+            "id" => Str::uuid(),
+            "text" => "Permissions",
+            "icon" => "lock",
+            "link" => "#",
+            "open" => false,
+            "children" => [
+                [
+                    "id" => Str::uuid(),
+                    "text" => "Groups",
+                    "link" => "/account/permissions/groups",
                 ],
-            ];
-        }
-
-        return [];
+                [
+                    "id" => Str::uuid(),
+                    "text" => "Users",
+                    "link" => "/account/permissions/users",
+                ],
+                [
+                    "id" => Str::uuid(),
+                    "text" => "Access Tokens",
+                    "link" => "/account/permissions/access-tokens",
+                ],
+            ],
+        ];
     }
 
     /**

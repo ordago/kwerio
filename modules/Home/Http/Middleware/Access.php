@@ -20,10 +20,6 @@ class Access
         $module = resolve(Module::class);
         $user = $request->user();
 
-        if ($user->is_owner()) {
-            return $next($request);
-        }
-
         if ($user->can_access_module($module->uid)) {
             return $next($request);
         }

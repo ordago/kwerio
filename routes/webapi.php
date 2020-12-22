@@ -17,7 +17,7 @@ Route::middleware(["auth"])->group(function() {
     });
 });
 
-Route::middleware(["auth", "owner-only"])->group(function() {
+Route::middleware(["auth"])->group(function() {
     // ---------------------------------------------------------- ACCOUNT -- #
     Route::prefix("account")->group(function() {
         // ---------------------------------------- ACCOUNT / PERMISSIONS -- #

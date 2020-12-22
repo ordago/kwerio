@@ -16,7 +16,7 @@ Route::middleware(["auth"])->group(function() {
     Route::get("/profile", [ProfileController::class, "show_index_page"]);
 });
 
-Route::middleware(["auth", "owner-only"])->group(function() {
+Route::middleware(["auth"])->group(function() {
     // ---------------------------------------------------------- ACCOUNT -- #
     Route::prefix("account")->group(function() {
         // ---------------------------------------- ACCOUNT / PERMISSIONS -- #
