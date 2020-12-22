@@ -30,7 +30,6 @@ class UserFactory extends Factory {
             "password" => Hash::make("secret"),
             "first_name" => $this->faker->firstName,
             "last_name" => $this->faker->lastName,
-            "can_create_tokens" => mt_rand(0, 1),
         ];
     }
 }

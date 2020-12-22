@@ -15,8 +15,8 @@ class CreateAccessTokensTable extends Migration
     {
         Schema::create('access_tokens', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->uuid("uuid");
+            $table->timestamps();
             $table->unsignedBigInteger("user_id");
             $table->string("name")->nullable();
             $table->boolean("is_hashed")->default(false);

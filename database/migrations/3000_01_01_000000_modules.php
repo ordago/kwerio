@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 use Symfony\Component\Finder\Finder;
 use Illuminate\Database\Migrations\Migration;

@@ -52,5 +52,9 @@ Route::prefix("~test")->group(function() {
 
     Route::middleware("auth")->group(function() {
         Route::get("/protected", function() { return ["type" => "web_auth"]; });
+
+        Route::middleware("root")->group(function() {
+            Route::get("/root-access", function() { return ["type" => "root_access"]; });
+        });
     });
 });

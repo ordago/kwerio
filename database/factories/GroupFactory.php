@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Group;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class GroupFactory extends Factory
 {
@@ -21,8 +22,11 @@ class GroupFactory extends Factory
      */
     public function definition()
     {
+        $name = $this->faker->words(mt_rand(1, 3), true);
+
         return [
-            "name" => $this->faker->words(mt_rand(1, 3), true),
+            "name" => $name,
+            "slug" => Str::slug($name),
         ];
     }
 }

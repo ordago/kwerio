@@ -4,8 +4,12 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User as UserModel;
-use App\Models\Ability;
+
+use App\Models\{
+    Ability,
+    Group,
+    User,
+};
 
 class UsersTableSeeder extends Seeder
 {
@@ -15,7 +19,7 @@ class UsersTableSeeder extends Seeder
      * @return void
      */
     public function run() {
-        $root = UserModel::create([
+        $rootUser = User::create([
             "owner_at" => now(),
             "email" => config("app.root_user.email"),
             "password" => Hash::make(config("app.root_user.password")),
@@ -28,6 +32,7 @@ class UsersTableSeeder extends Seeder
             "email_verified_at" => now(),
         ]);
 
-        $root->abilities()->attach(Ability::get(["id"]));
+        $rootUser->abilities()->attach(Ability::get(["id"]));
+        $rootUser->groups()->attach(Group::whereName("root")->first()->id);
     }
 }

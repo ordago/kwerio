@@ -18,6 +18,7 @@ class GroupsTableSeeder extends Seeder
     public function run() {
         $root = Group::create([
             "name" => "root",
+            "slug" => "root",
         ]);
     }
 }
