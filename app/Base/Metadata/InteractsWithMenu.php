@@ -3,6 +3,7 @@
 namespace Kwerio\Metadata;
 
 use Illuminate\Support\Str;
+use App\Models\Module as ModuleModel;
 
 trait InteractsWithMenu {
     private $applications = [];
@@ -44,10 +45,14 @@ trait InteractsWithMenu {
      */
     private function _build_applications() {
         $user = request()->user();
+        $modules = ModuleModel::get(["uid"]);
 
         $this->applications = collect(config("modules"))
             ->filter(function($module) use($user) {
                 return !($user->can_access_modules($module["uid"]) && (bool) $module["hidden"]);
+            })
+            ->filter(function($module) use($modules) {
+                return (bool) $modules->where("uid", $module["uid"])->count();
             })
             ->map(function($module) {
                 return [

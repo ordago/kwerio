@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Database\Seeder;
-use App\Models\Module;
+use App\Models\Module as ModuleModel;
 
 class ModulesTableSeeder extends Seeder
 {
@@ -14,20 +14,10 @@ class ModulesTableSeeder extends Seeder
      * @return void
      */
     public function run() {
-        $core_modules = [
-            "About",
-            "Login",
-            "Home",
-        ];
-
-        foreach ($core_modules as $module) {
-            $path = base_path("modules/{$module}");
-
-            if (file_exists($path)) {
-                Module::create([
-                    "uid" => $module,
-                ]);
-            }
+        foreach (config("modules") as $module) {
+            ModuleModel::firstOrCreate(["uid" => $module["uid"]], [
+                "uid" => $module["uid"],
+            ]);
         }
     }
 }
