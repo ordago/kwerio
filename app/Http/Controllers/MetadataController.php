@@ -53,7 +53,6 @@ class MetadataController extends Controller {
         return [
             "uuid" => $user->uuid,
             "owner_at" => $user->owner_at,
-            "is_owner" => $user->is_owner(),
             "email" => $user->email,
             "first_name" => $user->first_name ?? "",
             "last_name" => $user->last_name ?? "",
@@ -62,9 +61,8 @@ class MetadataController extends Controller {
             "locale_iso_format" => $user->locale_iso_format,
             "is_rtl" => (bool) $user->is_rtl,
             "dir" => $user->is_rtl ? "rtl" : "ltr",
-            "groups" => $user->get_groups_ids(),
-            "modules" => $user->get_modules_ids(),
-            "can_create_tokens" => $user->can_create_tokens,
+            "groups" => $user->get_groups_uuids(),
+            "modules" => $user->get_modules_uids(),
         ];
     }
 
@@ -78,11 +76,7 @@ class MetadataController extends Controller {
 
         return collect(config("modules"))
             ->filter(function($module) use($user) {
-                if ($user->can_access_module($module["uid"]) && (bool) $module["hidden"] === false) {
-                    return true;
-                }
-
-                return false;
+                return !($user->can_access_modules($module["uid"]) && (bool) $module["hidden"]);
             })
             ->map(function($module) {
                 return [

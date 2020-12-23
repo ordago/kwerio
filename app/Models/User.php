@@ -13,7 +13,8 @@ class User extends Authenticatable {
     use HasFactory,
         Notifiable,
         Traits\LocalizeDatetimeAttributes,
-        Traits\InteractsWithGroup;
+        Traits\InteractsWithGroup,
+        Traits\InteractsWithModule;
 
     protected $guarded = [];
     protected $with = ["groups"];
@@ -32,41 +33,12 @@ class User extends Authenticatable {
         });
     }
 
+    /**
+     * Get user abilities.
+     *
+     * @return BelongsToMany
+     */
     function abilities() {
         return $this->belongsToMany(Ability::class);
-    }
-
-    /**
-     * Check if user is allowed to access module.
-     *
-     * @param string $uid
-     */
-    function can_access_module($uid) {
-        foreach ($this->groups as $group) {
-            foreach ($group->modules as $module) {
-                if ($module->uid === $uid) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Get ids of the modules that this user has access to.
-     *
-     * @return array
-     */
-    function get_modules_ids() {
-        $ids = [];
-
-        foreach ($this->groups as $group) {
-            foreach ($group->modules as $module) {
-                $ids[] = $module->uid;
-            }
-        }
-
-        return $ids;
     }
 }

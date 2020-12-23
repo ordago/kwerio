@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Module extends Model {
-    use Traits\LocalizeDatetimeAttributes;
+    use HasFactory, Traits\LocalizeDatetimeAttributes;
 
     protected $guarded = [];
     protected $hidden = ["pivot"];
