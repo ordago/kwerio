@@ -21,4 +21,32 @@ class Module extends Model {
             }
         });
     }
+
+    /**
+     * Get all modules normalized.
+     *
+     * @return array
+     */
+    static function all_normalized() {
+        $modules = config("modules");
+
+        $items = Module::get(["uid", "created_at", "updated_at"])
+            ->map(function($item) use($modules) {
+                $module = array_values(array_filter($modules, function($inner) use($item) {
+                    return $inner["uid"] === $item->uid;
+                }))[0];
+
+                return [
+                    "uid" => $item->uid,
+                    "name" => $item->name,
+                    "created_at" => $item->created_at,
+                    "updated_at" => $item->updated_at,
+                ];
+            });
+
+        return [
+            "items" => $items,
+            "total" => Module::count(),
+        ];
+    }
 }

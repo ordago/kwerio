@@ -59,4 +59,27 @@ class Group extends Model {
 
         return $abilities;
     }
+
+    /**
+     * Get all groups normalized.
+     *
+     * @return array
+     */
+    static function all_normalized() {
+        $groups = Group::get(["uuid", "name", "created_at", "updated_at"])
+            ->map(function($group) {
+                $modules = $group->modules->pluck("uid")->toArray();
+                $abilities = $group->abilities()->pluck("uuid")->toArray();
+
+                return array_merge(
+                    ["modules" => $modules, "abilities" => $abilities],
+                    $group->toArray()
+                );
+            });
+
+        return [
+            "items" => $groups,
+            "total" => Group::count(),
+        ];
+    }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\{
     DB,
@@ -15,6 +16,8 @@ use Illuminate\Support\Facades\{
 use App\Models\{
     User as UserModel,
     Group as GroupModel,
+    Ability as AbilityModel,
+    Module as ModuleModel,
 };
 
 class UserController extends Controller {
@@ -110,11 +113,26 @@ class UserController extends Controller {
      * @return array
      */
     function metadata() {
-        return [
+        $metadata = [
             "languages" => all_languages(),
             "timezones" => timezone_identifiers_list(),
             "localeIsoFormats" => get_locale_iso_formats(),
         ];
+
+        $abilities = [
+            "root/user_create",
+            "root/user_update",
+        ];
+
+        if (Auth::user()->canAny($abilities)) {
+            $metadata += [
+                "abilities" => AbilityModel::all_normalized(),
+                "groups" => GroupModel::all_normalized(),
+                "modules" => ModuleModel::all_normalized(),
+            ];
+        }
+
+        return $metadata;
     }
 
     /**
