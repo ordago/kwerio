@@ -1,9 +1,14 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
-import axios from 'axios'
 
+import _ from "lodash"
+import axios from "axios"
+
+import { actions as abilitiesActions } from "../Abilities/index.slice"
 import { actions } from "./index.slice"
 import { api } from "../../routes/app"
 import { form } from "../Users/index.slice"
+import { actions as groupsActions } from "../Groups/index.slice"
+import { actions as modulesActions } from "../Modules/index.slice"
 import { move_to_start } from "../../utils/service"
 import { rsc_catched_error, show_under_form_fields } from "../../utils/errors"
 
@@ -17,6 +22,21 @@ export const metadata = createAsyncThunk(`${PREFIX}/metadata`, async (uuid, { ge
       const response = await axios.post(api.users.metadata)
 
       if (response.status === 200) {
+        if (_.hasIn(response.data, "groups")) {
+          dispatch(groupsActions.upsertMany(response.data.groups.items))
+          dispatch(groupsActions.updateRscTotal(response.data.groups.total))
+        }
+
+        if (_.hasIn(response.data, "modules")) {
+          dispatch(modulesActions.upsertMany(response.data.modules.items))
+          dispatch(modulesActions.updateRscTotal(response.data.modules.total))
+        }
+
+        if (_.hasIn(response.data, "abilities")) {
+          dispatch(abilitiesActions.upsertMany(response.data.abilities.items))
+          dispatch(abilitiesActions.updateRscTotal(response.data.abilities.total))
+        }
+
         return response.data
       }
 

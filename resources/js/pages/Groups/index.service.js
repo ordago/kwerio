@@ -6,34 +6,42 @@ import { actions, form, adapter } from "./index.slice"
 import { api } from "../../routes/app"
 import { move_to_start, needs_more } from "../../utils/service"
 import { rsc_catched_error ,show_under_form_fields } from "../../utils/errors"
+import { actions as modulesActions } from '../Modules/index.slice.js'
+import { actions as abilitiesActions } from '../Abilities/index.slice.js'
 
 export const PREFIX = "GROUPS"
 
 /**
- * Fetch all groups.
+ * Fetch metadata.
  */
-export const all = createAsyncThunk(`${PREFIX}/all`, async (__, { dispatch, getState, rejectWithValue }) => {
-  const state = getState().groups
+export const metadata = createAsyncThunk(`${PREFIX}/metadata`, async (__, { getState, dispatch, rejectWithValue }) => {
+  try {
+    const response = await axios.post(api.groups.metadata)
 
-  if (needs_more(state, adapter)) {
-    try {
-      const response = await axios.post(api.groups.all)
-
-      if (
-        response.status === 200
-        && _.hasIn(response.data, "items")
-        && _.hasIn(response.data, "total")
-      ) {
-        dispatch(actions.upsertMany(response.data.items))
-        return response.data
+    if (response.status === 200) {
+      if (_.hasIn(response.data, "groups")) {
+        dispatch(actions.upsertMany(response.data.groups.items))
+        dispatch(actions.updateRscTotal(response.data.groups.total))
       }
 
-      return rejectWithValue(response.data)
+      if (_.hasIn(response.data, "modules")) {
+        dispatch(modulesActions.upsertMany(response.data.modules.items))
+        dispatch(modulesActions.updateRscTotal(response.data.modules.total))
+      }
+
+      if (_.hasIn(response.data, "abilities")) {
+        dispatch(abilitiesActions.upsertMany(response.data.abilities.items))
+        dispatch(abilitiesActions.updateRscTotal(response.data.abilities.total))
+      }
+
+      return response.data
     }
 
-    catch (err) {
-      return rsc_catched_error(err, rejectWithValue)
-    }
+    return rejectWithValue(response.data)
+  }
+
+  catch (err) {
+    return rsc_catched_error(err, rejectWithValue)
   }
 })
 
@@ -100,7 +108,6 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
 })
 
 export const extraReducers = {
-
   // upsert
   [upsert.pending]: (state, action) => {
     state.loading = true
@@ -143,19 +150,15 @@ export const extraReducers = {
     }
   },
 
-  // all
-  [all.pending]: (state, action) => {
+  // metadata
+  [metadata.pending]: (state, action) => {
     state.loading = true
   },
-  [all.rejected]: (state, action) => {
+  [metadata.rejected]: (state, action) => {
     state.loading = false
     console.error(action)
   },
-  [all.fulfilled]: (state, action) => {
+  [metadata.fulfilled]: (state, action) => {
     state.loading = false
-
-    if (_.hasIn(action.payload, "total")) {
-      state.rsc.total = action.payload.total
-    }
-  }
+  },
 }

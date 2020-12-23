@@ -43,7 +43,7 @@ export const api = {
     create: `${API_PERMISSIONS_ENDPOINT}/groups/create`,
     update: `${API_PERMISSIONS_ENDPOINT}/groups/update`,
     fetch_by_uuid: `${API_PERMISSIONS_ENDPOINT}/groups/fetch-by-uuid`,
-    all: `${API_PERMISSIONS_ENDPOINT}/groups/all`,
+    metadata: `${API_PERMISSIONS_ENDPOINT}/groups/metadata`,
   },
   users: {
     index: `${API_PERMISSIONS_ENDPOINT}/users`,
@@ -60,6 +60,5 @@ export const api = {
   },
   modules: {
     index: `${API_MODULES_ENDPOINT}/modules`,
-    all: `${API_MODULES_ENDPOINT}/all`,
   },
 }

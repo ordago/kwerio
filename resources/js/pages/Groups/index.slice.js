@@ -1,7 +1,7 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit"
 import Form from "@euvoor/form"
 
-import { PREFIX, upsert, fetch_by_uuid, extraReducers, all } from "./index.service"
+import { PREFIX, upsert, fetch_by_uuid, extraReducers, metadata } from "./index.service"
 import { api } from "../../routes/app"
 import PaginatedTable from "../../components/PaginatedTable/index"
 
@@ -42,6 +42,9 @@ const slice = createSlice({
     ...form.reducers,
     ...paginatedTable.reducers,
     upsertOne: adapter.upsertOne,
+    updateRscTotal: (state, action) => {
+      state.rsc.total = action.payload
+    },
     resetUpsert: (state, action) => {
       state.upsert.uuid = null
       state.upsert.name.value = ""
@@ -71,7 +74,7 @@ export const tableAsyncActions = paginatedTable.asyncActions("groups", actions)
 export const asyncActions = {
   upsert,
   fetch_by_uuid,
-  all,
+  metadata,
 }
 
 export default slice.reducer

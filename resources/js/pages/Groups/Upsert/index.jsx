@@ -14,10 +14,7 @@ import React from "react"
 
 import { actions, adapter, asyncActions } from "../index.slice"
 import { endpoints } from "../../../routes/app"
-import {
-  adapter as modulesAdapter,
-  asyncActions as modulesAsyncActions
-} from "../../Modules/index.slice"
+import { adapter as modulesAdapter } from "../../Modules/index.slice"
 import { notify } from "../../../utils/errors"
 import AccountMenu from "../../../components/Menus/AccountMenu"
 import Page from "../../../components/Page"
@@ -60,7 +57,7 @@ function Upsert({ match }) {
   }, [])
 
   React.useEffect(() => {
-    dispatch(modulesAsyncActions.all()).then(action => notify(action, enqueueSnackbar))
+    dispatch(asyncActions.metadata()).then(action => notify(action, enqueueSnackbar))
   }, [])
 
   return (

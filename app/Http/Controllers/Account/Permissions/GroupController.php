@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace App\Http\Controllers\Account\Permissions;
 
@@ -6,10 +6,12 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\{
     Group as GroupModel,
     Module as ModuleModel,
+    Ability as AbilityModel,
 };
 
 class GroupController extends Controller {
@@ -152,12 +154,26 @@ class GroupController extends Controller {
     }
 
     /**
-     * Fetch all groups.
+     * Get metadata.
      *
      * @return array
      */
-    function all() {
-        return $this->_normalize(GroupModel::get());
+    function metadata() {
+        $metadata = [];
+        $abilities = [
+            "root/group_create",
+            "root/group_update",
+        ];
+
+        if (Auth::user()->canAny($abilities)) {
+            $metadata += [
+                "groups" => GroupModel::all_normalized(),
+                "modules" => ModuleModel::all_normalized(),
+                "abilities" => AbilityModel::all_normalized(),
+            ];
+        }
+
+        return $metadata;
     }
 
     /**

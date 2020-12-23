@@ -61,15 +61,17 @@ function InnerApp({ switchRoutes = () => {} }) {
               <Main>
                 <Switch>
 
-                  {/* ACCOUNT / PERMISSIONS */}
+                  {/* ACCOUNT / PERMISSIONS / GROUPS */}
                   <Route exact path={endpoints.groups.create} render={props => <Suspense component={<GroupsUpsert {...props} />} />} />
                   <Route exact path={endpoints.groups.index} render={props => <Suspense component={<Groups {...props} />} />} />
                   <Route exact path={endpoints.groups.update} render={props => <Suspense component={<GroupsUpsert {...props} />} />} />
 
+                  {/* ACCOUNT / PERMISSIONS / USERS */}
                   <Route exact path={endpoints.users.create} render={props => <Suspense component={<UsersUpsert {...props} />} />} />
                   <Route exact path={endpoints.users.update} render={props => <Suspense component={<UsersUpsert {...props} />} />} />
                   <Route exact path={endpoints.users.index} render={props => <Suspense component={<Users {...props} />} />} />
 
+                  {/* ACCOUNT / PERMISSIONS / ACCESS TOKENS */}
                   <Route exact path={endpoints.accessTokens.index} render={props => <Suspense component={<AccessTokens {...props} />} />} />
                   <Route exact path={endpoints.accessTokens.create} render={props => <Suspense component={<AccessTokensUpsert {...props} />} />} />
                   <Route exact path={endpoints.accessTokens.update} render={props => <Suspense component={<AccessTokensUpsert {...props} />} />} />
@@ -80,7 +82,6 @@ function InnerApp({ switchRoutes = () => {} }) {
                   {/* OTHERS */}
                   <Route exact path={endpoints.profile.index} render={props => <Suspense component={<Profile {...props} />} />} />
 
-                  {/* MODULE ROUTES */}
                   {switchRoutes()}
 
                 </Switch>

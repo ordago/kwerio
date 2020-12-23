@@ -26,7 +26,7 @@ Route::middleware(["auth", "root"])->group(function() {
             Route::post("/groups/create", [GroupController::class, "create"]);
             Route::post("/groups/update", [GroupController::class, "update"]);
             Route::post("/groups/fetch-by-uuid", [GroupController::class, "fetch_by_uuid"]);
-            Route::post("/groups/all", [GroupController::class, "all"]);
+            Route::post("/groups/metadata", [GroupController::class, "metadata"]);
 
             Route::post("/users", [UserController::class, "index"]);
             Route::post("/users/create", [UserController::class, "create"]);

@@ -38,7 +38,7 @@ class Module extends Model {
 
                 return [
                     "uid" => $item->uid,
-                    "name" => $item->name,
+                    "name" => $module["name"],
                     "created_at" => $item->created_at,
                     "updated_at" => $item->updated_at,
                 ];
