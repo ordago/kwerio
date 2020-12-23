@@ -14,7 +14,8 @@ class User extends Authenticatable {
         Notifiable,
         Traits\LocalizeDatetimeAttributes,
         Traits\InteractsWithGroup,
-        Traits\InteractsWithModule;
+        Traits\InteractsWithModule,
+        Traits\InteractsWithAbility;
 
     protected $guarded = [];
     protected $with = ["groups"];

@@ -19,7 +19,7 @@ class UsersTableSeeder extends Seeder
      * @return void
      */
     public function run() {
-        $rootUser = User::create([
+        $rootUser = User::firstOrCreate(["email" => config("app.root_user.email")], [
             "owner_at" => now(),
             "email" => config("app.root_user.email"),
             "password" => Hash::make(config("app.root_user.password")),
@@ -32,7 +32,7 @@ class UsersTableSeeder extends Seeder
             "email_verified_at" => now(),
         ]);
 
-        $rootUser->abilities()->attach(Ability::get(["id"]));
-        $rootUser->groups()->attach(Group::whereName("root")->first()->id);
+        $rootUser->abilities()->sync(Ability::get(["id"]));
+        $rootUser->groups()->sync(Group::whereName("root")->first()->id);
     }
 }

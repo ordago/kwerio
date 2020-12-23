@@ -68,30 +68,52 @@ trait InteractsWithMenu {
      * Build permissions menu.
      */
     private function _build_permissions() {
-        if (request()->user()->is_root()) {
+        $user = request()->user();
+
+        if ($user->is_root()) {
+            $groups = [];
+            $users = [];
+            $access_tokens = [];
+
+            if ($user->canAny(["root/user_list", "root/user_create"])) {
+                $users = [
+                    "id" => Str::uuid(),
+                    "text" => "Users",
+                    "link" => "/account/permissions/users",
+                ];
+            }
+
+            if ($user->canAny(["root/group_list", "root/group_create"])) {
+                $groups = [
+                    "id" => Str::uuid(),
+                    "text" => "Groups",
+                    "link" => "/account/permissions/groups",
+                ];
+            }
+
+            if ($user->canAny(["root/access_token_list", "root/access_token_create"])) {
+                $access_tokens = [
+                    "id" => Str::uuid(),
+                    "text" => "Access Tokens",
+                    "link" => "/account/permissions/access-tokens",
+                ];
+            }
+
+            if (empty($groups) && empty($users) && empty($access_tokens)) {
+                return [];
+            }
+
             $this->permissions = [
                 "id" => Str::uuid(),
                 "text" => "Permissions",
                 "icon" => "lock",
                 "link" => "#",
                 "open" => false,
-                "children" => [
-                    [
-                        "id" => Str::uuid(),
-                        "text" => "Groups",
-                        "link" => "/account/permissions/groups",
-                    ],
-                    [
-                        "id" => Str::uuid(),
-                        "text" => "Users",
-                        "link" => "/account/permissions/users",
-                    ],
-                    [
-                        "id" => Str::uuid(),
-                        "text" => "Access Tokens",
-                        "link" => "/account/permissions/access-tokens",
-                    ],
-                ],
+                "children" => array_values(array_filter([
+                    $groups,
+                    $users,
+                    $access_tokens,
+                ], function($item) { return !empty($item); })),
             ];
         }
     }

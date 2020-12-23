@@ -169,9 +169,13 @@ class GroupController extends Controller {
     private function _normalize($groups) {
         $items = $groups->map(function($group) {
             $modules = $group->modules->pluck("uid")->toArray();
+            $abilities = $group->abilities()->pluck("uuid")->toArray();
 
             return array_merge(
-                ["modules" => $modules],
+                [
+                    "modules" => $modules,
+                    "abilities" => $abilities,
+                ],
                 $group->only($this->columns)
             );
         });

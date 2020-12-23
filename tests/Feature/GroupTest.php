@@ -2,16 +2,45 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Support\Str;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\{
+    Module,
     Group,
     User,
+    Ability,
 };
 
 class GroupTest extends TestCase {
     use WithFaker, RefreshDatabase;
+
+    /** @test */
+    function abilities() {
+        $user = User::factory()
+            ->has(Group::factory(3)->has(Module::factory(5)))
+            ->create();
+
+        Module::get()->map(function($module) {
+            foreach (range(1, 3) as $_) {
+                Ability::create([
+                    "name" => "{$module->uid}/" . Str::slug($this->faker->sentence, "_"),
+                    "description" => $this->faker->sentence,
+                ]);
+            }
+        });
+
+        $abilities = collect();
+
+        $user->groups->each(function($group) use($abilities) {
+            foreach ($group->abilities() as $ability) {
+                $abilities->push($ability);
+            }
+        });
+
+        $this->assertCount(3 * 5 * 3, $abilities);
+    }
 
     /** @test */
     function is_root() {

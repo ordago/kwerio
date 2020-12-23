@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -23,7 +24,39 @@ class Group extends Model {
         });
     }
 
+    /**
+     * Get group modules.
+     *
+     * @return BelongsToMany
+     */
     function modules() {
         return $this->belongsToMany(Module::class);
+    }
+
+    /**
+     * Get group abilities.
+     *
+     * @return Collection
+     */
+    function abilities() {
+        $abilities = new Collection;
+
+        $append = function($prefix) use($abilities) {
+            Ability::where("name", "like", "{$prefix}/%")
+                ->get()
+                ->each(function($ability) use($abilities) {
+                    $abilities->push($ability);
+                });
+        };
+
+        if ($this->name === "root") {
+            $append("root");
+        } else {
+            $this->modules->each(function($module) use($append) {
+                $append($module->uid);
+            });
+        }
+
+        return $abilities;
     }
 }
