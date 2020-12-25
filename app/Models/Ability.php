@@ -21,8 +21,22 @@ class Ability extends Model {
         });
     }
 
+    /**
+     * Get users who have this ability.
+     *
+     * @return BelongsToMany
+     */
     function users() {
         return $this->belongsToMany(User::class);
+    }
+
+    /**
+     * Get groups who have this ability.
+     *
+     * @return BelongsToMany
+     */
+    function groups() {
+        return $this->belongsToMany(Group::class);
     }
 
     /**

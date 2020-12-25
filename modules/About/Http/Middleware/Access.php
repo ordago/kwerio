@@ -20,7 +20,7 @@ class Access
         $module = resolve(Module::class);
         $user = $request->user();
 
-        if ($user->can_access_module($module->uid)) {
+        if ($user->can_access_modules($module->uid)) {
             return $next($request);
         }
 

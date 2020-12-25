@@ -11,6 +11,12 @@ export const adapter = createEntityAdapter({
 
 export const form = Form({
   name: {},
+  abilities: {
+    validator: {
+      required: false,
+    },
+    value: [],
+  },
   modules: {
     validator: {
       required: false,
@@ -42,6 +48,15 @@ const slice = createSlice({
     ...form.reducers,
     ...paginatedTable.reducers,
     upsertOne: adapter.upsertOne,
+    toggleAbility: (state, action) => {
+      const idx = state.upsert.abilities.value.indexOf(action.payload)
+
+      if (idx === -1) {
+        state.upsert.abilities.value.push(action.payload)
+      } else {
+        state.upsert.abilities.value = state.upsert.abilities.value.filter(uuid => uuid !== action.payload)
+      }
+    },
     updateRscTotal: (state, action) => {
       state.rsc.total = action.payload
     },
@@ -49,6 +64,7 @@ const slice = createSlice({
       state.upsert.uuid = null
       state.upsert.name.value = ""
       state.upsert.modules.value = []
+      state.upsert.abilities.value = []
     },
     handleChange: (state, action) => {
       form.reducers.handleChange(state.upsert, action)
@@ -61,6 +77,7 @@ const slice = createSlice({
       state.upsert.uuid = item.uuid
       state.upsert.name.value = item.name
       state.upsert.modules.value = item.modules
+      state.upsert.abilities.value = item.abilities
     },
   },
   extraReducers: {

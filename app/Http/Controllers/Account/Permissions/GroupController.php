@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 use App\Models\{
     Group as GroupModel,
@@ -86,6 +87,7 @@ class GroupController extends Controller {
         $data = $request->validate([
             "name" => "required|unique:groups,name",
             "modules" => "",
+            "abilities" => "",
         ]);
 
         return $this->_upsert($data);
@@ -105,6 +107,7 @@ class GroupController extends Controller {
                 Rule::unique("groups")->ignore($request->get("uuid"), "uuid"),
             ],
             "modules" => "",
+            "abilities" => "",
         ]);
 
         return $this->_upsert($data);
@@ -121,11 +124,15 @@ class GroupController extends Controller {
 
         try {
             $group = GroupModel::updateOrCreate(["uuid" => @$data["uuid"]], [
+                "slug" => Str::slug($data["name"]),
                 "name" => $data["name"],
             ])->fresh();
 
             $modules = ModuleModel::whereIn("uid", $data["modules"])->get(["id"]);
             $group->modules()->sync($modules);
+
+            $abilities = AbilityModel::whereIn("uuid", $data["abilities"])->get(["id"]);
+            $group->abilities()->sync($abilities);
 
             DB::commit();
 

@@ -1,4 +1,4 @@
-import { Paper } from "@material-ui/core"
+import { Paper, TableCell } from "@material-ui/core"
 import { useHistory } from "react-router-dom"
 import { useSelector } from "react-redux"
 import React from "react"
@@ -35,7 +35,11 @@ function Groups({ match }) {
             adapter={adapter}
             reducerName="groups"
             asyncActions={tableAsyncActions}
-            onRowClick={item => history.push(endpoints.groups.update.replace(/:uuid/, item.uuid))}
+            onRowClick={item => {
+              if (item.name !== "root") {
+                history.push(endpoints.groups.update.replace(/:uuid/, item.uuid))
+              }
+            }}
           />
         </Paper>
       )}

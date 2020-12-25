@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Ability;
+use App\Models\Group;
+use App\Models\Module as ModuleModel;
 
 class AbilitiesTableSeeder extends Seeder
 {
@@ -34,11 +36,34 @@ class AbilitiesTableSeeder extends Seeder
      * @return void
      */
     public function run() {
-        foreach ($this->abilities as $ability => $description) {
-            Ability::firstOrCreate(["name" => $ability], [
+        $firstOrCreate = function($ability, $description, $module_id) {
+            return Ability::firstOrCreate(["name" => $ability], [
+                "module_id" => $module_id,
                 "name" => $ability,
                 "description" => $description,
             ]);
+        };
+
+        // Store core abilities.
+        foreach ($this->abilities as $ability => $description) {
+            $firstOrCreate($ability, $description, null);
+        }
+
+        // Store modules abilities.
+        foreach (config("modules") as $module) {
+            $config = require base_path("modules/{$module["uid"]}/config/module.php");
+            $moduleModel = ModuleModel::whereUid($module["uid"])->firstOrFail();
+            $group = Group::whereSlug($module["uid"])->firstOrFail();
+
+            if (!empty($config["abilities"])) {
+                $abilities = [];
+
+                foreach ($config["abilities"] as $ability => $description) {
+                    $abilities[] = $firstOrCreate($ability, $description, $moduleModel->id)->id;
+                }
+
+                $group->abilities()->syncWithoutDetaching($abilities);
+            }
         }
     }
 }

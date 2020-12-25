@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\{
-    Group,
+    Group as GroupModel,
     Module as ModuleModel,
 };
 
@@ -16,9 +16,24 @@ class GroupsTableSeeder extends Seeder
      * @return void
      */
     public function run() {
-        $root = Group::create([
+        $root = GroupModel::firstOrCreate(["name" => "root"], [
             "name" => "root",
             "slug" => "root",
         ]);
+
+        $modules = collect(config("modules"));
+
+        ModuleModel::get()->each(function($item) use($modules) {
+            $module = $modules->where("uid", $item->uid)->first();
+
+            if ($module) {
+                $group = GroupModel::firstOrCreate(["slug" => $item->uid], [
+                    "name" => $module["name"],
+                    "slug" => $item->uid,
+                ]);
+
+                $group->modules()->sync($item);
+            }
+        });
     }
 }

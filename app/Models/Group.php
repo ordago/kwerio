@@ -12,7 +12,7 @@ class Group extends Model {
 
     protected $guarded = [];
     protected $hidden = ["pivot"];
-    protected $with = ["modules"];
+    protected $with = ["modules", "abilities"];
 
     public static function boot() {
         parent::boot();
@@ -36,28 +36,10 @@ class Group extends Model {
     /**
      * Get group abilities.
      *
-     * @return Collection
+     * @return belongsToMany
      */
     function abilities() {
-        $abilities = new Collection;
-
-        $append = function($prefix) use($abilities) {
-            Ability::where("name", "like", "{$prefix}/%")
-                ->get()
-                ->each(function($ability) use($abilities) {
-                    $abilities->push($ability);
-                });
-        };
-
-        if ($this->name === "root") {
-            $append("root");
-        } else {
-            $this->modules->each(function($module) use($append) {
-                $append($module->uid);
-            });
-        }
-
-        return $abilities;
+        return $this->belongsToMany(Ability::class);
     }
 
     /**
@@ -66,16 +48,20 @@ class Group extends Model {
      * @return array
      */
     static function all_normalized() {
-        $groups = Group::get(["uuid", "name", "created_at", "updated_at"])
-            ->map(function($group) {
-                $modules = $group->modules->pluck("uid")->toArray();
-                $abilities = $group->abilities()->pluck("uuid")->toArray();
+        $groups = Group::get()->map(function($group) {
+            $modules = $group->modules->pluck("uid")->toArray();
+            $abilities = $group->abilities->pluck("uuid")->toArray();
 
-                return array_merge(
-                    ["modules" => $modules, "abilities" => $abilities],
-                    $group->toArray()
-                );
-            });
+            return array_merge(
+                compact("modules", "abilities"),
+                [
+                    "uuid" => $group->uuid,
+                    "name" => $group->name,
+                    "created_at" => $group->created_at,
+                    "updated_at" => $group->updated_at,
+                ]
+            );
+        });
 
         return [
             "items" => $groups,

@@ -73,7 +73,7 @@ export const fetch_by_uuid = createAsyncThunk(`${PREFIX}/fetch_by_uuid`, async (
  */
 export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch, getState, rejectWithValue }) => {
   try {
-    const { uuid, name, modules } = getState().groups.upsert
+    const { uuid, name, modules, abilities } = getState().groups.upsert
     let endpoint = api.groups.update
 
     if (_.isNull(uuid)) {
@@ -84,6 +84,7 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
       uuid,
       name: name.value,
       modules: modules.value,
+      abilities: abilities.value,
     })
 
     if (response.status === 200 && _.hasIn(response.data, "total") && _.hasIn(response.data, "items")) {

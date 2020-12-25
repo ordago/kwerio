@@ -23,6 +23,15 @@ class Module extends Model {
     }
 
     /**
+     * Get module abilities.
+     *
+     * @return HasMany
+     */
+    function abilities() {
+        return $this->hasMany(Ability::class);
+    }
+
+    /**
      * Get all modules normalized.
      *
      * @return array
@@ -36,9 +45,16 @@ class Module extends Model {
                     return $inner["uid"] === $item->uid;
                 }))[0];
 
+                $abilities = Module::whereUid($module["uid"])
+                    ->first()
+                    ->abilities()
+                    ->get(["uuid"])
+                    ->pluck("uuid");
+
                 return [
                     "uid" => $item->uid,
                     "name" => $module["name"],
+                    "abilities" => $abilities,
                     "created_at" => $item->created_at,
                     "updated_at" => $item->updated_at,
                 ];
