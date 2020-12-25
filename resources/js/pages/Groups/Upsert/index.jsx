@@ -82,6 +82,10 @@ function Upsert({ match }) {
     return state.upsert.abilities.value.filter(uuid => uuid === ability_uuid).length > 0
   }
 
+  function _is_check_all_checked() {
+    return abilities.map(ab => ab.abilities.map(item => item.uuid)).flat().length === state.upsert.abilities.value.length
+  }
+
   return (
     <Page
       title={t("Groups")}
@@ -130,7 +134,20 @@ function Upsert({ match }) {
               <>
                 <Divider />
 
-                <Typography variant="h5">Abilities</Typography>
+                <Typography variant="h5">{t("Abilities")}</Typography>
+
+                <FormControlLabel
+                  label={t("Check all abilities")}
+                  control={
+                    <Switch
+                      checked={_is_check_all_checked()}
+                      onChange={e => dispatch(actions.toggleAllAbilities({
+                        abilities,
+                        checked: e.target.checked,
+                      }))}
+                    />
+                  }
+                />
 
                 {abilities.map(item => (
                   <React.Fragment key={item.name}>
@@ -140,7 +157,7 @@ function Upsert({ match }) {
                       {item.abilities.map(ability => (
                         <Grid item xs={12} key={ability.uuid}>
                           <FormControlLabel
-                            label={ability.description}
+                            label={t(ability.description)}
                             control={
                               <Switch
                                 onChange={() => dispatch(actions.toggleAbility(ability.uuid))}
