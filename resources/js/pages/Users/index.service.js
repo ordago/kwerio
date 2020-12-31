@@ -112,6 +112,7 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
         }))
 
         dispatch(actions.softReset())
+        dispatch(actions.fillUpsert(response.data.items[0]))
 
         return response.data
       }

@@ -210,7 +210,17 @@ class UserController extends Controller {
             $groups = GroupModel::whereIn("uuid", $data["groups"])->get(["id"]);
             $user->groups()->sync($groups);
 
-            $abilities = AbilityModel::whereIn("uuid", $data["abilities"])->get(["id"]);
+            $abilities = [];
+
+            foreach ($groups as $group) {
+                foreach ($group->abilities as $ability) {
+                    if (in_array($ability->uuid, $data["abilities"])) {
+                        $abilities[] = $ability->uuid;
+                    }
+                }
+            }
+
+            $abilities = AbilityModel::whereIn("uuid", $abilities)->get(["id"]);
             $user->abilities()->sync($abilities);
 
             DB::commit();
@@ -235,9 +245,10 @@ class UserController extends Controller {
     private function _normalize($users) {
         $items = $users->map(function($user) {
             $groups = $user->groups->pluck("uuid")->toArray();
+            $abilities = $user->abilities->pluck("uuid")->toArray();
 
             return array_merge(
-                ["groups" => $groups],
+                compact("groups", "abilities"),
                 $user->only($this->columns)
             );
         });

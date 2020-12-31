@@ -31,14 +31,20 @@ function Abilities() {
     let group = groupsSelector.selectById(groupsState, groups.value[i])
     let inner = []
 
+    if (_.isUndefined(group)) continue
+
     for (let j = 0; j < group.abilities.length; j ++) {
-      inner.push(abilitiesSelector.selectById(abilitiesState, group.abilities[j]))
+      let item = abilitiesSelector.selectById(abilitiesState, group.abilities[j])
+      if (_.isUndefined(item)) continue
+      inner.push(item)
     }
 
-    abilities.push({
-      group_name: group.name,
-      abilities: inner,
-    })
+    if (inner.length > 0) {
+      abilities.push({
+        group_name: group.name,
+        abilities: inner,
+      })
+    }
   }
 
   function _is_ability_checked(ability_uuid) {

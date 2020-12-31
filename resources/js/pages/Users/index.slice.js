@@ -127,7 +127,7 @@ const slice = createSlice({
       state.upsert.timezone.value = item.timezone
       state.upsert.locale_iso_format.value = item.locale_iso_format
       state.upsert.groups.value = item.groups
-      state.upsert.can_create_tokens.value = item.can_create_tokens
+      state.upsert.abilities.value = item.abilities
     },
   },
   extraReducers: {

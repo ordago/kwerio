@@ -18,7 +18,7 @@ class User extends Authenticatable {
         Traits\InteractsWithAbility;
 
     protected $guarded = [];
-    protected $with = ["groups"];
+    protected $with = ["groups", "abilities"];
 
     protected $casts = [
         "email_verified_at" => "datetime",
