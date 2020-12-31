@@ -48,6 +48,7 @@ class UserController extends Controller {
             "locale_iso_format" => [ "nullable", Rule::in(collect(get_locale_iso_formats())->pluck("label")) ],
             "password" => "required|confirmed|min:6",
             "groups" => "nullable",
+            "abilities" => "nullable",
         ];
     }
 
@@ -208,6 +209,9 @@ class UserController extends Controller {
 
             $groups = GroupModel::whereIn("uuid", $data["groups"])->get(["id"]);
             $user->groups()->sync($groups);
+
+            $abilities = AbilityModel::whereIn("uuid", $data["abilities"])->get(["id"]);
+            $user->abilities()->sync($abilities);
 
             DB::commit();
 

@@ -16,36 +16,24 @@ import _ from "lodash"
 import { actions, adapter, asyncActions } from "../index.slice"
 import { endpoints } from "../../../routes/app"
 import { notify } from "../../../utils/errors"
+import Abilities from "./Abilities"
 import AccountMenu from "../../../components/Menus/AccountMenu"
 import Groups from "./Groups"
 import I18n from "./I18n"
 import Page from "../../../components/Page"
 import PersonalInfo from "./PersonalInfo"
 import useT from "../../../hooks/useT"
-import Abilities from './Abilities'
+import useUuid from "../../../hooks/useUuid"
 
 function Upsert({ match }) {
   const state = useSelector(state => state.users),
-    selector = adapter.getSelectors(),
     { enqueueSnackbar } = useSnackbar(),
     dispatch = useDispatch(),
     { email, first_name, last_name, locale } = state.upsert,
     history = useHistory(),
     translations = useSelector(state => state.app.t),
-    t = useT(translations)
-
-  React.useEffect(() => {
-    const uuid = _.get(match, "params.uuid"),
-      item = selector.selectById(state, uuid)
-
-    if (!_.isUndefined(uuid) && _.isUndefined(item)) {
-      dispatch(asyncActions.fetch_by_uuid(uuid)).then(action => notify(action, enqueueSnackbar))
-    } else if (!_.isUndefined(item)) {
-      dispatch(actions.fillUpsert(item))
-    } else {
-      dispatch(actions.resetUpsert())
-    }
-  }, [])
+    t = useT(translations),
+    uuid = useUuid({ reducer: "users", match, adapter, asyncActions, actions })
 
   React.useEffect(() => {
     dispatch(asyncActions.metadata()).then(action => notify(action, enqueueSnackbar))

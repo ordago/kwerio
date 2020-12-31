@@ -45,7 +45,15 @@ export const form = Form({
       required: false,
     }
   },
+
   groups: {
+    value: [],
+    validator: {
+      required: false,
+    },
+  },
+
+  abilities: {
     value: [],
     validator: {
       required: false,
@@ -88,6 +96,15 @@ const slice = createSlice({
     ...form.reducers,
     ...paginatedTable.reducers,
     upsertOne: adapter.upsertOne,
+    toggleAbility: (state, action) => {
+      const idx = state.upsert.abilities.value.indexOf(action.payload)
+
+      if (idx === -1) {
+        state.upsert.abilities.value.push(action.payload)
+      } else {
+        state.upsert.abilities.value = state.upsert.abilities.value.filter(uuid => uuid !== action.payload)
+      }
+    },
     resetUpsert: (state, action) => {
       state.upsert = {
         uuid: null,

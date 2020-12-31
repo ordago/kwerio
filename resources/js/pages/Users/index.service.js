@@ -80,6 +80,7 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
       locale, timezone, locale_iso_format,
       password, password_confirmation,
       groups, can_create_tokens,
+      abilities,
     } = getState().users.upsert
 
     let endpoint = api.users.update
@@ -99,6 +100,7 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
       password: password.value,
       password_confirmation: password_confirmation.value,
       groups: groups.value,
+      abilities: abilities.value,
       can_create_tokens: can_create_tokens.value,
     })
 

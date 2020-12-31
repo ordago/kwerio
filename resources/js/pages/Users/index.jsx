@@ -5,12 +5,12 @@ import React from "react"
 
 import { actions, adapter, tableAsyncActions } from "./index.slice"
 import { endpoints } from "../../routes/app"
+import AccountMenu from "../../components/Menus/AccountMenu"
 import Page from "../../components/Page"
 import PaginatedTable from "../../components/PaginatedTable/index.jsx"
 import Toolbar from "../../components/PaginatedTable/Toolbar"
 import useStyles from "./index.styles"
 import useT from "../../hooks/useT"
-import AccountMenu from '../../components/Menus/AccountMenu'
 
 function Users({ match }) {
   const classes = useStyles(),
