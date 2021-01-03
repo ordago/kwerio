@@ -17,6 +17,7 @@ import { actions, adapter, asyncActions } from "../index.slice"
 import { endpoints } from "../../../routes/app"
 import { notify } from "../../../utils/errors"
 import AccountMenu from "../../../components/Menus/AccountMenu"
+import Groupable from "../../../components/Groupable/index.jsx"
 import Page from "../../../components/Page"
 import useStyles from "./index.styles"
 import useT from "../../../hooks/useT"
@@ -33,14 +34,18 @@ function Upsert({ match }) {
     classes = useStyles(),
     history = useHistory()
 
+  React.useEffect(() => {
+    dispatch(asyncActions.metadata()).then(action => notify(action, enqueueSnackbar))
+  }, [])
+
   function _get_token() {
     const item = selector.selectById(state, uuid)
 
     if (item && !_.isNull(item.original_token)) {
       return item.original_token
-    } else if (item && item.is_hashed) {
+    } else if (item && item.is_hashed.value) {
       return "<YOUR TOKEN>"
-    } else if (item && !item.is_hashed) {
+    } else if (item && !item.is_hashed.value) {
       return item.token
     }
   }
@@ -48,7 +53,7 @@ function Upsert({ match }) {
   function _is_hashed_disabled() {
     if (_.isUndefined(uuid)) return false
     const item = selector.selectById(state, uuid)
-    if (item && item.is_hashed) return true
+    if (item && item.is_hashed.value) return true
     return false
   }
 
@@ -64,7 +69,7 @@ function Upsert({ match }) {
             {/* NAME */}
             <TextField
               label={t("Name")}
-              value={state.upsert.name}
+              value={state.upsert.name.value}
               onChange={e => dispatch(actions.handleChange({ name: "name", value: e.target.value }))}
               fullWidth
             />
@@ -74,23 +79,28 @@ function Upsert({ match }) {
               label={t("Is hashed")}
               control={
                 <Switch
-                  checked={state.upsert.is_hashed}
+                  checked={state.upsert.is_hashed.value}
                   disabled={_is_hashed_disabled()}
                   onChange={e => dispatch(actions.handleChange({ name: "is_hashed", value: e.target.checked }))}
                 />
               }
             />
 
-            {state.upsert.is_hashed && (
+            {state.upsert.is_hashed.value && (
               <Alert severity="warning">{t("Hashed tokens can only be copied once.")}</Alert>
             )}
 
             {/* Expired at */}
             <TextField
               label={t("Expired after")}
-              value={state.upsert.expired_at}
+              value={state.upsert.expired_at.value}
               onChange={e => dispatch(actions.handleChange({ name: "expired_at", value: e.target.value }))}
               fullWidth
+            />
+
+            <Groupable
+              state={state}
+              actions={actions}
             />
 
             {!_.isUndefined(uuid) && (

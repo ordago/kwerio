@@ -57,6 +57,7 @@ export const api = {
     create: `${API_PERMISSIONS_ENDPOINT}/api-users/create`,
     update: `${API_PERMISSIONS_ENDPOINT}/api-users/update`,
     fetch_by_uuid: `${API_PERMISSIONS_ENDPOINT}/api-users/fetch-by-uuid`,
+    metadata: `${API_PERMISSIONS_ENDPOINT}/api-users/metadata`,
   },
   modules: {
     index: `${API_MODULES_ENDPOINT}/modules`,

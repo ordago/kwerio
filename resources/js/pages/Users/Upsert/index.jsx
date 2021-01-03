@@ -16,9 +16,8 @@ import _ from "lodash"
 import { actions, adapter, asyncActions } from "../index.slice"
 import { endpoints } from "../../../routes/app"
 import { notify } from "../../../utils/errors"
-import Abilities from "./Abilities"
 import AccountMenu from "../../../components/Menus/AccountMenu"
-import Groups from "./Groups"
+import Groupable from "../../../components/Groupable/index.jsx"
 import I18n from "./I18n"
 import Page from "../../../components/Page"
 import PersonalInfo from "./PersonalInfo"
@@ -53,8 +52,11 @@ function Upsert({ match }) {
             <I18n />
             <Divider />
 
-            <Groups />
-            <Abilities />
+            <Groupable
+              state={state}
+              actions={actions}
+            />
+
           </CardContent>
 
           <CardActions>

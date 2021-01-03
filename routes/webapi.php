@@ -38,6 +38,7 @@ Route::middleware(["auth", "root"])->group(function() {
             Route::post("/api-users/create", [ApiUserController::class, "create"]);
             Route::post("/api-users/update", [ApiUserController::class, "update"]);
             Route::post("/api-users/fetch-by-uuid", [ApiUserController::class, "fetch_by_uuid"]);
+            Route::post("/api-users/metadata", [ApiUserController::class, "metadata"]);
         });
     });
 

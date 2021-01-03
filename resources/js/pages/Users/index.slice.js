@@ -4,12 +4,15 @@ import Form, { types } from "@euvoor/form"
 import { PREFIX, fetch_by_uuid, upsert, extraReducers, metadata } from "./index.service"
 import { api } from "../../routes/app"
 import PaginatedTable from "../../components/PaginatedTable/index"
+import groupable from "../../components/Groupable/index"
 
 export const adapter = createEntityAdapter({
   selectId: user => user.uuid,
 })
 
 export const form = Form({
+  ...groupable.form,
+
   /* REQUIRED */
   email: {
     validator: {
@@ -45,27 +48,6 @@ export const form = Form({
       required: false,
     }
   },
-
-  groups: {
-    value: [],
-    validator: {
-      required: false,
-    },
-  },
-
-  abilities: {
-    value: [],
-    validator: {
-      required: false,
-    },
-  },
-
-  can_create_tokens: {
-    value: false,
-    validator: {
-      required: false,
-    },
-  },
 })
 
 const paginatedTable = PaginatedTable(PREFIX, api.users, adapter)
@@ -95,16 +77,8 @@ const slice = createSlice({
   reducers: {
     ...form.reducers,
     ...paginatedTable.reducers,
+    ...groupable.reducers,
     upsertOne: adapter.upsertOne,
-    toggleAbility: (state, action) => {
-      const idx = state.upsert.abilities.value.indexOf(action.payload)
-
-      if (idx === -1) {
-        state.upsert.abilities.value.push(action.payload)
-      } else {
-        state.upsert.abilities.value = state.upsert.abilities.value.filter(uuid => uuid !== action.payload)
-      }
-    },
     resetUpsert: (state, action) => {
       state.upsert = {
         uuid: null,

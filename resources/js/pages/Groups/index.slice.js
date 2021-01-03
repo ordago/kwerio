@@ -4,6 +4,7 @@ import Form from "@euvoor/form"
 import { PREFIX, upsert, fetch_by_uuid, extraReducers, metadata } from "./index.service"
 import { api } from "../../routes/app"
 import PaginatedTable from "../../components/PaginatedTable/index"
+import abilities from '../../components/Abilities/index.js'
 
 export const adapter = createEntityAdapter({
   selectId: group => group.uuid,
@@ -11,12 +12,7 @@ export const adapter = createEntityAdapter({
 
 export const form = Form({
   name: {},
-  abilities: {
-    validator: {
-      required: false,
-    },
-    value: [],
-  },
+  ...abilities.form,
   modules: {
     validator: {
       required: false,
@@ -47,25 +43,8 @@ const slice = createSlice({
   reducers: {
     ...form.reducers,
     ...paginatedTable.reducers,
+    ...abilities.reducers,
     upsertOne: adapter.upsertOne,
-    toggleAllAbilities: (state, action) => {
-      if (action.payload.checked === true) {
-        state.upsert.abilities.value = action.payload.abilities
-          .map(item => item.abilities.map(ability => ability.uuid))
-          .flat()
-      } else {
-        state.upsert.abilities.value = []
-      }
-    },
-    toggleAbility: (state, action) => {
-      const idx = state.upsert.abilities.value.indexOf(action.payload)
-
-      if (idx === -1) {
-        state.upsert.abilities.value.push(action.payload)
-      } else {
-        state.upsert.abilities.value = state.upsert.abilities.value.filter(uuid => uuid !== action.payload)
-      }
-    },
     updateRscTotal: (state, action) => {
       state.rsc.total = action.payload
     },

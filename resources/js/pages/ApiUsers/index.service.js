@@ -1,11 +1,48 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
-import axios from 'axios'
 
+import axios from "axios"
+
+import { actions as abilitiesActions } from "../Abilities/index.slice"
+import { actions } from "./index.slice"
 import { api } from "../../routes/app"
+import { actions as groupsActions } from "../Groups/index.slice"
+import { actions as modulesActions } from "../Modules/index.slice"
 import { rsc_catched_error } from "../../utils/errors"
-import { actions } from './index.slice.js'
 
 export const PREFIX = "API_USERS"
+
+export const metadata = createAsyncThunk(`${PREFIX}/metadata`, async (uuid, { getState, dispatch, rejectWithValue }) => {
+  try {
+    const state = getState().apiUsers
+
+    const response = await axios.post(api.apiUsers.metadata)
+
+    if (response.status === 200) {
+      if (_.hasIn(response.data, "groups")) {
+        dispatch(groupsActions.upsertMany(response.data.groups.items))
+        dispatch(groupsActions.updateRscTotal(response.data.groups.total))
+      }
+
+      if (_.hasIn(response.data, "modules")) {
+        dispatch(modulesActions.upsertMany(response.data.modules.items))
+        dispatch(modulesActions.updateRscTotal(response.data.modules.total))
+      }
+
+      if (_.hasIn(response.data, "abilities")) {
+        dispatch(abilitiesActions.upsertMany(response.data.abilities.items))
+        dispatch(abilitiesActions.updateRscTotal(response.data.abilities.total))
+      }
+
+      return response.data
+    }
+
+    return rejectWithValue(response.data)
+  }
+
+  catch (err) {
+    return rsc_catched_error(err, rejectWithValue)
+  }
+})
 
 export const fetch_by_uuid = createAsyncThunk(`${PREFIX}/fetch-by-uuid`, async (uuid, { dispatch, getState, rejectWithValue }) => {
   try {

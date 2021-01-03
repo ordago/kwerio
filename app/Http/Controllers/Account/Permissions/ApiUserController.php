@@ -9,7 +9,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use App\Models\{
-    ApiUser,
+    ApiUser as ApiUserModel,
+    User as UserModel,
+    Group as GroupModel,
+    Ability as AbilityModel,
+    Module as ModuleModel,
 };
 
 class ApiUserController extends Controller {
@@ -55,7 +59,7 @@ class ApiUserController extends Controller {
             "q" => "nullable",
         ]);
 
-        $query = ApiUser::query();
+        $query = ApiUserModel::query();
 
         if (!empty($data["q"])) {
             $query->where("name", "like", "%{$data['q']}%")
@@ -133,7 +137,7 @@ class ApiUserController extends Controller {
         }
 
         if (!empty($data["uuid"])) {
-            $item = ApiUser::whereUuid($data["uuid"])->firstOrFail();
+            $item = ApiUserModel::whereUuid($data["uuid"])->firstOrFail();
             $token = $item->token;
 
             if ($data["is_hashed"] && !$item->is_hashed) {
@@ -149,7 +153,7 @@ class ApiUserController extends Controller {
             }
         }
 
-        $apiUser = ApiUser::updateOrCreate(["uuid" => $data["uuid"]], [
+        $apiUser = ApiUserModel::updateOrCreate(["uuid" => $data["uuid"]], [
             "user_id" => Auth::id(),
             "is_hashed" => $data["is_hashed"],
             "name" => $data["name"],
@@ -168,8 +172,32 @@ class ApiUserController extends Controller {
         ]);
 
         return $this->_normalize(
-            ApiUser::whereUuid($data["uuid"])->get()
+            ApiUserModel::whereUuid($data["uuid"])->get()
         );
+    }
+
+    /**
+     * Get metadata.
+     *
+     * @return array
+     */
+    function metadata() {
+        $metadata = [ ];
+
+        $abilities = [
+            "root/api_user_create",
+            "root/api_user_update",
+        ];
+
+        if (Auth::user()->canAny($abilities)) {
+            $metadata += [
+                "abilities" => AbilityModel::all_normalized(),
+                "groups" => GroupModel::all_normalized(),
+                "modules" => ModuleModel::all_normalized(),
+            ];
+        }
+
+        return $metadata;
     }
 
     /**
@@ -196,7 +224,7 @@ class ApiUserController extends Controller {
         if (method_exists($apiUsers, "total")) {
             $total = $apiUsers->total();
         } else {
-            $total = ApiUser::count();
+            $total = ApiUserModel::count();
         }
 
         $page = request()->get("page") ?? 1;
