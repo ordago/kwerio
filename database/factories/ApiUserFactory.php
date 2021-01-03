@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\ApiUser;
+use App\Models\AccessToken;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-class ApiUserFactory extends Factory {
-    protected $model = ApiUser::class;
+class AccessTokenFactory extends Factory {
+    protected $model = AccessToken::class;
 
     /**
      * Define the model's default state.

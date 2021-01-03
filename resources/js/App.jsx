@@ -19,8 +19,8 @@ const Groups = React.lazy(() => import("./pages/Groups")),
   GroupsUpsert = React.lazy(() => import("./pages/Groups/Upsert")),
   Users = React.lazy(() => import("./pages/Users")),
   UsersUpsert = React.lazy(() => import("./pages/Users/Upsert")),
-  AccessTokens = React.lazy(() => import("./pages/AccessTokens")),
-  AccessTokensUpsert = React.lazy(() => import("./pages/AccessTokens/Upsert")),
+  ApiUsers = React.lazy(() => import("./pages/ApiUsers")),
+  ApiUsersUpsert = React.lazy(() => import("./pages/ApiUsers/Upsert")),
   Account = React.lazy(() => import("./pages/Account")),
   Profile = React.lazy(() => import("./pages/Profile"))
 
@@ -71,10 +71,10 @@ function InnerApp({ switchRoutes = () => {} }) {
                   <Route exact path={endpoints.users.update} render={props => <Suspense component={<UsersUpsert {...props} />} />} />
                   <Route exact path={endpoints.users.index} render={props => <Suspense component={<Users {...props} />} />} />
 
-                  {/* ACCOUNT / PERMISSIONS / ACCESS TOKENS */}
-                  <Route exact path={endpoints.accessTokens.index} render={props => <Suspense component={<AccessTokens {...props} />} />} />
-                  <Route exact path={endpoints.accessTokens.create} render={props => <Suspense component={<AccessTokensUpsert {...props} />} />} />
-                  <Route exact path={endpoints.accessTokens.update} render={props => <Suspense component={<AccessTokensUpsert {...props} />} />} />
+                  {/* ACCOUNT / PERMISSIONS / API USERS */}
+                  <Route exact path={endpoints.apiUsers.index} render={props => <Suspense component={<ApiUsers {...props} />} />} />
+                  <Route exact path={endpoints.apiUsers.create} render={props => <Suspense component={<ApiUsersUpsert {...props} />} />} />
+                  <Route exact path={endpoints.apiUsers.update} render={props => <Suspense component={<ApiUsersUpsert {...props} />} />} />
 
                   {/* ACCOUNT / SETTINGS */}
                   <Route exact path={endpoints.account.index} render={props => <Suspense component={<Account {...props} />} />} />

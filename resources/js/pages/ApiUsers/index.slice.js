@@ -5,10 +5,10 @@ import { api } from "../../routes/app"
 import PaginatedTable from "../../components/PaginatedTable"
 
 export const adapter = createEntityAdapter({
-  selectId: accessToken => accessToken.uuid,
+  selectId: apiUsers => apiUsers.uuid,
 })
 
-const paginatedTable = PaginatedTable(PREFIX, api.accessTokens, adapter)
+const paginatedTable = PaginatedTable(PREFIX, api.apiUsers, adapter)
 
 const initialState = adapter.getInitialState({
   ...paginatedTable.initialState,
@@ -80,7 +80,7 @@ const slice = createSlice({
 })
 
 export const actions = slice.actions
-export const tableAsyncActions = paginatedTable.asyncActions("accessTokens", actions)
+export const tableAsyncActions = paginatedTable.asyncActions("apiUsers", actions)
 
 export const asyncActions = {
   upsert,

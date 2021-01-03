@@ -7,19 +7,19 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Auth;
-use App\Models\AccessToken;
+use App\Models\ApiUser;
 use Illuminate\Support\Str;
 
-class UpsertAccessTokenTest extends TestCase {
+class UpsertApiUserTest extends TestCase {
     use WithFaker, RefreshDatabase;
 
-    protected $api_endpoint = "/api/account/permissions/access-tokens";
+    protected $api_endpoint = "/api/account/permissions/api-users";
 
     /** @test */
     function index() {
         $this->login_as_owner();
 
-        AccessToken::factory(20)->create([
+        ApiUser::factory(20)->create([
             "user_id" => Auth::id(),
         ]);
 
@@ -34,7 +34,7 @@ class UpsertAccessTokenTest extends TestCase {
     /** @test */
     function fetch_by_uuid() {
         $this->login_as_owner();
-        $at = AccessToken::factory()->create(["user_id" => Auth::id()]);
+        $at = ApiUser::factory()->create(["user_id" => Auth::id()]);
 
         $this->post("{$this->api_endpoint}/fetch-by-uuid", $at->only("uuid"))
             ->assertStatus(200);
@@ -43,7 +43,7 @@ class UpsertAccessTokenTest extends TestCase {
     /** @test */
     function create_with_expired_at() {
         $this->login_as_owner();
-        $at = AccessToken::factory()->make([
+        $at = ApiUser::factory()->make([
             "uuid" => null,
             "expired_at" => "3 days",
         ]);
@@ -62,7 +62,7 @@ class UpsertAccessTokenTest extends TestCase {
     /** @test */
     function create() {
         $this->login_as_owner();
-        $at = AccessToken::factory()->make([
+        $at = ApiUser::factory()->make([
             "is_hashed" => true,
             "uuid" => null,
         ]);
@@ -80,7 +80,7 @@ class UpsertAccessTokenTest extends TestCase {
     /** @test */
     function update() {
         $this->login_as_owner();
-        $at = AccessToken::factory()->create([
+        $at = ApiUser::factory()->create([
             "user_id" => Auth::id(),
             "is_hashed" => true,
         ]);
@@ -98,7 +98,7 @@ class UpsertAccessTokenTest extends TestCase {
     /** @test */
     function update_unhashed_token() {
         $this->login_as_owner();
-        $at = AccessToken::factory()->create([
+        $at = ApiUser::factory()->create([
             "user_id" => Auth::id(),
             "is_hashed" => false,
             "token" => Str::random(48),
@@ -116,7 +116,7 @@ class UpsertAccessTokenTest extends TestCase {
     /** @test */
     function update_hash_token() {
         $this->login_as_owner();
-        $at = AccessToken::factory()->create([
+        $at = ApiUser::factory()->create([
             "user_id" => Auth::id(),
             "is_hashed" => false,
             "token" => Str::random(48),
@@ -134,7 +134,7 @@ class UpsertAccessTokenTest extends TestCase {
     /** @test */
     function update_with_original_token_included() {
         $this->login_as_owner();
-        $at = AccessToken::factory()->create([
+        $at = ApiUser::factory()->create([
             "user_id" => Auth::id(),
             "is_hashed" => false,
             "token" => Str::random(48),

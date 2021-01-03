@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class AccessToken extends Model {
+class ApiUser extends Model {
     use HasFactory, Traits\LocalizeDatetimeAttributes;
 
     protected $guarded = [];

@@ -5,7 +5,7 @@ use App\Http\Controllers\{
     LogoutController,
     ProfileController,
     Account\Permissions\UserController,
-    Account\Permissions\AccessTokenController,
+    Account\Permissions\ApiUserController,
     Account\Permissions\GroupController,
     Account\Settings\AccountController,
     Account\ModuleController,
@@ -29,9 +29,9 @@ Route::middleware(["auth", "root"])->group(function() {
             Route::get("/users/create", [GroupController::class, "show_create_page"]);
             Route::get("/users/{uuid}", [GroupController::class, "show_update_page"]);
 
-            Route::get("/access-tokens", [AccessTokenController::class, "show_index_page"]);
-            Route::get("/access-tokens/create", [AccessTokenController::class, "show_create_page"]);
-            Route::get("/access-tokens/{uuid}", [AccessTokenController::class, "show_update_page"]);
+            Route::get("/api-users", [ApiUserController::class, "show_index_page"]);
+            Route::get("/api-users/create", [ApiUserController::class, "show_create_page"]);
+            Route::get("/api-users/{uuid}", [ApiUserController::class, "show_update_page"]);
         });
 
         // ------------------------------------------- ACCOUNT - SETTINGS -- #

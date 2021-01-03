@@ -8,12 +8,12 @@ import modules from "Kwerio/pages/Modules/index.slice"
 import abilities from "Kwerio/pages/Abilities/index.slice"
 import profile from "Kwerio/pages/Profile/index.slice"
 import users from "Kwerio/pages/Users/index.slice"
-import accessTokens from "Kwerio/pages/AccessTokens/index.slice"
+import apiUsers from "Kwerio/pages/ApiUsers/index.slice"
 
 const reducers = {
   groups,
   users,
-  accessTokens,
+  apiUsers,
   modules,
   abilities,
   abilities,

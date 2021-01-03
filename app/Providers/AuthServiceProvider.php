@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Database\Seeders\AbilitiesTableSeeder;
-use Kwerio\AccessTokenGuard;
+use Kwerio\ApiUserGuard;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use App\Models\User;
 
@@ -32,8 +32,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Auth::extend("access-token", function($app, $name, array $config) {
-            return new AccessTokenGuard();
+        Auth::extend("api-user", function($app, $name, array $config) {
+            return new ApiUserGuard();
         });
 
         $this->_register_abilities();

@@ -9,10 +9,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use App\Models\{
-    AccessToken,
+    ApiUser,
 };
 
-class AccessTokenController extends Controller {
+class ApiUserController extends Controller {
     private $carry_token = false;
     private $token = null;
 
@@ -22,7 +22,7 @@ class AccessTokenController extends Controller {
      * @return View
      */
     function show_index_page() {
-        return view("account.permissions.access-tokens");
+        return view("account.permissions.api-users");
     }
 
     /**
@@ -31,7 +31,7 @@ class AccessTokenController extends Controller {
      * @return View
      */
     function show_create_page() {
-        return view("account.permissions.access-tokens");
+        return view("account.permissions.api-users");
     }
 
     /**
@@ -40,7 +40,7 @@ class AccessTokenController extends Controller {
      * @return View
      */
     function show_update_page() {
-        return view("account.permissions.access-tokens");
+        return view("account.permissions.api-users");
     }
 
     /**
@@ -55,7 +55,7 @@ class AccessTokenController extends Controller {
             "q" => "nullable",
         ]);
 
-        $query = AccessToken::query();
+        $query = ApiUser::query();
 
         if (!empty($data["q"])) {
             $query->where("name", "like", "%{$data['q']}%")
@@ -133,7 +133,7 @@ class AccessTokenController extends Controller {
         }
 
         if (!empty($data["uuid"])) {
-            $item = AccessToken::whereUuid($data["uuid"])->firstOrFail();
+            $item = ApiUser::whereUuid($data["uuid"])->firstOrFail();
             $token = $item->token;
 
             if ($data["is_hashed"] && !$item->is_hashed) {
@@ -149,7 +149,7 @@ class AccessTokenController extends Controller {
             }
         }
 
-        $accessToken = AccessToken::updateOrCreate(["uuid" => $data["uuid"]], [
+        $apiUser = ApiUser::updateOrCreate(["uuid" => $data["uuid"]], [
             "user_id" => Auth::id(),
             "is_hashed" => $data["is_hashed"],
             "name" => $data["name"],
@@ -158,7 +158,7 @@ class AccessTokenController extends Controller {
         ]);
 
         return $this->_normalize(
-            $accessToken->whereUuid($accessToken->uuid)->get()
+            $apiUser->whereUuid($apiUser->uuid)->get()
         );
     }
 
@@ -168,35 +168,35 @@ class AccessTokenController extends Controller {
         ]);
 
         return $this->_normalize(
-            AccessToken::whereUuid($data["uuid"])->get()
+            ApiUser::whereUuid($data["uuid"])->get()
         );
     }
 
     /**
      * Normalize access token data.
      *
-     * @param LengthAwarePaginator|Collect $accessTokens
+     * @param LengthAwarePaginator|Collect $apiUsers
      * @return array
      */
-    private function _normalize($accessTokens) {
-        $items = $accessTokens->map(function($accessToken) {
+    private function _normalize($apiUsers) {
+        $items = $apiUsers->map(function($apiUser) {
             return [
-                "uuid" => $accessToken->uuid,
-                "name" => $accessToken->name,
-                "is_hashed" => (bool) $accessToken->is_hashed,
-                "token" => $accessToken->token,
+                "uuid" => $apiUser->uuid,
+                "name" => $apiUser->name,
+                "is_hashed" => (bool) $apiUser->is_hashed,
+                "token" => $apiUser->token,
                 "original_token" => $this->carry_token ? $this->token : null,
-                "email" => $accessToken->user->email,
-                "created_at" => $accessToken->created_at,
-                "updated_at" => $accessToken->udpated_at,
-                "expired_at" => $accessToken->expired_at,
+                "email" => $apiUser->user->email,
+                "created_at" => $apiUser->created_at,
+                "updated_at" => $apiUser->udpated_at,
+                "expired_at" => $apiUser->expired_at,
             ];
         });
 
-        if (method_exists($accessTokens, "total")) {
-            $total = $accessTokens->total();
+        if (method_exists($apiUsers, "total")) {
+            $total = $apiUsers->total();
         } else {
-            $total = AccessToken::count();
+            $total = ApiUser::count();
         }
 
         $page = request()->get("page") ?? 1;

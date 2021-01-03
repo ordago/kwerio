@@ -14,9 +14,9 @@ import Toolbar from "../../components/PaginatedTable/Toolbar"
 import useStyles from "./index.styles"
 import useT from "../../hooks/useT"
 
-function AccessTokens({ match }) {
+function ApiUsers({ match }) {
   const classes = useStyles(),
-    state = useSelector(state => state.accessTokens),
+    state = useSelector(state => state.api_users),
     history = useHistory(),
     translations = useSelector(state => state.app.t),
     t = useT(translations),
@@ -51,23 +51,23 @@ function AccessTokens({ match }) {
   return (
     <Page
       loading={loading}
-      title={t("Access Tokens")}
+      title={t("Api Users")}
       menu={() => <AccountMenu match={match} />}
       content={() => (
         <Paper>
           <Toolbar
             actions={actions}
             tableAsyncActions={tableAsyncActions}
-            onAddButtonClick={() => history.push(endpoints.accessTokens.create)}
+            onAddButtonClick={() => history.push(endpoints.api_users.create)}
           />
 
           <PaginatedTable
-            reducerName="accessTokens"
+            reducerName="apiUsers"
             adapter={adapter}
             actions={actions}
             asyncActions={tableAsyncActions}
             renderCell={_renderCell}
-            onRowClick={row => history.push(endpoints.accessTokens.update.replace(/:uuid/, row.uuid))}
+            onRowClick={row => history.push(endpoints.api_users.update.replace(/:uuid/, row.uuid))}
           />
         </Paper>
       )}
@@ -75,4 +75,4 @@ function AccessTokens({ match }) {
   )
 }
 
-export default React.memo(AccessTokens)
+export default React.memo(ApiUsers)

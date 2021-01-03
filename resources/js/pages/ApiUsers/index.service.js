@@ -5,11 +5,11 @@ import { api } from "../../routes/app"
 import { rsc_catched_error } from "../../utils/errors"
 import { actions } from './index.slice.js'
 
-export const PREFIX = "ACCESS_TOKENS"
+export const PREFIX = "API_USERS"
 
 export const fetch_by_uuid = createAsyncThunk(`${PREFIX}/fetch-by-uuid`, async (uuid, { dispatch, getState, rejectWithValue }) => {
   try {
-    const response = await axios.post(api.accessTokens.fetch_by_uuid, { uuid })
+    const response = await axios.post(api.api_users.fetch_by_uuid, { uuid })
 
     if (response.status === 200) {
       dispatch(actions.upsertOne({ ...response.data.items[0] }))
@@ -32,12 +32,12 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (original_token
       name,
       is_hashed,
       expired_at,
-    } = getState()["accessTokens"].upsert
+    } = getState()["apiUsers"].upsert
 
-    let endpoint = api.accessTokens.update
+    let endpoint = api.apiUsers.update
 
     if (!uuid) {
-      endpoint = api.accessTokens.create
+      endpoint = api.apiUsers.create
     }
 
     const response = await axios.post(endpoint, { uuid, name, is_hashed, expired_at, original_token })

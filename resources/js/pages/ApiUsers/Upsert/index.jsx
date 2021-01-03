@@ -23,12 +23,12 @@ import useT from "../../../hooks/useT"
 import useUuid from "../../../hooks/useUuid"
 
 function Upsert({ match }) {
-  const state = useSelector(state => state.accessTokens),
+  const state = useSelector(state => state.apiUsers),
     { enqueueSnackbar } = useSnackbar(),
     translations = useSelector(state => state.app.t),
     t = useT(translations),
     dispatch = useDispatch(),
-    uuid = useUuid({ reducer: "accessTokens", match, adapter, asyncActions, actions }),
+    uuid = useUuid({ reducer: "apiUsers", match, adapter, asyncActions, actions }),
     selector = adapter.getSelectors(),
     classes = useStyles(),
     history = useHistory()
@@ -56,7 +56,7 @@ function Upsert({ match }) {
     <Page
       loading={state.loading}
       menu={() => <AccountMenu match={match} />}
-      title={t("Access Tokens")}
+      title={t("Api Users")}
       content={() => (
         <Card>
           <CardContent>
@@ -123,7 +123,7 @@ function Upsert({ match }) {
                   .then(action => {
                     if (_.isUndefined(uuid)) {
                       const item = action.payload.items[0]
-                      history.push(endpoints.accessTokens.update.replace(/:uuid/, item.uuid))
+                      history.push(endpoints.api_users.update.replace(/:uuid/, item.uuid))
                     }
                   })
               }}

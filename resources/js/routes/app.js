@@ -23,10 +23,10 @@ export const endpoints = {
     create: `${PERMISSIONS_ENDPOINT}/users/create`,
     update: `${PERMISSIONS_ENDPOINT}/users/:uuid`
   },
-  accessTokens: {
-    index: `${PERMISSIONS_ENDPOINT}/access-tokens`,
-    create: `${PERMISSIONS_ENDPOINT}/access-tokens/create`,
-    update: `${PERMISSIONS_ENDPOINT}/access-tokens/:uuid`,
+  apiUsers: {
+    index: `${PERMISSIONS_ENDPOINT}/api-users`,
+    create: `${PERMISSIONS_ENDPOINT}/api-users/create`,
+    update: `${PERMISSIONS_ENDPOINT}/api-users/:uuid`,
   },
   modules: {
     index: `${MODULES_ENDPOINT}`,
@@ -52,11 +52,11 @@ export const api = {
     fetch_by_uuid: `${API_PERMISSIONS_ENDPOINT}/users/fetch-by-uuid`,
     metadata: `${API_PERMISSIONS_ENDPOINT}/users/metadata`,
   },
-  accessTokens: {
-    index: `${API_PERMISSIONS_ENDPOINT}/access-tokens`,
-    create: `${API_PERMISSIONS_ENDPOINT}/access-tokens/create`,
-    update: `${API_PERMISSIONS_ENDPOINT}/access-tokens/update`,
-    fetch_by_uuid: `${API_PERMISSIONS_ENDPOINT}/access-tokens/fetch-by-uuid`,
+  apiUsers: {
+    index: `${API_PERMISSIONS_ENDPOINT}/api-users`,
+    create: `${API_PERMISSIONS_ENDPOINT}/api-users/create`,
+    update: `${API_PERMISSIONS_ENDPOINT}/api-users/update`,
+    fetch_by_uuid: `${API_PERMISSIONS_ENDPOINT}/api-users/fetch-by-uuid`,
   },
   modules: {
     index: `${API_MODULES_ENDPOINT}/modules`,
