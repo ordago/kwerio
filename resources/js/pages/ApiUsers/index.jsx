@@ -16,7 +16,7 @@ import useT from "../../hooks/useT"
 
 function ApiUsers({ match }) {
   const classes = useStyles(),
-    state = useSelector(state => state.api_users),
+    state = useSelector(state => state.apiUsers),
     history = useHistory(),
     translations = useSelector(state => state.app.t),
     t = useT(translations),
@@ -58,7 +58,7 @@ function ApiUsers({ match }) {
           <Toolbar
             actions={actions}
             tableAsyncActions={tableAsyncActions}
-            onAddButtonClick={() => history.push(endpoints.api_users.create)}
+            onAddButtonClick={() => history.push(endpoints.apiUsers.create)}
           />
 
           <PaginatedTable
@@ -67,7 +67,7 @@ function ApiUsers({ match }) {
             actions={actions}
             asyncActions={tableAsyncActions}
             renderCell={_renderCell}
-            onRowClick={row => history.push(endpoints.api_users.update.replace(/:uuid/, row.uuid))}
+            onRowClick={row => history.push(endpoints.apiUsers.update.replace(/:uuid/, row.uuid))}
           />
         </Paper>
       )}

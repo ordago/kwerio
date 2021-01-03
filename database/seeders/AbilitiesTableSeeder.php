@@ -17,17 +17,17 @@ class AbilitiesTableSeeder extends Seeder
         "root/user_delete" => "Delete existing user",
         "root/user_delete_root" => "Delete root user",
 
+        // Api Users
+        "root/api_user_list" => "List available api users",
+        "root/api_user_create" => "Create new api user",
+        "root/api_user_update" => "Update existing api user",
+        "root/api_user_delete" => "Delete existing api user",
+
         // Groups
         "root/group_list" => "List available groups",
         "root/group_create" => "Create new group",
         "root/group_update" => "Update an existing group",
         "root/group_delete" => "Delete existing group",
-
-        // Access tokens
-        "root/access_token_list" => "List available access tokens",
-        "root/access_token_create" => "Create new access token",
-        "root/access_token_update" => "Update existing access token",
-        "root/access_token_delete" => "Delete existing access token",
     ];
 
     /**

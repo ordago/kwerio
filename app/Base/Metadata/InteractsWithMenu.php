@@ -78,7 +78,7 @@ trait InteractsWithMenu {
         if ($user->is_root()) {
             $groups = [];
             $users = [];
-            $access_tokens = [];
+            $api_users = [];
 
             if ($user->canAny(["root/user_list", "root/user_create"])) {
                 $users = [
@@ -96,15 +96,15 @@ trait InteractsWithMenu {
                 ];
             }
 
-            if ($user->canAny(["root/access_token_list", "root/access_token_create"])) {
-                $access_tokens = [
+            if ($user->canAny(["root/api_user_list", "root/api_user_create"])) {
+                $api_users = [
                     "id" => Str::uuid(),
-                    "text" => "Access Tokens",
-                    "link" => "/account/permissions/access-tokens",
+                    "text" => "Api Users",
+                    "link" => "/account/permissions/api-users",
                 ];
             }
 
-            if (empty($groups) && empty($users) && empty($access_tokens)) {
+            if (empty($groups) && empty($users) && empty($api_users)) {
                 return [];
             }
 
@@ -117,7 +117,7 @@ trait InteractsWithMenu {
                 "children" => array_values(array_filter([
                     $groups,
                     $users,
-                    $access_tokens,
+                    $api_users,
                 ], function($item) { return !empty($item); })),
             ];
         }

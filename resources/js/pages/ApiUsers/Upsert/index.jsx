@@ -123,7 +123,7 @@ function Upsert({ match }) {
                   .then(action => {
                     if (_.isUndefined(uuid)) {
                       const item = action.payload.items[0]
-                      history.push(endpoints.api_users.update.replace(/:uuid/, item.uuid))
+                      history.push(endpoints.apiUsers.update.replace(/:uuid/, item.uuid))
                     }
                   })
               }}

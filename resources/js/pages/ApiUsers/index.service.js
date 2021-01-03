@@ -9,7 +9,7 @@ export const PREFIX = "API_USERS"
 
 export const fetch_by_uuid = createAsyncThunk(`${PREFIX}/fetch-by-uuid`, async (uuid, { dispatch, getState, rejectWithValue }) => {
   try {
-    const response = await axios.post(api.api_users.fetch_by_uuid, { uuid })
+    const response = await axios.post(api.apiUsers.fetch_by_uuid, { uuid })
 
     if (response.status === 200) {
       dispatch(actions.upsertOne({ ...response.data.items[0] }))

@@ -17,7 +17,7 @@ class ApiUserController extends Controller {
     private $token = null;
 
     /**
-     * Show access tokens page.
+     * Show api users page.
      *
      * @return View
      */
@@ -26,7 +26,7 @@ class ApiUserController extends Controller {
     }
 
     /**
-     * Show create access tokens page.
+     * Show create api users page.
      *
      * @return View
      */
@@ -35,7 +35,7 @@ class ApiUserController extends Controller {
     }
 
     /**
-     * Show update access tokens page.
+     * Show update api users page.
      *
      * @return View
      */
@@ -78,7 +78,7 @@ class ApiUserController extends Controller {
     }
 
     /**
-     * Create new access token.
+     * Create new api user.
      *
      * @param Request $request
      * @return array
@@ -97,14 +97,14 @@ class ApiUserController extends Controller {
     }
 
     /**
-     * Update existing access token.
+     * Update existing api user.
      *
      * @param Request $request
      * @return array
      */
     function update(Request $request) {
         $data = $request->validate([
-            "uuid" => "required|exists:access_tokens,uuid",
+            "uuid" => "required|exists:api_users,uuid",
             "name" => "nullable",
             "is_hashed" => "required|boolean",
             "expired_at" => "nullable",
@@ -115,7 +115,7 @@ class ApiUserController extends Controller {
     }
 
     /**
-     * Create or update an access token.
+     * Create or update an api user.
      *
      * @param string|null $uuid
      * @return array
@@ -164,7 +164,7 @@ class ApiUserController extends Controller {
 
     function fetch_by_uuid(Request $request) {
         $data = $request->validate([
-            "uuid" => "required|exists:access_tokens,uuid",
+            "uuid" => "required|exists:api_users,uuid",
         ]);
 
         return $this->_normalize(
@@ -173,7 +173,7 @@ class ApiUserController extends Controller {
     }
 
     /**
-     * Normalize access token data.
+     * Normalize api user data.
      *
      * @param LengthAwarePaginator|Collect $apiUsers
      * @return array

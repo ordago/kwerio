@@ -12,7 +12,7 @@ trait InteractsWithGroup {
      * @return BelongsToMany
      */
     function groups() {
-        return $this->belongsToMany(Group::class);
+        return $this->morphToMany(Group::class, "groupable");
     }
 
     /**

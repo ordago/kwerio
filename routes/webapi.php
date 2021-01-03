@@ -5,7 +5,7 @@ use App\Http\Controllers\{
     LogoutController,
     ProfileController,
     Account\Permissions\UserController,
-    Account\Permissions\AccessTokenController,
+    Account\Permissions\ApiUserController,
     Account\Permissions\GroupController,
     Account\Settings\AccountController,
     Account\ModuleController,
@@ -34,10 +34,10 @@ Route::middleware(["auth", "root"])->group(function() {
             Route::post("/users/fetch-by-uuid", [UserController::class, "fetch_by_uuid"]);
             Route::post("/users/metadata", [UserController::class, "metadata"]);
 
-            Route::post("/access-tokens", [AccessTokenController::class, "index"]);
-            Route::post("/access-tokens/create", [AccessTokenController::class, "create"]);
-            Route::post("/access-tokens/update", [AccessTokenController::class, "update"]);
-            Route::post("/access-tokens/fetch-by-uuid", [AccessTokenController::class, "fetch_by_uuid"]);
+            Route::post("/api-users", [ApiUserController::class, "index"]);
+            Route::post("/api-users/create", [ApiUserController::class, "create"]);
+            Route::post("/api-users/update", [ApiUserController::class, "update"]);
+            Route::post("/api-users/fetch-by-uuid", [ApiUserController::class, "fetch_by_uuid"]);
         });
     });
 
