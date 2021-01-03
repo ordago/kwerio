@@ -29,6 +29,8 @@ class GroupController extends Controller {
      * @return View
      */
     function show_index_page() {
+        $this->authorize("root/group_list");
+
         return view("account.permissions.groups");
     }
 
@@ -56,6 +58,8 @@ class GroupController extends Controller {
      * @return array
      */
     function index(Request $request) {
+        $this->authorize("root/group_list");
+
         $data = $request->validate([
             "page" => "required|numeric",
             "sorts" => "required|array",

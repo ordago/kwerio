@@ -11,23 +11,23 @@ class AbilitiesTableSeeder extends Seeder
 {
     public $abilities = [
         // Users
-        "root/user_list" => "List available users",
-        "root/user_create" => "Create new user",
-        "root/user_update" => "Update an existing user",
-        "root/user_delete" => "Delete existing user",
-        "root/user_delete_root" => "Delete root user",
+        "root/user_list" => "Users / List available users",
+        "root/user_create" => "Users / Create new user",
+        "root/user_update" => "Users / Update an existing user",
+        "root/user_delete" => "Users / Delete existing user",
+        "root/user_delete_root" => "Users / Delete root user",
 
         // Api Users
-        "root/api_user_list" => "List available api users",
-        "root/api_user_create" => "Create new api user",
-        "root/api_user_update" => "Update existing api user",
-        "root/api_user_delete" => "Delete existing api user",
+        "root/api_user_list" => "Api Users / List available api users",
+        "root/api_user_create" => "Api Users / Create new api user",
+        "root/api_user_update" => "Api Users / Update existing api user",
+        "root/api_user_delete" => "Api Users / Delete existing api user",
 
         // Groups
-        "root/group_list" => "List available groups",
-        "root/group_create" => "Create new group",
-        "root/group_update" => "Update an existing group",
-        "root/group_delete" => "Delete existing group",
+        "root/group_list" => "Groups / List available groups",
+        "root/group_create" => "Groups / Create new group",
+        "root/group_update" => "Groups / Update an existing group",
+        "root/group_delete" => "Groups / Delete existing group",
     ];
 
     /**
@@ -44,10 +44,20 @@ class AbilitiesTableSeeder extends Seeder
             ]);
         };
 
-        // Store core abilities.
-        foreach ($this->abilities as $ability => $description) {
-            $firstOrCreate($ability, $description, null);
+        // Remove all groups abilities
+        foreach (Group::get() as $group) {
+            $group->abilities()->detach();
         }
+
+        // Store core abilities.
+        $abilities = [];
+
+        foreach ($this->abilities as $ability => $description) {
+            $abilities[] = $firstOrCreate($ability, $description, null)->id;
+        }
+
+        $rootGroup = Group::whereSlug("root")->firstOrFail();
+        $rootGroup->abilities()->syncWithoutDetaching($abilities);
 
         // Store modules abilities.
         foreach (config("modules") as $module) {

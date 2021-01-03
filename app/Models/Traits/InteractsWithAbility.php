@@ -5,14 +5,13 @@ namespace App\Models\Traits;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\{
     Ability,
-    User,
 };
 
 trait InteractsWithAbility {
     /**
-     * Get user abilities.
+     * Get abilities.
      *
-     * @return MorphsToMany
+     * @return MorphToMany
      */
     function abilities() {
         return $this->morphToMany(Ability::class, "abilitable")
@@ -20,7 +19,7 @@ trait InteractsWithAbility {
     }
 
     /**
-     * Check if the user has the given ability.
+     * Check if it has the given ability.
      *
      * @param string $ability
      * @return bool

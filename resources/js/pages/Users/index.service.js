@@ -76,10 +76,16 @@ export const fetch_by_uuid = createAsyncThunk(`${PREFIX}/fetch_by_uuid`, async (
 export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch, getState, rejectWithValue }) => {
   try {
     const {
-      uuid, email, first_name, last_name,
-      locale, timezone, locale_iso_format,
-      password, password_confirmation,
-      groups, can_create_tokens,
+      uuid,
+      email,
+      first_name,
+      last_name,
+      locale,
+      timezone,
+      locale_iso_format,
+      password,
+      password_confirmation,
+      groups,
       abilities,
     } = getState().users.upsert
 
@@ -101,10 +107,9 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
       password_confirmation: password_confirmation.value,
       groups: groups.value,
       abilities: abilities.value,
-      can_create_tokens: can_create_tokens.value,
     })
 
-    if (response.status === 200 && _.hasIn(response.data, "total") && _.hasIn(response.data, "items")) {
+    if (response.status === 200 ) {
       if (response.data.items.length === 1) {
         dispatch(actions.upsertOne({
           ...response.data.items[0],

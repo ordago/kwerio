@@ -7,12 +7,17 @@ import _ from 'lodash'
  * @param {callback} enqueueSnackbar
  */
 export function notify(action, enqueueSnackbar) {
-  if (
-    _.get(action, "error.message") === "Rejected"
-    && _.hasIn(action, "payload.message")
-  ) {
+  let error_msg = _.get(action, "error.message")
+
+  if (error_msg === "Rejected" && _.hasIn(action, "payload.message")) {
     enqueueSnackbar(message(action.payload), { variant: "error" })
-  } else {
+  }
+
+  else if (error_msg === "Rejected") {
+    enqueueSnackbar(action.payload, { variant: "error" })
+  }
+
+  else {
     return action
   }
 }
@@ -26,6 +31,8 @@ export function notify(action, enqueueSnackbar) {
  * @throws {Error}
  */
 export function rsc_catched_error(err, rejectWithValue) {
+  console.error(err)
+
   if (_.hasIn(err, "response.data")) {
     return rejectWithValue(err.response.data)
   }
