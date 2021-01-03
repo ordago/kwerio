@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Group extends Model {
-    use HasFactory, Traits\LocalizeDatetimeAttributes;
+    use HasFactory,
+        Traits\LocalizeDatetimeAttributes,
+        Traits\InteractsWithAbility;
 
     protected $guarded = [];
     protected $hidden = ["pivot"];
@@ -30,16 +32,8 @@ class Group extends Model {
      * @return BelongsToMany
      */
     function modules() {
-        return $this->belongsToMany(Module::class);
-    }
-
-    /**
-     * Get group abilities.
-     *
-     * @return belongsToMany
-     */
-    function abilities() {
-        return $this->belongsToMany(Ability::class);
+        return $this->belongsToMany(Module::class)
+            ->withTimestamps();
     }
 
     /**

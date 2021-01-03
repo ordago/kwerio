@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAbilityUserTable extends Migration
+class CreateAbilitablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateAbilityUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('ability_user', function (Blueprint $table) {
+        Schema::create('abilitables', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->unsignedBigInteger("user_id");
-            $table->unsignedBigInteger("ability_id");
 
-            $table->foreign("user_id")->references("id")->on("users");
+            $table->unsignedBigInteger("ability_id");
+            $table->morphs("abilitable");
+
             $table->foreign("ability_id")->references("id")->on("abilities");
         });
     }
@@ -31,6 +31,6 @@ class CreateAbilityUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ability_user');
+        Schema::dropIfExists('abilitables');
     }
 }

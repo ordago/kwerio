@@ -12,10 +12,11 @@ trait InteractsWithAbility {
     /**
      * Get user abilities.
      *
-     * @return BelongsToMany
+     * @return MorphsToMany
      */
     function abilities() {
-        return $this->belongsToMany(Ability::class);
+        return $this->morphToMany(Ability::class, "abilitable")
+            ->withTimestamps();
     }
 
     /**

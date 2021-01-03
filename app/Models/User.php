@@ -33,13 +33,4 @@ class User extends Authenticatable {
             }
         });
     }
-
-    /**
-     * Get user abilities.
-     *
-     * @return BelongsToMany
-     */
-    function abilities() {
-        return $this->belongsToMany(Ability::class);
-    }
 }
