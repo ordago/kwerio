@@ -38,18 +38,34 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
+
+            // The following routes are only accessible through a web inerface,
+            // And it should not be allowed to fetch data/pages from them using
+            // an api.
+            //
+            // USE: 'auth:web' or 'auth' to allow only authenticated web
+            // requests.
             Route::middleware("web")
                 ->namespace($this->namespace)
                 ->group(base_path("routes/web.php"));
 
-            Route::middleware("webapi")
-                ->namespace($this->namespace)
-                ->group(base_path("routes/webapi.php"));
-
+            // The following routes can be accessed from the web interface, as
+            // well as the api.
+            //
+            // USE: 'auth:web,api' or 'auth:api,web' to allow authenticated
+            // web and api requests.
             Route::prefix("api")
                 ->middleware("webapi")
                 ->namespace($this->namespace)
                 ->group(base_path("routes/webapi.php"));
+
+            // The following routes are only accessible using an api.
+            //
+            // USE: 'auth:api' to allow only authenticated api requests.
+            Route::prefix("api")
+                ->middleware("api")
+                ->namespace($this->namespace)
+                ->group(base_path("routes/api.php"));
         });
     }
 

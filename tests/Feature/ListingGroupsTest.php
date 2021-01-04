@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -11,6 +12,7 @@ use App\Models\{
     Group,
     User,
     Ability,
+    ApiUser,
 };
 
 class ListingGroupsTest extends TestCase {
@@ -41,8 +43,19 @@ class ListingGroupsTest extends TestCase {
 
     /** @test */
     function list_api__allow_root_with_listing_ability() {
+        // User
         $user = $this->get_root_user_with_abilities("root/group_list");
         $this->actingAs($user)->post($this->api, $this->post_data)->assertStatus(200);
+
+        Auth::logout();
+
+        // Api User
+        $apiUser = $this->get_root_api_user_with_abilities("root/group_list");
+
+        $this
+            ->withHeaders(["Authorization" => "Bearer {$apiUser->token}"])
+            ->post($this->api, $this->post_data)
+            ->assertStatus(200);
     }
 
     /** @test */

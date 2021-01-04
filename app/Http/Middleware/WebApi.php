@@ -22,7 +22,7 @@ class WebApi
 
         $middlewares = is_null($request->bearerToken())
             ? $middlewareGroups["web"]
-            : $middlewareGroup["api"];
+            : $middlewareGroups["api"];
 
         return resolve(Pipeline::class)
             ->send($request)

@@ -11,13 +11,7 @@ use App\Http\Controllers\{
     Account\ModuleController,
 };
 
-Route::middleware(["auth"])->group(function() {
-    Route::prefix("api")->group(function() {
-        Route::get("/metadata", [MetadataController::class, "index"]);
-    });
-});
-
-Route::middleware(["auth", "root"])->group(function() {
+Route::middleware(["auth:web,api", "root"])->group(function() {
     // ---------------------------------------------------------- ACCOUNT -- #
     Route::prefix("account")->group(function() {
         // ---------------------------------------- ACCOUNT / PERMISSIONS -- #

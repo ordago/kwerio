@@ -90,9 +90,9 @@ function Upsert({ match }) {
               <Alert severity="warning">{t("Hashed tokens can only be copied once.")}</Alert>
             )}
 
-            {/* Expired at */}
+            {/* Expires at */}
             <TextField
-              label={t("Expired after")}
+              label={t("Expires after")}
               value={state.upsert.expired_at.value}
               onChange={e => dispatch(actions.handleChange({ name: "expired_at", value: e.target.value }))}
               fullWidth

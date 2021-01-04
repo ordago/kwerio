@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class ApiUser extends Model {
-    use HasFactory, Traits\LocalizeDatetimeAttributes;
+    use HasFactory,
+        Traits\LocalizeDatetimeAttributes,
+        Traits\InteractsWithGroup,
+        Traits\InteractsWithAbility;
 
     protected $guarded = [];
     protected $with = ["user"];

@@ -12,6 +12,10 @@ use App\Http\Controllers\{
 };
 
 Route::middleware(["auth"])->group(function() {
+    Route::prefix("api")->group(function() {
+        Route::get("/metadata", [MetadataController::class, "index"]);
+    });
+
     Route::get("/logout", [LogoutController::class, "logout"]);
     Route::get("/profile", [ProfileController::class, "show_index_page"]);
 });

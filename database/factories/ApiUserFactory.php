@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\AccessToken;
+use App\Models\ApiUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-class AccessTokenFactory extends Factory {
-    protected $model = AccessToken::class;
+class ApiUserFactory extends Factory {
+    protected $model = ApiUser::class;
 
     /**
      * Define the model's default state.
@@ -16,16 +16,32 @@ class AccessTokenFactory extends Factory {
      */
     public function definition()
     {
-        $is_hashed = (bool) mt_rand(0, 1);
-        $token = Str::random(48);
-        $token = $is_hashed ? hash("sha256", $token) : $token;
-
         return [
             "uuid" => (string) Str::uuid(),
             "name" => $this->faker->sentence,
-            "is_hashed" => $is_hashed,
-            "token" => $token,
-            "expired_at" => null,
+            "is_hashed" => false,
+            "token" => Str::random(48),
+            "expires_at" => null,
         ];
+    }
+
+    public function configure() {
+        return $this->afterMaking(function(ApiUser $apiUser) {
+            if ($apiUser->is_hashed) {
+                $apiUser->token = hash("sha256", $apiUser->token);
+            }
+        })->afterCreating(function(ApiUser $apiUser) {
+
+        });
+    }
+
+    public function hashed() {
+        $token = Str::random(48);
+
+        return $this->state(function($attributes) {
+            return [
+                "is_hashed" => true,
+            ];
+        });
     }
 }

@@ -92,7 +92,7 @@ class ApiUserController extends Controller {
             "uuid" => "nullable",
             "name" => "nullable",
             "is_hashed" => "required|boolean",
-            "expired_at" => "nullable",
+            "expires_at" => "nullable",
         ]);
 
         $this->carry_token = true;
@@ -111,7 +111,7 @@ class ApiUserController extends Controller {
             "uuid" => "required|exists:api_users,uuid",
             "name" => "nullable",
             "is_hashed" => "required|boolean",
-            "expired_at" => "nullable",
+            "expires_at" => "nullable",
             "original_token" => "nullable",
         ]);
 
@@ -141,15 +141,15 @@ class ApiUserController extends Controller {
             $token = $item->token;
 
             if ($data["is_hashed"] && !$item->is_hashed) {
-                $token = hash("sha256", $item->token);
+                $token = $data["uuid"] . "::" . hash("sha256", $item->token);
             }
         }
 
-        if (!empty($data["expired_at"])) {
-            $expired_at = strtotime("+ " . $data["expired_at"]);
+        if (!empty($data["expires_at"])) {
+            $expires_at = strtotime("+ " . $data["expires_at"]);
 
-            if ($expired_at) {
-                $data["expired_at"] = Carbon::createFromTimestamp($expired_at);
+            if ($expires_at) {
+                $data["expires_at"] = Carbon::createFromTimestamp($expires_at);
             }
         }
 
@@ -157,9 +157,14 @@ class ApiUserController extends Controller {
             "user_id" => Auth::id(),
             "is_hashed" => $data["is_hashed"],
             "name" => $data["name"],
-            "expired_at" => $data["expired_at"],
+            "expires_at" => $data["expires_at"],
             "token" => $token,
         ]);
+
+        if (empty($data["uuid"]) && $data["is_hashed"]) {
+            $apiUser->token = $apiUser->uuid . "::" . $apiUser->token;
+            $apiUser->save();
+        }
 
         return $this->_normalize(
             $apiUser->whereUuid($apiUser->uuid)->get()
@@ -217,7 +222,7 @@ class ApiUserController extends Controller {
                 "email" => $apiUser->user->email,
                 "created_at" => $apiUser->created_at,
                 "updated_at" => $apiUser->udpated_at,
-                "expired_at" => $apiUser->expired_at,
+                "expires_at" => $apiUser->expires_at,
             ];
         });
 

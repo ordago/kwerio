@@ -6,6 +6,7 @@ use Database\Seeders\AbilitiesTableSeeder;
 use Kwerio\ApiUserGuard;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use App\Models\User;
+use App\Extensions\ApiUserProvider;
 
 use Illuminate\Support\Facades\{
     Gate,
@@ -33,7 +34,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Auth::extend("api-user", function($app, $name, array $config) {
-            return new ApiUserGuard();
+            return resolve(ApiUserGuard::class);
         });
 
         $this->_register_abilities();
@@ -46,7 +47,7 @@ class AuthServiceProvider extends ServiceProvider
         $abilitiesTableSeeder = resolve(AbilitiesTableSeeder::class);
 
         foreach ($abilitiesTableSeeder->abilities as $ability => $description) {
-            Gate::define($ability, function(User $user) use($ability) {
+            Gate::define($ability, function($user) use($ability) {
                 return $user->has_abilities($ability);
             });
         }

@@ -19,6 +19,15 @@ trait InteractsWithAbility {
     }
 
     /**
+     * Get abilities names.
+     *
+     * @return array
+     */
+    function get_abilities_names() {
+        return $this->abilities->pluck("name");
+    }
+
+    /**
      * Check if it has the given ability.
      *
      * @param string $ability

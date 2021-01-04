@@ -21,7 +21,7 @@ class CreateApiUsersTable extends Migration
             $table->string("name")->nullable();
             $table->boolean("is_hashed")->default(false);
             $table->string("token")->unique();
-            $table->timestamp("expired_at")->nullable();
+            $table->timestamp("expires_at")->nullable();
             $table->timestamp("last_used_at")->nullable();
 
             $table->foreign("user_id")

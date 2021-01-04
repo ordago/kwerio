@@ -2,19 +2,46 @@
 
 namespace Kwerio;
 
+use App\Models\ApiUser;
+use Illuminate\Support\Str;
+use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\{
     Guard,
     Authenticatable,
 };
 
 class ApiUserGuard implements Guard {
+    private $request;
+
+    /**
+     * Initialize Constructor.
+     *
+     * @param Request $request
+     */
+    function __construct(Request $request) {
+        $this->request = $request;
+    }
+
     /**
      * Determine if the current user is authenticated.
      *
      * @return bool
      */
     public function check() {
-        dd("g:check");
+        if (is_null($apiUser = $this->user())) return false;
+
+        // Valdiate hashed token
+        if ($apiUser->is_hashed) {
+            $token = substr($this->request->bearerToken(), strlen($apiUser->uuid) + 2);
+            $equals = hash("sha256", $token) === $apiUser->token;
+
+            if (!$equals) return false;
+        }
+
+        // Extra validation
+
+        return true;
     }
 
     /**
@@ -32,7 +59,14 @@ class ApiUserGuard implements Guard {
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
     public function user() {
-        return \App\Models\User::first();
+        $token = $this->request->bearerToken();
+        $uuid = strstr($token, "::", true);
+
+        if ($uuid) {
+            return ApiUser::whereUuid($uuid)->first();
+        }
+
+        return ApiUser::whereToken($token)->first();
     }
 
     /**
@@ -41,7 +75,7 @@ class ApiUserGuard implements Guard {
      * @return int|string|null
      */
     public function id() {
-        dd("g:id");
+        return $this->user()->id;
     }
 
     /**

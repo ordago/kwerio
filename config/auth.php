@@ -41,9 +41,9 @@ return [
             'provider' => 'users',
         ],
 
-        "access-token" => [
-            "driver" => "access-token",
-            "provider" => "users",
+        "api" => [
+            "driver" => "api-user",
+            //"provider" => "api_users",
         ],
     ],
 
@@ -69,6 +69,11 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
+
+        //"api_users" => [
+        //    "driver" => "eloquent",
+        //    "model" => App\Models\ApiUser::class,
+        //],
     ],
 
     /*
