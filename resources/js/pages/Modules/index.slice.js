@@ -4,7 +4,7 @@ import { PREFIX } from "./index.service"
 import * as services from "./index.service"
 
 export const adapter = createEntityAdapter({
-  selectId: module => module.uid,
+  selectId: module => module.uuid,
 })
 
 const initialState = adapter.getInitialState({

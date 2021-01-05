@@ -29,6 +29,8 @@ const initialState = {
     locale_iso_format: "L",
     is_rtl: false,
     dir: "ltr",
+    groups: [],
+    abilities: [],
   },
   theme: {
     palette: {

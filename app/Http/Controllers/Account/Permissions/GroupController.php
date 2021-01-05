@@ -30,7 +30,6 @@ class GroupController extends Controller {
      */
     function show_index_page() {
         $this->authorize("root/group_list");
-
         return view("account.permissions.groups");
     }
 
@@ -40,6 +39,7 @@ class GroupController extends Controller {
      * @return View
      */
     function show_create_page() {
+        $this->authorize("root/group_create");
         return view("account.permissions.groups");
     }
 
@@ -49,6 +49,7 @@ class GroupController extends Controller {
      * @return view
      */
     function show_update_page() {
+        $this->authorize("root/group_update");
         return view("account.permissions.groups");
     }
 
@@ -88,6 +89,8 @@ class GroupController extends Controller {
      * @return array
      */
     function create(Request $request) {
+        $this->authorize("root/group_create");
+
         $data = $request->validate([
             "name" => "required|unique:groups,name",
             "modules" => "",
@@ -104,6 +107,8 @@ class GroupController extends Controller {
      * @return array
      */
     function update(Request $request) {
+        $this->authorize("root/group_update");
+
         $data = $request->validate([
             "uuid" => "required|exists:groups,uuid",
             "name" => [
@@ -132,10 +137,19 @@ class GroupController extends Controller {
                 "name" => $data["name"],
             ])->fresh();
 
-            $modules = ModuleModel::whereIn("uid", $data["modules"])->get(["id"]);
+            $modules = ModuleModel::whereIn("uuid", $data["modules"])->get(["id"]);
             $group->modules()->sync($modules);
 
-            $abilities = AbilityModel::whereIn("uuid", $data["abilities"])->get(["id"]);
+            $abilities = [];
+
+            foreach ($group->modules as $module) {
+                foreach ($module->abilities as $ability) {
+                    if (in_array($ability->uuid, $data["abilities"])) {
+                        $abilities[] = $ability->id;
+                    }
+                }
+            }
+
             $group->abilities()->sync($abilities);
 
             DB::commit();
@@ -195,7 +209,7 @@ class GroupController extends Controller {
      */
     private function _normalize($groups) {
         $items = $groups->map(function($group) {
-            $modules = $group->modules->pluck("uid")->toArray();
+            $modules = $group->modules->pluck("uuid")->toArray();
             $abilities = $group->abilities()->pluck("uuid")->toArray();
 
             return array_merge(

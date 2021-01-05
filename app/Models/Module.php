@@ -39,22 +39,17 @@ class Module extends Model {
     static function all_normalized() {
         $modules = config("modules");
 
-        $items = Module::get(["uid", "created_at", "updated_at"])
+        $items = Module::get(["id", "uid", "uuid", "created_at", "updated_at"])
             ->map(function($item) use($modules) {
                 $module = array_values(array_filter($modules, function($inner) use($item) {
                     return $inner["uid"] === $item->uid;
                 }))[0];
 
-                $abilities = Module::whereUid($module["uid"])
-                    ->first()
-                    ->abilities()
-                    ->get(["uuid"])
-                    ->pluck("uuid");
-
                 return [
                     "uid" => $item->uid,
+                    "uuid" => $item->uuid,
                     "name" => $module["name"],
-                    "abilities" => $abilities,
+                    "abilities" => $item->abilities()->pluck("uuid"),
                     "created_at" => $item->created_at,
                     "updated_at" => $item->updated_at,
                 ];

@@ -45,20 +45,22 @@ trait InteractsWithMenu {
      */
     private function _build_applications() {
         $user = request()->user();
-        $modules = ModuleModel::get(["uid"]);
+        $modules = ModuleModel::get(["uid", "uuid"]);
 
         $this->applications = collect(config("modules"))
-            ->filter(function($module) use($user) {
-                return !($user->can_access_modules($module["uid"]) && (bool) $module["hidden"]);
-            })
             ->filter(function($module) use($modules) {
                 return (bool) $modules->where("uid", $module["uid"])->count();
             })
-            ->map(function($module) {
+            ->filter(function($module) use($user, $modules) {
+                $uuid = $modules->where("uid", $module["uid"])->first()->uuid;
+                return !($user->can_access_modules($uuid) && (bool) $module["hidden"]);
+            })
+            ->map(function($module) use($modules) {
                 return [
                     "id" => Str::uuid(),
                     "position" => $module["position"],
                     "uid" => $module["uid"],
+                    "uuid" => $modules->where("uid", $module["uid"])->first()->uuid,
                     "text" => $module["name"],
                     "link" => $module["slug"],
                     "hidden" => $module["hidden"],

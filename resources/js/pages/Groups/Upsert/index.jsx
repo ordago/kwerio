@@ -14,14 +14,15 @@ import React from "react"
 
 import { actions, adapter, asyncActions } from "../index.slice"
 import { endpoints } from "../../../routes/app"
+import { adapter as modulesAdapter } from "../../Modules/index.slice"
 import { notify } from "../../../utils/errors"
 import Abilities from "../../../components/Abilities/index.jsx"
 import AccountMenu from "../../../components/Menus/AccountMenu"
 import Page from "../../../components/Page"
 import useStyles from "./index.styles"
 import useT from "../../../hooks/useT"
+import useUser from "../../../hooks/useUser"
 import useUuid from "../../../hooks/useUuid"
-import { adapter as modulesAdapter } from '../../Modules/index.slice'
 
 function Upsert({ match }) {
   const state = useSelector(state => state.groups),
@@ -35,11 +36,18 @@ function Upsert({ match }) {
     uuid = useUuid({ reducer: "groups", match, adapter, asyncActions, actions }),
     modulesState = useSelector(state => state.modules),
     modulesSelector = modulesAdapter.getSelectors(),
-    modules_options = modulesSelector.selectAll(modulesState)
+    modules_options = modulesSelector.selectAll(modulesState),
+    user = useUser()
 
   React.useEffect(() => {
     dispatch(asyncActions.metadata()).then(action => notify(action, enqueueSnackbar))
   }, [])
+
+  let ability = "root/group_create"
+
+  if (!_.isEmpty(uuid)) {
+    ability = "root/group_update"
+  }
 
   return (
     <Page
@@ -47,72 +55,76 @@ function Upsert({ match }) {
       loading={state.loading}
       menu={() => <AccountMenu match={match} />}
       content={() => (
-        <Card>
-          <CardContent>
-            <TextField
-              name={name.name}
-              label="Group name"
-              fullWidth
-              value={name.value}
-              onChange={e => dispatch(actions.handleChange({ name: e.target.name, value: e.target.value }))}
-              onBlur={e => dispatch(actions.handleBlur({ name: e.target.name, value: e.target.value }))}
-              helperText={name.error ? name.helper_text : ""}
-              error={name.error}
-            />
-
-            <Autocomplete
-              multiple
-              name={modules.name}
-              value={modules.value.map(uid => modulesSelector.selectById(modulesState, uid)).filter(Boolean)}
-              filterSelectedOptions
-              options={modules_options}
-              getOptionLabel={option => option.name}
-              getOptionSelected={(option, value) => option.uid === value.uid}
-              onChange={(e, value, reason) => {
-                dispatch(actions.handleChange({
-                  name: modules.name,
-                  value: value.map(module => module.uid)
-                }))
-              }}
-              fullWidth
-              renderInput={(params) => (
+        <>
+          {user.can(ability) && (
+            <Card>
+              <CardContent>
                 <TextField
-                  {...params}
-                  variant="outlined"
-                  label="Modules"
-                  margin="dense"
+                  name={name.name}
+                  label="Group name"
+                  fullWidth
+                  value={name.value}
+                  onChange={e => dispatch(actions.handleChange({ name: e.target.name, value: e.target.value }))}
+                  onBlur={e => dispatch(actions.handleBlur({ name: e.target.name, value: e.target.value }))}
+                  helperText={name.error ? name.helper_text : ""}
+                  error={name.error}
                 />
-              )}
-            />
 
-            <Abilities
-              parentAdapter={modulesAdapter}
-              actions={actions}
-              state={state}
-              reducerName="modules"
-              items={modules}
-            />
+                <Autocomplete
+                  multiple
+                  name={modules.name}
+                  value={modules.value.map(uuid => modulesSelector.selectById(modulesState, uuid)).filter(Boolean)}
+                  filterSelectedOptions
+                  options={modules_options}
+                  getOptionLabel={option => option.name}
+                  getOptionSelected={(option, value) => option.uuid === value.uuid}
+                  onChange={(e, value, reason) => {
+                    dispatch(actions.handleChange({
+                      name: modules.name,
+                      value: value.map(module => module.uuid)
+                    }))
+                  }}
+                  fullWidth
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Modules"
+                      margin="dense"
+                    />
+                  )}
+                />
 
-          </CardContent>
+                <Abilities
+                  parentAdapter={modulesAdapter}
+                  actions={actions}
+                  state={state}
+                  reducerName="modules"
+                  items={modules}
+                />
 
-          <CardActions>
-            <Button
-              disabled={is_disabled({ name })}
-              onClick={() => {
-                dispatch(asyncActions.upsert())
-                  .then(action => notify(action, enqueueSnackbar))
-                  .then(action => {
-                    if (!_.isUndefined(action)) {
-                      enqueueSnackbar(`Success`, { variant: "success" })
-                      history.push(endpoints.groups.index)
-                    }
-                  })
-              }}
-            >
-              save
-            </Button>
-          </CardActions>
-        </Card>
+              </CardContent>
+
+              <CardActions>
+                <Button
+                  disabled={is_disabled({ name })}
+                  onClick={() => {
+                    dispatch(asyncActions.upsert())
+                      .then(action => notify(action, enqueueSnackbar))
+                      .then(action => {
+                        if (!_.isUndefined(action)) {
+                          enqueueSnackbar(`Success`, { variant: "success" })
+                          history.push(endpoints.groups.index)
+                        }
+                      })
+                  }}
+                >
+                  save
+                </Button>
+              </CardActions>
+            </Card>
+          )}
+        </>
       )}
     />
   )

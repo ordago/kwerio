@@ -23,7 +23,7 @@ trait InteractsWithUser {
             "is_rtl" => (bool) $user->is_rtl,
             "dir" => $user->is_rtl ? "rtl" : "ltr",
             "groups" => $user->get_groups_uuids(),
-            "modules" => $user->get_modules_uids(),
+            "modules" => $user->get_modules_uuids(),
             "abilities" => $user->get_abilities_names(),
         ];
 

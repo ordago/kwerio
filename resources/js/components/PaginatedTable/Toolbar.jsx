@@ -22,7 +22,11 @@ function Toolbar({
   // Add button
   hasAddButton = true,
   buttonLabel = null,
-  onAddButtonClick = () => {}
+  onAddButtonClick = () => {},
+
+  // Abilities
+  canSearch = false,
+  canCreate = false,
 }) {
   const classes = useStyles(),
     dispatch = useDispatch(),
@@ -54,33 +58,38 @@ function Toolbar({
 
   return (
     <>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        px={1}
-        pt={1}
-        alignItems="flex-start"
-      >
-        <Box>
-          {hasSearch && (
-            <TextField
-              label={searchLabel}
-              name="search"
-              type="search"
-              onChange={handleChange}
-              value={q}
-            />
-          )}
-        </Box>
+      {(canSearch || canCreate) && (
+        <>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            px={1}
+            pt={1}
+            alignItems="flex-start"
+          >
+            <Box>
+              {canSearch && hasSearch && (
+                <TextField
+                  label={searchLabel}
+                  name="search"
+                  type="search"
+                  onChange={handleChange}
+                  value={q}
+                />
+              )}
+            </Box>
 
-        <Box>
-          <Button onClick={onAddButtonClick}>
-            {buttonLabel}
-          </Button>
-        </Box>
-      </Box>
-
-      <Divider />
+            <Box>
+              {canCreate && (
+                <Button onClick={onAddButtonClick}>
+                  {buttonLabel}
+                </Button>
+              )}
+            </Box>
+          </Box>
+          <Divider />
+        </>
+      )}
     </>
   )
 }
