@@ -89,4 +89,10 @@ class ListingGroupsTest extends TestCase {
         $user = $this->get_root_user_with_abilities("group_list");
         $this->actingAs($user)->get($this->endpoint)->assertStatus(200);
     }
+
+    /** @test */
+    function access_page__allow_root_with_create_ability() {
+        $user = $this->get_root_user_with_abilities("root/group_create");
+        $this->actingAs($user)->get($this->endpoint)->assertStatus(200);
+    }
 }

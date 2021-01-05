@@ -40,11 +40,8 @@ function Groups({ match }) {
               adapter={adapter}
               reducerName="groups"
               asyncActions={tableAsyncActions}
-              onRowClick={item => {
-                if (user.can("root/group_update") && item.name !== "root") {
-                  history.push(endpoints.groups.update.replace(/:uuid/, item.uuid))
-                }
-              }}
+              onRowClick={item => history.push(endpoints.groups.update.replace(/:uuid/, item.uuid))
+              }
             />
           )}
         </Paper>

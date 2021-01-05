@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Account\Permissions;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -29,7 +30,15 @@ class GroupController extends Controller {
      * @return View
      */
     function show_index_page() {
-        $this->authorize("root/group_list");
+        $abilities = [
+            "root/group_list",
+            "root/group_create",
+        ];
+
+        if (!Gate::any($abilities)) {
+            abort(403);
+        }
+
         return view("account.permissions.groups");
     }
 
@@ -169,6 +178,15 @@ class GroupController extends Controller {
      * @return Group
      */
     function fetch_by_uuid(Request $request) {
+        $abilities = [
+            "root/group_list",
+            "root/group_update",
+        ];
+
+        if (!Gate::any($abilities)) {
+            abort(403);
+        }
+
         $data = $request->validate([
             "uuid" => "required|exists:groups,uuid",
         ]);

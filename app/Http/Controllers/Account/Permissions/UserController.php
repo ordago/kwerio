@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Account\Permissions;
 
+use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -58,6 +59,15 @@ class UserController extends Controller {
      * @return View
      */
     function show_index_page() {
+        $abilities = [
+            "root/user_list",
+            "root/user_create",
+        ];
+
+        if (!Gate::any($abilities)) {
+            abort(403);
+        }
+
         return view("account.permissions.users");
     }
 
@@ -67,6 +77,7 @@ class UserController extends Controller {
      * @return View
      */
     function show_create_page() {
+        $this->authorize("root/user_create");
         return view("account.permissions.users");
     }
 
@@ -76,6 +87,7 @@ class UserController extends Controller {
      * @return view
      */
     function show_update_page() {
+        $this->authorize("root/user_update");
         return view("account.permissions.users");
     }
 
@@ -85,6 +97,8 @@ class UserController extends Controller {
      * @return array
      */
     function index(Request $request) {
+        $this->authorize("root/user_list");
+
         $data = $request->validate([
             "page" => "required|numeric",
             "sorts" => "required|array",
@@ -142,6 +156,15 @@ class UserController extends Controller {
      * @return array
      */
     function fetch_by_uuid(Request $request) {
+        $abilities = [
+            "root/user_list",
+            "root/user_update",
+        ];
+
+        if (!Gate::any($abilities)) {
+            abort(403);
+        }
+
         $data = $request->validate([
             "uuid" => "required|exists:users,uuid",
         ]);
@@ -158,8 +181,8 @@ class UserController extends Controller {
      * @return array
      */
     function create(Request $request) {
+        $this->authorize("root/user_create");
         $data = $request->validate($this->rules);
-
         return $this->_upsert($data);
     }
 
@@ -170,6 +193,8 @@ class UserController extends Controller {
      * @return array
      */
     function update(Request $request) {
+        $this->authorize("root/user_update");
+
         $data = $request->validate(array_merge($this->rules, [
             "uuid" => "required|exists:users,uuid",
             "password" => "nullable|confirmed|min:6",

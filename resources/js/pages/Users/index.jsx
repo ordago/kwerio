@@ -11,6 +11,7 @@ import PaginatedTable from "../../components/PaginatedTable/index.jsx"
 import Toolbar from "../../components/PaginatedTable/Toolbar"
 import useStyles from "./index.styles"
 import useT from "../../hooks/useT"
+import useUser from "../../hooks/useUser"
 
 function Users({ match }) {
   const classes = useStyles(),
@@ -18,7 +19,8 @@ function Users({ match }) {
     history = useHistory(),
     translations = useSelector(state => state.app.t),
     t = useT(translations),
-    loading = useSelector(state => state.users.loading)
+    loading = useSelector(state => state.users.loading),
+    user = useUser()
 
   return (
     <Page
@@ -31,15 +33,19 @@ function Users({ match }) {
             actions={actions}
             tableAsyncActions={tableAsyncActions}
             onAddButtonClick={() => history.push(endpoints.users.create)}
+            canSearch={user.can("root/user_list")}
+            canCreate={user.can("root/user_create")}
           />
 
-          <PaginatedTable
-            reducerName="users"
-            adapter={adapter}
-            actions={actions}
-            asyncActions={tableAsyncActions}
-            onRowClick={item => history.push(endpoints.users.update.replace(/:uuid/, item.uuid))}
-          />
+          {user.can("root/user_list") && (
+            <PaginatedTable
+              reducerName="users"
+              adapter={adapter}
+              actions={actions}
+              asyncActions={tableAsyncActions}
+              onRowClick={item => history.push(endpoints.users.update.replace(/:uuid/, item.uuid))}
+            />
+          )}
         </Paper>
       )}
     />
