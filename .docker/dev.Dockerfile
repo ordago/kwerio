@@ -83,7 +83,7 @@ RUN set -eux \
 
 # Install xdebug
 RUN set -eux \
-    && git clone -b 3.0.1 --depth 1 https://github.com/xdebug/xdebug.git /usr/src/php/ext/xdebug \
+    && git clone -b 3.0.2 --depth 1 https://github.com/xdebug/xdebug.git /usr/src/php/ext/xdebug \
     && docker-php-ext-configure xdebug --enable-xdebug-dev \
     && docker-php-ext-install xdebug
 
