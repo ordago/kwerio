@@ -13,7 +13,7 @@ export const adapter = createEntityAdapter({
 export const form = Form({
   ...groupable.form,
   name: { },
-  expired_at: {
+  expires_at: {
     validator: {
       required: false,
     },
@@ -39,7 +39,7 @@ const initialState = adapter.getInitialState({
     { slug: "name", label: "Name", sort: false, sortDirection: "asc", sortOrder: 5 },
     { slug: "token", label: "Token" },
     { slug: "email", label: "Created by", sort: true, sortDirection: "asc", sortOrder: 4 },
-    { slug: "expired_at", label: "Expired at", sort: true, sortDirection: "desc", sortOrder: 3 },
+    { slug: "expires_at", label: "Expires at", sort: true, sortDirection: "desc", sortOrder: 3 },
     { slug: "created_at", label: "Created at", sort: true, sortDirection: "desc", sortOrder: 2 },
     { slug: "updated_at", label: "Updated at", sort: true, sortDirection: "desc", sortOrder: 1 },
   ],
@@ -59,7 +59,7 @@ const slice = createSlice({
       state.upsert.uuid = item.uuid
       state.upsert.name.value = item.name
       state.upsert.is_hashed.value = item.is_hashed
-      state.upsert.expired_at.value = item.expired_at
+      state.upsert.expires_at.value = item.expires_at
       state.upsert.groups.value = item.groups
       state.upsert.abilities.value = item.abilities
     },

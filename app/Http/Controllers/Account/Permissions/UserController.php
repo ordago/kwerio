@@ -257,8 +257,6 @@ class UserController extends Controller {
             DB::rollback();
             throw $e;
         }
-
-        abort(403);
     }
 
     /**

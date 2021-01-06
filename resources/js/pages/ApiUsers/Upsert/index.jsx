@@ -41,11 +41,11 @@ function Upsert({ match }) {
   function _get_token() {
     const item = selector.selectById(state, uuid)
 
-    if (item && !_.isNull(item.original_token)) {
-      return item.original_token
-    } else if (item && item.is_hashed.value) {
-      return "<YOUR TOKEN>"
-    } else if (item && !item.is_hashed.value) {
+    if (item && !_.isNull(item.token_unhashed)) {
+      return item.token_unhashed
+    } else if (item && item.is_hashed) {
+      return "[TOKEN]"
+    } else if (item && !item.is_hashed) {
       return item.token
     }
   }
@@ -53,7 +53,7 @@ function Upsert({ match }) {
   function _is_hashed_disabled() {
     if (_.isUndefined(uuid)) return false
     const item = selector.selectById(state, uuid)
-    if (item && item.is_hashed.value) return true
+    if (item && item.is_hashed) return true
     return false
   }
 
@@ -93,8 +93,8 @@ function Upsert({ match }) {
             {/* Expires at */}
             <TextField
               label={t("Expires after")}
-              value={state.upsert.expired_at.value}
-              onChange={e => dispatch(actions.handleChange({ name: "expired_at", value: e.target.value }))}
+              value={state.upsert.expires_at.value}
+              onChange={e => dispatch(actions.handleChange({ name: "expires_at", value: e.target.value }))}
               fullWidth
             />
 
@@ -105,7 +105,7 @@ function Upsert({ match }) {
 
             {!_.isUndefined(uuid) && (
               <pre>
-                curl host -H "Authorization: Bearer {_get_token(state, uuid)}"
+                curl [HOST] -H "Authorization: Bearer {_get_token(state, uuid)}"
               </pre>
             )}
           </CardContent>
@@ -114,14 +114,14 @@ function Upsert({ match }) {
             <Button
               disabled={state.loading}
               onClick={() => {
-                let original_token = null
+                let token_unhashed = null
 
                 if (!_.isUndefined(uuid)) {
                   const item = selector.selectById(state, uuid)
-                  if (!_.isUndefined(item)) original_token = item.original_token
+                  if (!_.isUndefined(item)) token_unhashed = item.token_unhashed
                 }
 
-                dispatch(asyncActions.upsert(original_token))
+                dispatch(asyncActions.upsert(token_unhashed))
                   .then(action => notify(action, enqueueSnackbar))
                   .then(action => {
                     if (!_.isUndefined(action)) {

@@ -15,6 +15,10 @@ class ApiUser extends Model {
     protected $guarded = [];
     protected $with = ["user"];
 
+    protected $casts = [
+        "is_hashed" => "boolean",
+    ];
+
     public static function boot() {
         parent::boot();
 

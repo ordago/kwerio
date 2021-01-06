@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Account\Permissions;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -17,8 +19,16 @@ use App\Models\{
 };
 
 class ApiUserController extends Controller {
-    private $carry_token = false;
     private $token = null;
+
+    private $rules = [
+        "name" => "required",
+        "is_hashed" => "nullable|boolean",
+        "expires_at" => "nullable",
+        "token_unhashed" => "nullable",
+        "groups" => "nullable|array",
+        "abilities" => "nullable|array",
+    ];
 
     /**
      * Show api users page.
@@ -26,6 +36,15 @@ class ApiUserController extends Controller {
      * @return View
      */
     function show_index_page() {
+        $abilities = [
+            "root/api_user_list",
+            "root/api_user_create",
+        ];
+
+        if (!Gate::any($abilities)) {
+            abort(403);
+        }
+
         return view("account.permissions.api-users");
     }
 
@@ -88,16 +107,10 @@ class ApiUserController extends Controller {
      * @return array
      */
     function create(Request $request) {
-        $data = $request->validate([
-            "uuid" => "nullable",
-            "name" => "nullable",
-            "is_hashed" => "required|boolean",
-            "expires_at" => "nullable",
-        ]);
+        $this->authorize("root/api_user_create");
+        $data = $request->validate(["uuid" => "nullable"] + $this->rules);
 
-        $this->carry_token = true;
-
-        return $this->_upsert($data);
+        return $this->_upsert($data, Str::random(48));
     }
 
     /**
@@ -107,15 +120,23 @@ class ApiUserController extends Controller {
      * @return array
      */
     function update(Request $request) {
+        $this->authorize("root/api_user_update");
+
         $data = $request->validate([
             "uuid" => "required|exists:api_users,uuid",
-            "name" => "nullable",
-            "is_hashed" => "required|boolean",
-            "expires_at" => "nullable",
-            "original_token" => "nullable",
-        ]);
+        ] + $this->rules);
 
-        return $this->_upsert($data);
+        $token = null;
+
+        if ($data["is_hashed"]) {
+            $apiUser = ApiUserModel::whereUuid($data["uuid"])->firstOrFail();
+
+            if ($apiUser->is_hashed === false) {
+                $token = $apiUser->token;
+            }
+        }
+
+        return $this->_upsert($data, $token);
     }
 
     /**
@@ -124,54 +145,82 @@ class ApiUserController extends Controller {
      * @param string|null $uuid
      * @return array
      */
-    private function _upsert($data) {
-        $token = $this->token = Str::random(48);
+    private function _upsert($data, $original_token = null) {
+        DB::beginTransaction();
 
-        if (!empty($data["original_token"])) {
-            $this->carry_token = true;
-            $this->token = $data["original_token"];
-        }
+        try {
+            $appends = [];
+            $this->token = null;
 
-        if ($data["is_hashed"]) {
-            $token = hash("sha256", $token);
-        }
-
-        if (!empty($data["uuid"])) {
-            $item = ApiUserModel::whereUuid($data["uuid"])->firstOrFail();
-            $token = $item->token;
-
-            if ($data["is_hashed"] && !$item->is_hashed) {
-                $token = $data["uuid"] . "::" . hash("sha256", $item->token);
+            // Creating token..
+            if (is_string($original_token)) {
+                $token = $original_token;
+                if ($data["is_hashed"]) $token = hash("sha256", $token);
+                $appends["token"] = $token;
             }
-        }
 
-        if (!empty($data["expires_at"])) {
-            $expires_at = strtotime("+ " . $data["expires_at"]);
+            // Convert expires at..
+            if (!empty($data["expires_at"])) {
+                $expires_at = strtotime("+ " . $data["expires_at"]);
 
-            if ($expires_at) {
-                $data["expires_at"] = Carbon::createFromTimestamp($expires_at);
+                if ($expires_at) {
+                    $data["expires_at"] = Carbon::createFromTimestamp($expires_at);
+                }
             }
+
+            // Storing token..
+            $apiUser = ApiUserModel::updateOrCreate(["uuid" => $data["uuid"]], [
+                "user_id" => Auth::id(),
+                "is_hashed" => $data["is_hashed"],
+                "name" => $data["name"],
+                "expires_at" => $data["expires_at"],
+            ] + $appends);
+
+            if (is_string($original_token) && $apiUser->is_hashed) {
+                $this->token = "{$apiUser->uuid}::{$original_token}";
+            }
+
+            if (!is_null($data["token_unhashed"])) {
+                $this->token = $data["token_unhashed"];
+            }
+
+            // Syncing groups..
+            $groups = GroupModel::whereIn("uuid", $data["groups"])->pluck("id");
+            $apiUser->groups()->sync($groups);
+
+            // Syncing abilities..
+            $abilities = [];
+
+            foreach ($apiUser->groups as $group) {
+                foreach ($group->abilities as $ability) {
+                    if (in_array($ability->uuid, $data["abilities"])) {
+                        $abilities[] = $ability->id;
+                    }
+                }
+            }
+
+            $apiUser->abilities()->sync($abilities);
+
+            DB::commit();
+
+            return $this->_normalize(
+                $apiUser->whereUuid($apiUser->uuid)->get()
+            );
         }
 
-        $apiUser = ApiUserModel::updateOrCreate(["uuid" => $data["uuid"]], [
-            "user_id" => Auth::id(),
-            "is_hashed" => $data["is_hashed"],
-            "name" => $data["name"],
-            "expires_at" => $data["expires_at"],
-            "token" => $token,
-        ]);
-
-        if (empty($data["uuid"]) && $data["is_hashed"]) {
-            $apiUser->token = $apiUser->uuid . "::" . $apiUser->token;
-            $apiUser->save();
+        catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
         }
-
-        return $this->_normalize(
-            $apiUser->whereUuid($apiUser->uuid)->get()
-        );
     }
 
     function fetch_by_uuid(Request $request) {
+        $abilities = ["root/api_user_list", "root/api_user_update"];
+
+        if (!Gate::any($abilities)) {
+            abort(403);
+        }
+
         $data = $request->validate([
             "uuid" => "required|exists:api_users,uuid",
         ]);
@@ -218,11 +267,13 @@ class ApiUserController extends Controller {
                 "name" => $apiUser->name,
                 "is_hashed" => (bool) $apiUser->is_hashed,
                 "token" => $apiUser->token,
-                "original_token" => $this->carry_token ? $this->token : null,
                 "email" => $apiUser->user->email,
+                "groups" => $apiUser->groups->pluck("uuid")->toArray(),
+                "abilities" => $apiUser->abilities->pluck("uuid")->toArray(),
+                "token_unhashed" => $this->token,
+                "expires_at" => $apiUser->expires_at,
                 "created_at" => $apiUser->created_at,
                 "updated_at" => $apiUser->udpated_at,
-                "expires_at" => $apiUser->expires_at,
             ];
         });
 

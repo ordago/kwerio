@@ -13,6 +13,7 @@ import PaginatedTable from "../../components/PaginatedTable/index.jsx"
 import Toolbar from "../../components/PaginatedTable/Toolbar"
 import useStyles from "./index.styles"
 import useT from "../../hooks/useT"
+import useUser from "../../hooks/useUser"
 
 function ApiUsers({ match }) {
   const classes = useStyles(),
@@ -20,7 +21,8 @@ function ApiUsers({ match }) {
     history = useHistory(),
     translations = useSelector(state => state.app.t),
     t = useT(translations),
-    loading = state.loading
+    loading = state.loading,
+    user = useUser()
 
   function _renderCell(row, col) {
     if (col.slug === "expired_at" && _.isEmpty(row[col.slug])) {
@@ -59,16 +61,20 @@ function ApiUsers({ match }) {
             actions={actions}
             tableAsyncActions={tableAsyncActions}
             onAddButtonClick={() => history.push(endpoints.apiUsers.create)}
+            canSearch={user.can("root/api_user_list")}
+            canCreate={user.can("root/api_user_create")}
           />
 
-          <PaginatedTable
-            reducerName="apiUsers"
-            adapter={adapter}
-            actions={actions}
-            asyncActions={tableAsyncActions}
-            renderCell={_renderCell}
-            onRowClick={row => history.push(endpoints.apiUsers.update.replace(/:uuid/, row.uuid))}
-          />
+          {user.can("root/api_user_list") && (
+            <PaginatedTable
+              reducerName="apiUsers"
+              adapter={adapter}
+              actions={actions}
+              asyncActions={tableAsyncActions}
+              renderCell={_renderCell}
+              onRowClick={row => history.push(endpoints.apiUsers.update.replace(/:uuid/, row.uuid))}
+            />
+          )}
         </Paper>
       )}
     />

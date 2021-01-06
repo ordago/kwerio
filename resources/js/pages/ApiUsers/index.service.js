@@ -62,13 +62,15 @@ export const fetch_by_uuid = createAsyncThunk(`${PREFIX}/fetch-by-uuid`, async (
   }
 })
 
-export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (original_token, { dispatch, getState, rejectWithValue }) => {
+export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (token_unhashed, { dispatch, getState, rejectWithValue }) => {
   try {
     const {
       uuid,
       name,
       is_hashed,
-      expired_at,
+      expires_at,
+      groups,
+      abilities,
     } = getState()["apiUsers"].upsert
 
     let endpoint = api.apiUsers.update
@@ -77,7 +79,15 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (original_token
       endpoint = api.apiUsers.create
     }
 
-    const response = await axios.post(endpoint, { uuid, name, is_hashed, expired_at, original_token })
+    const response = await axios.post(endpoint, {
+      uuid,
+      name: name.value,
+      is_hashed: is_hashed.value,
+      expires_at: expires_at.value,
+      token_unhashed,
+      groups: groups.value,
+      abilities: abilities.value,
+    })
 
     if (response.status === 200) {
       dispatch(actions.upsertOne({
