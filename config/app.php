@@ -2,7 +2,7 @@
 
 return [
 
-    "per_page" => 17,
+    "per_page" => 100,
 
     "root_user" => [
         "email" => env("ROOT_USER_EMAIL", "euvoor@gmail.com"),

@@ -66,7 +66,6 @@ function Upsert({ match }) {
                 dispatch(asyncActions.upsert())
                   .then(action => notify(action, enqueueSnackbar))
                   .then(action => {
-                    console.log(action)
                     if (!_.isUndefined(action)) {
                       enqueueSnackbar(`Success`, { variant: "success" })
                       history.push(endpoints.users.index)
