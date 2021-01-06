@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Kwerio\Normalizer;
 
 use App\Models\{
     Group as GroupModel,
@@ -67,7 +68,7 @@ class GroupController extends Controller {
      *
      * @return array
      */
-    function index(Request $request) {
+    function index(Request $request, Normalizer $normalizer) {
         $this->authorize("root/group_list");
 
         $data = $request->validate([
@@ -86,9 +87,9 @@ class GroupController extends Controller {
             $query->orderBy($sort["name"], $sort["dir"]);
         }
 
-        $results = $query->paginate(config("app.per_page"));
+        $items = $query->paginate(config("app.per_page"));
 
-        return $this->_normalize($results);
+        return $normalizer->normalize($items, [$this, "_normalize_callback"]);
     }
 
     /**
@@ -141,6 +142,8 @@ class GroupController extends Controller {
         DB::beginTransaction();
 
         try {
+            $normalizer = resolve(Normalizer::class);
+
             $group = GroupModel::updateOrCreate(["uuid" => @$data["uuid"]], [
                 "slug" => Str::slug($data["name"]),
                 "name" => $data["name"],
@@ -163,7 +166,7 @@ class GroupController extends Controller {
 
             DB::commit();
 
-            return $this->_normalize(GroupModel::whereUuid($group->uuid)->get());
+            return $normalizer->normalize($group->fresh(), [$this, "_normalize_callback"]);
         }
 
         catch (\Throwable $e) {
@@ -177,7 +180,7 @@ class GroupController extends Controller {
      *
      * @return Group
      */
-    function fetch_by_uuid(Request $request) {
+    function fetch_by_uuid(Request $request, Normalizer $normalizer) {
         $abilities = [
             "root/group_list",
             "root/group_update",
@@ -191,9 +194,9 @@ class GroupController extends Controller {
             "uuid" => "required|exists:groups,uuid",
         ]);
 
-        $groups = GroupModel::whereUuid($data["uuid"])->get();
+        $group = GroupModel::whereUuid($data["uuid"])->first();
 
-        return $this->_normalize($groups);
+        return $normalizer->normalize($group, [$this, "_normalize_callback"]);
     }
 
     /**
@@ -225,27 +228,16 @@ class GroupController extends Controller {
      * @param Collection $groups
      * @return array
      */
-    private function _normalize($groups) {
-        $items = $groups->map(function($group) {
-            $modules = $group->modules->pluck("uuid")->toArray();
-            $abilities = $group->abilities()->pluck("uuid")->toArray();
+    function _normalize_callback(GroupModel $group) {
+        $modules = $group->modules->pluck("uuid")->toArray();
+        $abilities = $group->abilities()->pluck("uuid")->toArray();
 
-            return array_merge(
-                [
-                    "modules" => $modules,
-                    "abilities" => $abilities,
-                ],
-                $group->only($this->columns)
-            );
-        });
-
-        $total = GroupModel::count();
-        $page = request()->get("page");
-
-        return [
-            "items" => $items,
-            "total" => $total,
-            "next_page" => $total === config("app.per_page") ? $page + 1 : $page,
-        ];
+        return array_merge(
+            [
+                "modules" => $modules,
+                "abilities" => $abilities,
+            ],
+            $group->only($this->columns)
+        );
     }
 }

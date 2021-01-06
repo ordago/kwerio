@@ -20,11 +20,6 @@ class ServiceProvider extends BaseServiceProvider {
      * Boot module
      */
     function _boot($module) {
-        $router = resolve(Router::class);
-        $middleware_class = "Modules\\{$module->uid}\\Http\\Middleware\\Access";
-
-        $router->aliasMiddleware("access_{$module->uid}", $middleware_class);
-
         $this->_register_abilities($module);
         $this->_register_routes($module);
         $this->_register_resources($module);

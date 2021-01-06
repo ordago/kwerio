@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Kwerio\Normalizer;
 
 use Illuminate\Support\Facades\{
     DB,
@@ -96,7 +97,7 @@ class UserController extends Controller {
      *
      * @return array
      */
-    function index(Request $request) {
+    function index(Request $request, Normalizer $normalizer) {
         $this->authorize("root/user_list");
 
         $data = $request->validate([
@@ -119,7 +120,7 @@ class UserController extends Controller {
 
         $items = $query->paginate(config("app.per_page"));
 
-        return $this->_normalize($items);
+        return $normalizer->normalize($items, [$this, "_normalize_callback"]);
     }
 
     /**
@@ -155,7 +156,7 @@ class UserController extends Controller {
      *
      * @return array
      */
-    function fetch_by_uuid(Request $request) {
+    function fetch_by_uuid(Request $request, Normalizer $normalizer) {
         $abilities = [
             "root/user_list",
             "root/user_update",
@@ -169,9 +170,9 @@ class UserController extends Controller {
             "uuid" => "required|exists:users,uuid",
         ]);
 
-        $users = UserModel::whereUuid($data["uuid"])->get();
+        $user = UserModel::whereUuid($data["uuid"])->first();
 
-        return $this->_normalize($users);
+        return $normalizer->normalize($user, [$this, "_normalize_callback"]);
     }
 
     /**
@@ -250,7 +251,7 @@ class UserController extends Controller {
 
             DB::commit();
 
-            return $this->_normalize(UserModel::whereUuid($user->uuid)->get());
+            return resolve(Normalizer::class)->normalize($user->fresh(), [$this, "_normalize_callback"]);
         }
 
         catch (\Throwable $e) {
@@ -260,29 +261,18 @@ class UserController extends Controller {
     }
 
     /**
-     * Normalize the users.
+     * Normalizer callback.
      *
      * @param Collection $users
      * @return array
      */
-    private function _normalize($users) {
-        $items = $users->map(function($user) {
-            $groups = $user->groups->pluck("uuid")->toArray();
-            $abilities = $user->abilities->pluck("uuid")->toArray();
+    function _normalize_callback(UserModel $user) {
+        $groups = $user->groups->pluck("uuid")->toArray();
+        $abilities = $user->abilities->pluck("uuid")->toArray();
 
-            return array_merge(
-                compact("groups", "abilities"),
-                $user->only($this->columns)
-            );
-        });
-
-        $total = UserModel::count();
-        $page = request()->get("page");
-
-        return [
-            "items" => $items,
-            "total" => $total,
-            "next_page" => $total === config("app.per_page") ? $page + 1 : $page,
-        ];
+        return array_merge(
+            compact("groups", "abilities"),
+            $user->only($this->columns)
+        );
     }
 }

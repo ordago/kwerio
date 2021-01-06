@@ -14,14 +14,19 @@ use App\Models\{
 };
 
 trait User {
-    function get_user_with_groups_and_abilities($groups, $abilities) {
+    function get_user_with_groups_and_abilities(
+        $groups,
+        $abilities = [],
+        $group_same_name_slug = false
+    ) {
         $factory = UserModel::factory();
 
         $groups = Arr::wrap($groups);
         $abilities = Arr::wrap($abilities);
 
         foreach ($groups as $group) {
-            $factory = $factory->has(Group::factory(["name" => $group, "slug" => Str::slug($group)]));
+            $slug = $group_same_name_slug ? $group : Str::slug($group);
+            $factory = $factory->has(Group::factory(["name" => $group, "slug" => $slug]));
         }
 
         foreach ($abilities as $ability) {

@@ -20,7 +20,7 @@
         "cross-env": "^7.0.3",
         "faker": "^5.1.0",
         "jest": "^26.6.1",
-        "laravel-mix": "^6.0.6",
+        "laravel-mix": "^5.0.9",
         "lodash": "^4.17.20",
         "po2json": "^0.4.5",
         "resolve-url-loader": "^3.1.2"
