@@ -18,23 +18,28 @@ trait InteractsWithMenu {
         $this->_build_permissions();
         $this->_build_settings();
 
+        $data = [
+            [
+                "id" => Str::uuid(),
+                "text" => "Applications",
+                "children" => $this->applications,
+            ],
+        ];
+
+        if (count($this->permissions) || count($this->settings)) {
+            $data[] = [
+                "id" => Str::uuid(),
+                "text" => "Account",
+                "children" => array_values(array_filter([
+                    $this->permissions,
+                    $this->settings,
+                ], function($menu) { return !empty($menu); })),
+            ];
+        }
+
         $this->attributes["menu"] = [
             "open" => false,
-            "data" => [
-                [
-                    "id" => Str::uuid(),
-                    "text" => "Applications",
-                    "children" => $this->applications,
-                ],
-                [
-                    "id" => Str::uuid(),
-                    "text" => "Account",
-                    "children" => array_values(array_filter([
-                        $this->permissions,
-                        $this->settings,
-                    ], function($menu) { return !empty($menu); })),
-                ],
-            ],
+            "data" => $data,
         ];
 
         return $this;
@@ -52,8 +57,10 @@ trait InteractsWithMenu {
                 return (bool) $modules->where("uid", $module["uid"])->count();
             })
             ->filter(function($module) use($user, $modules) {
+                if ($module["hidden"]) return false;
                 $uuid = $modules->where("uid", $module["uid"])->first()->uuid;
-                return !($user->can_access_modules($uuid) && (bool) $module["hidden"]);
+                if (is_null($uuid)) return false;
+                return $user->can_access_modules($uuid);
             })
             ->map(function($module) use($modules) {
                 return [
