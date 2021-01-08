@@ -2,6 +2,7 @@
 
 namespace App\Models\Traits;
 
+use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\{
     Ability,
@@ -33,8 +34,8 @@ trait InteractsWithAbility {
      * @param string $ability
      * @return bool
      */
-    function has_ability(string $ability) {
-        return $this->has_abilities($ability);
+    function has_ability(string $ability, $module_uid = null) {
+        return $this->has_abilities($ability, $module_uid);
     }
 
     /**
@@ -43,29 +44,26 @@ trait InteractsWithAbility {
      * @param string|array $abilities
      * @return bool
      */
-    function has_abilities($abilities) {
-        $abilities = is_array($abilities) ? $abilities : func_get_args();
+    function has_abilities($abilities, $module_uid = null) {
+        $abilities = Arr::wrap($abilities);
 
-        $acceptables = array_intersect(
-            $this->abilities->pluck("name")->toArray(),
-            $abilities
-        );
+        if (is_null($module_uid)) {
+            $acceptables = array_intersect(
+                $this->abilities->pluck("name")->toArray(),
+                $abilities
+            );
 
-        return count($abilities) === count($acceptables);
-    }
+            return count($abilities) === count($acceptables);
+        }
 
-    /**
-     * Check if the user has one of the given abilities.
-     *
-     * @param string|array
-     * @return bool
-     */
-    function has_either_abilities($abilities) {
-        $abilities = is_array($abilities) ? $abilities : func_get_args();
+        foreach ($abilities as $name) {
+            $ability = $this->abilities->where("name", $name)->first();
+            if (is_null($ability)) return false;
 
-        return (bool) array_intersect(
-            $this->abilities->pluck("name")->toArray(),
-            $abilities
-        );
+            $module = $ability->module->where("uid", $module_uid)->first();
+            if (is_null($module)) return false;
+        }
+
+        return true;
     }
 }

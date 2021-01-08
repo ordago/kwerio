@@ -16,7 +16,7 @@ function MainMenu() {
   function inner_toggle(dispatch) {
     return function(evt) {
       if (evt && evt.type === 'keydown' && (evt.key === "Tab" || evt.key === "Shift")) return
-      dispatch(actions.toggleMenu())
+      dispatch(actions.toggleMainMenu())
     }
   }
 

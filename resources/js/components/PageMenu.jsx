@@ -15,13 +15,18 @@ import React from "react"
 import _ from "lodash"
 
 const useStyles = makeStyles(theme => createStyles({
+  parent: {
+    height: config => `calc(100% - ${config.appbar_height}px)`,
+    overflowX: "auto",
+  },
   nested: {
     paddingLeft: theme.spacing(4),
   },
 }))
 
 function PageMenu({ menu = null, actions }) {
-  const classes = useStyles(),
+  const config = useSelector(state => state.app.config),
+    classes = useStyles(config),
     match = useRouteMatch(),
     history = useHistory(),
     dispatch = useDispatch()
@@ -52,9 +57,7 @@ function PageMenu({ menu = null, actions }) {
    * Handle menu item click.
    */
   function _handle_click(item) {
-    console.log(item)
     if ("open" in item) {
-      console.log(actions)
       dispatch(actions.toggleMenu({ menu, item }))
     }
 
@@ -103,20 +106,18 @@ function PageMenu({ menu = null, actions }) {
   }
 
   return (
-    <>
-      <List component="div">
-        {menu_items.map(list => (
-          <React.Fragment key={list.id}>
-            {("is_header" in list) && (
-              <List subheader={("is_header" in list) && <ListSubheader>{list.text}</ListSubheader>}>
-                {("children" in list) && list.children.map(item => _render_list(item))}
-              </List>
-            )}
-            {!("is_header" in list) && _render_list(list)}
-          </React.Fragment>
-        ))}
-      </List>
-    </>
+    <List component="div" className={classes.parent}>
+      {menu_items.map(list => (
+        <React.Fragment key={list.id}>
+          {("is_header" in list) && (
+            <List subheader={("is_header" in list) && <ListSubheader>{list.text}</ListSubheader>}>
+              {("children" in list) && list.children.map(item => _render_list(item))}
+            </List>
+          )}
+          {!("is_header" in list) && _render_list(list)}
+        </React.Fragment>
+      ))}
+    </List>
   )
 }
 

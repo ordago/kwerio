@@ -21,6 +21,10 @@ class Ability extends Model {
         });
     }
 
+    function module() {
+        return $this->belongsTo(Module::class);
+    }
+
     /**
      * Get users who have this ability.
      *

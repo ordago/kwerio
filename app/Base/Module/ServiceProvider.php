@@ -34,8 +34,8 @@ class ServiceProvider extends BaseServiceProvider {
         $abilities = $module->config("abilities");
 
         foreach ($abilities as $ability => $description) {
-            Gate::define("{$module->uid}/{$ability}", function($user) use($ability) {
-                return $user->has_ability($ability);
+            Gate::define("{$module->uid}/{$ability}", function($user) use($ability, $module) {
+                return $user->has_ability($ability, $module->uid);
             });
         }
     }
