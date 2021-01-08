@@ -14,7 +14,7 @@ import React from "react"
 import _ from "lodash"
 
 import { actions, adapter, asyncActions } from "../index.slice"
-import { endpoints } from "../../../routes/app"
+import { endpoints } from "../../../routes"
 import { notify } from "../../../utils/errors"
 import AccountMenu from "../../../components/Menus/AccountMenu"
 import Groupable from "../../../components/Groupable/index.jsx"
@@ -23,6 +23,7 @@ import Page from "../../../components/Page"
 import PersonalInfo from "./PersonalInfo"
 import useT from "../../../hooks/useT"
 import useUuid from "../../../hooks/useUuid"
+import { actions as appActions } from '../../../App.slice.js'
 
 function Upsert({ match }) {
   const state = useSelector(state => state.users),
@@ -32,7 +33,8 @@ function Upsert({ match }) {
     history = useHistory(),
     translations = useSelector(state => state.app.t),
     t = useT(translations),
-    uuid = useUuid({ reducer: "users", match, adapter, asyncActions, actions })
+    uuid = useUuid({ reducer: "users", match, adapter, asyncActions, actions }),
+    permissionsMenu = useSelector(state => state.app.permissionsMenu)
 
   React.useEffect(() => {
     dispatch(asyncActions.metadata()).then(action => notify(action, enqueueSnackbar))
@@ -41,7 +43,8 @@ function Upsert({ match }) {
   return (
     <Page
       loading={state.loading}
-      menu={() => <AccountMenu match={match} />}
+      menu="app.permissionsMenu"
+      menuActions={appActions}
       title={t("Users")}
       content={() => (
         <Card>

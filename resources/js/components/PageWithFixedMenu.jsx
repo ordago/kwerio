@@ -4,9 +4,12 @@ import { useSelector } from "react-redux"
 import React from "react"
 import clsx from "clsx"
 
+import PageMenu from "./PageMenu"
+
 function PageWithFixedMenu({
   title = false,
-  menu = () => {},
+  menu = null,
+  menuActions = {},
   header = false,
   content = () => {},
 }) {
@@ -27,7 +30,7 @@ function PageWithFixedMenu({
             <Divider className={classes.divider} />
           </>
         )}
-        {menu()}
+        <PageMenu menu={menu} actions={menuActions} />
       </Paper>
 
       <Box
@@ -60,6 +63,7 @@ const useStyles = makeStyles(theme => createStyles({
 
   paper: {
     height: config => `calc(100vh - ${config.appbar_height}px)`,
+    width: config => config.menu_width + 1,
     position: "fixed",
     borderLeft: "none",
   },

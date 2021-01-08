@@ -14,9 +14,9 @@ import { useSnackbar } from "notistack"
 import React from "react"
 
 import { actions, adapter, asyncActions } from "../index.slice"
-import { endpoints } from "../../../routes/app"
+import { actions as appActions } from "../../../App.slice"
+import { endpoints } from "../../../routes"
 import { notify } from "../../../utils/errors"
-import AccountMenu from "../../../components/Menus/AccountMenu"
 import Groupable from "../../../components/Groupable/index.jsx"
 import Page from "../../../components/Page"
 import useStyles from "./index.styles"
@@ -60,7 +60,8 @@ function Upsert({ match }) {
   return (
     <Page
       loading={state.loading}
-      menu={() => <AccountMenu match={match} />}
+      menu="app.permissionsMenu"
+      menuActions={appActions}
       title={t("Api Users")}
       content={() => (
         <Card>

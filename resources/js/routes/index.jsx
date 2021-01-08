@@ -1,3 +1,16 @@
+import React from "react"
+
+import Suspense from "../components/Suspense"
+
+const Groups = React.lazy(() => import("../pages/Groups")),
+  GroupsUpsert = React.lazy(() => import("../pages/Groups/Upsert")),
+  Users = React.lazy(() => import("../pages/Users")),
+  UsersUpsert = React.lazy(() => import("../pages/Users/Upsert")),
+  ApiUsers = React.lazy(() => import("../pages/ApiUsers")),
+  ApiUsersUpsert = React.lazy(() => import("../pages/ApiUsers/Upsert")),
+  Account = React.lazy(() => import("../pages/Account")),
+  Profile = React.lazy(() => import("../pages/Profile"))
+
 const API_ENDPOINT = '/api',
   ENDPOINT = ''
 
@@ -62,4 +75,27 @@ export const api = {
   modules: {
     index: `${API_MODULES_ENDPOINT}/modules`,
   },
+}
+
+export const components = {
+  /* ACCOUNT / PERMISSIONS / GROUPS */
+  [endpoints.groups.create]: props => <Suspense component={<GroupsUpsert {...props} />} />,
+  [endpoints.groups.index]: props => <Suspense component={<Groups {...props} />} />,
+  [endpoints.groups.update]: props => <Suspense component={<GroupsUpsert {...props} />} />,
+
+  /* ACCOUNT / PERMISSIONS / USERS */
+  [endpoints.users.create]: props => <Suspense component={<UsersUpsert {...props} />} />,
+  [endpoints.users.update]: props => <Suspense component={<UsersUpsert {...props} />} />,
+  [endpoints.users.index]: props => <Suspense component={<Users {...props} />} />,
+
+  /* ACCOUNT / PERMISSIONS / API USERS */
+  [endpoints.apiUsers.index]: props => <Suspense component={<ApiUsers {...props} />} />,
+  [endpoints.apiUsers.create]: props => <Suspense component={<ApiUsersUpsert {...props} />} />,
+  [endpoints.apiUsers.update]: props => <Suspense component={<ApiUsersUpsert {...props} />} />,
+
+  /* ACCOUNT / SETTINGS */
+  [endpoints.account.index]: props => <Suspense component={<Account {...props} />} />,
+
+  /* OTHERS */
+  [endpoints.profile.index]: props => <Suspense component={<Profile {...props} />} />,
 }

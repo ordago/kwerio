@@ -2,7 +2,7 @@ import { createSlice, createEntityAdapter } from "@reduxjs/toolkit"
 import Form from "@euvoor/form"
 
 import { PREFIX, upsert, fetch_by_uuid, extraReducers, metadata } from "./index.service"
-import { api } from "../../routes/app"
+import { api } from "../../routes"
 import PaginatedTable from "../../components/PaginatedTable/index"
 import abilities from '../../components/Abilities/index.js'
 

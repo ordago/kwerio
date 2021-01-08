@@ -6,14 +6,14 @@ import React from "react"
 import _ from "lodash"
 
 import { actions, adapter, tableAsyncActions } from "./index.slice"
-import { endpoints } from "../../routes/app"
-import AccountMenu from "../../components/Menus/AccountMenu"
+import { endpoints } from "../../routes"
 import Page from "../../components/Page"
 import PaginatedTable from "../../components/PaginatedTable/index.jsx"
 import Toolbar from "../../components/PaginatedTable/Toolbar"
 import useStyles from "./index.styles"
 import useT from "../../hooks/useT"
 import useUser from "../../hooks/useUser"
+import { actions as appActions } from '../../App.slice.js'
 
 function ApiUsers({ match }) {
   const classes = useStyles(),
@@ -54,7 +54,8 @@ function ApiUsers({ match }) {
     <Page
       loading={loading}
       title={t("Api Users")}
-      menu={() => <AccountMenu match={match} />}
+      menu="app.permissionsMenu"
+      menuActions={appActions}
       content={() => (
         <Paper>
           <Toolbar

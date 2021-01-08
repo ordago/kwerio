@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\{
 };
 
 abstract class Base {
-    use Authorization;
+    use Traits\InteractsWithAuthorization,
+        Traits\InteractsWithView,
+        Traits\InteractsWithRoute;
 
     /**
      * REQUIRED
@@ -81,42 +83,11 @@ abstract class Base {
     }
 
     /**
-     * Get a prefixed route for the given module.
-     *
-     * @return string
-     */
-    function route_prefix($append = "") {
-        $append = ltrim($append, "/");
-        $append = empty($append) ? "" : "/{$append}";
-
-        return "{$this->slug}{$append}";
-    }
-
-    /**
-     * Get route name.
-     *
-     * @param string $name
-     * @return string
-     */
-    function route_name($name) {
-        return "{$this->uid}.{$name}";
-    }
-
-    /**
      * Get module configuration.
      *
      * @return mixed
      */
     function config(string $key) {
         return config("{$this->uid}.{$key}");
-    }
-
-    /**
-     * Get module view name.
-     *
-     * @return View
-     */
-    function view(string $view) {
-        return view($this->uid . "::{$view}");
     }
 }

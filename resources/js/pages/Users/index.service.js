@@ -5,7 +5,7 @@ import axios from "axios"
 
 import { actions as abilitiesActions } from "../Abilities/index.slice"
 import { actions } from "./index.slice"
-import { api } from "../../routes/app"
+import { api } from "../../routes"
 import { form } from "../Users/index.slice"
 import { actions as groupsActions } from "../Groups/index.slice"
 import { actions as modulesActions } from "../Modules/index.slice"

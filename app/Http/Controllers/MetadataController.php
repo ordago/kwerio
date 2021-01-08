@@ -15,7 +15,7 @@ class MetadataController extends Controller {
     function index(Metadata $metadata) {
         return $metadata
             ->user()
-            ->menu();
-
+            ->menu()
+            ->permissions_menu();
     }
 }

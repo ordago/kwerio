@@ -7,11 +7,12 @@ import Menu from "./Main/MainMenu/Menu"
 import PageHeader from "./PageHeader"
 import PageWithFixedMenu from "./PageWithFixedMenu"
 
-function AccountPage({
+function Page({
   title = "",
   header = false,
   loading = false,
-  menu = () => {},
+  menu = null,
+  menuActions = {},
   content = () => {},
 }) {
   const config = useSelector(state => state.app.config),
@@ -20,11 +21,8 @@ function AccountPage({
   return (
     <PageWithFixedMenu
       title={title}
-      menu={() => (
-        <Box className={classes.menu}>
-          {menu()}
-        </Box>
-      )}
+      menu={menu}
+      menuActions={menuActions}
       header={() => (
         <>
           {header !== false && header()}
@@ -42,4 +40,4 @@ const useStyles = makeStyles(theme => createStyles({
   },
 }))
 
-export default React.memo(AccountPage)
+export default React.memo(Page)

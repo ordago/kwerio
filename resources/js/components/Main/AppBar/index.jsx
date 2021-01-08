@@ -14,7 +14,7 @@ import MenuIcon from "@material-ui/icons/Menu"
 import React, { useState } from "react"
 
 import { actions } from "../../../App.slice"
-import { endpoints } from "../../../routes/app"
+import { endpoints } from "../../../routes"
 import useStyles from "./index.styles"
 
 function AppBar() {
@@ -32,7 +32,7 @@ function AppBar() {
             edge="start"
             className={classes.menuIconBtn}
             color="inherit"
-            onClick={() => dispatch(actions.toggleMenu())}
+            onClick={() => dispatch(actions.toggleMainMenu())}
           >
             <MenuIcon />
           </IconButton>

@@ -11,6 +11,27 @@ trait InteractsWithMenu {
     private $settings = [];
 
     /**
+     * Get permissions menu.
+     *
+     * @return array
+     */
+    function permissions_menu() {
+        $this->_build_permissions();
+
+        if (count($this->permissions)) {
+            $menu = $this->permissions;
+            unset($menu["icon"]);
+            unset($menu["open"]);
+            unset($menu["link"]);
+            $menu["is_header"] = true;
+
+            $this->attributes["permissions_menu"] = [$menu];
+        }
+
+        return $this;
+    }
+
+    /**
      * Set user accessable menu.
      */
     function menu() {
@@ -93,7 +114,8 @@ trait InteractsWithMenu {
                 $users = [
                     "id" => Str::uuid(),
                     "text" => "Users",
-                    "link" => "/account/permissions/users",
+                    "link" => $link = "/account/permissions/users",
+                    "matches" => [ $link, "{$link}/create", "{$link}/:uuid" ],
                 ];
             }
 
@@ -101,7 +123,8 @@ trait InteractsWithMenu {
                 $groups = [
                     "id" => Str::uuid(),
                     "text" => "Groups",
-                    "link" => "/account/permissions/groups",
+                    "link" => $link = "/account/permissions/groups",
+                    "matches" => [ $link, "{$link}/create", "{$link}/:uuid" ],
                 ];
             }
 
@@ -109,7 +132,8 @@ trait InteractsWithMenu {
                 $api_users = [
                     "id" => Str::uuid(),
                     "text" => "Api Users",
-                    "link" => "/account/permissions/api-users",
+                    "link" => $link = "/account/permissions/api-users",
+                    "matches" => [ $link, "{$link}/create", "{$link}/:uuid" ],
                 ];
             }
 

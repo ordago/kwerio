@@ -4,26 +4,28 @@ import { useSelector } from "react-redux"
 import React from "react"
 
 import { adapter, tableAsyncActions, actions } from "./index.slice"
-import { endpoints } from "../../routes/app"
-import AccountMenu from "../../components/Menus/AccountMenu"
+import { endpoints } from "../../routes"
 import Page from "../../components/Page"
 import PaginatedTable from "../../components/PaginatedTable/index.jsx"
 import Toolbar from "../../components/PaginatedTable/Toolbar"
 import useT from "../../hooks/useT"
 import useUser from "../../hooks/useUser"
+import { actions as appActions } from '../../App.slice.js'
 
 function Groups({ match }) {
   const state = useSelector(state => state.groups),
     history = useHistory(),
     translations = useSelector(state => state.app.t),
     t = useT(translations),
-    user = useUser()
+    user = useUser(),
+    permissionsMenu = useSelector(state => state.app.permissionsMenu)
 
   return (
     <Page
       loading={state.loading}
       title={t("Groups")}
-      menu={() => <AccountMenu match={match} />}
+      menu="app.permissionsMenu"
+      menuActions={appActions}
       content={() => (
         <Paper>
           <Toolbar

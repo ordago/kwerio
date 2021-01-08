@@ -4,7 +4,7 @@ import { useSelector } from "react-redux"
 import React from "react"
 
 import { actions, adapter, tableAsyncActions } from "./index.slice"
-import { endpoints } from "../../routes/app"
+import { endpoints } from "../../routes"
 import AccountMenu from "../../components/Menus/AccountMenu"
 import Page from "../../components/Page"
 import PaginatedTable from "../../components/PaginatedTable/index.jsx"
@@ -12,6 +12,7 @@ import Toolbar from "../../components/PaginatedTable/Toolbar"
 import useStyles from "./index.styles"
 import useT from "../../hooks/useT"
 import useUser from "../../hooks/useUser"
+import { actions as appActions } from '../../App.slice'
 
 function Users({ match }) {
   const classes = useStyles(),
@@ -26,7 +27,8 @@ function Users({ match }) {
     <Page
       loading={loading}
       title={t("Users")}
-      menu={() => <AccountMenu match={match} />}
+      menu="app.permissionsMenu"
+      menuActions={appActions}
       content={() => (
         <Paper>
           <Toolbar

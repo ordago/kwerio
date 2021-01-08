@@ -34,7 +34,7 @@ class ServiceProvider extends BaseServiceProvider {
         $abilities = $module->config("abilities");
 
         foreach ($abilities as $ability => $description) {
-            Gate::define("{$module->uid}/{$ability}", function(User $user) use($ability) {
+            Gate::define("{$module->uid}/{$ability}", function($user) use($ability) {
                 return $user->has_ability($ability);
             });
         }
@@ -65,12 +65,12 @@ class ServiceProvider extends BaseServiceProvider {
             ->group(base_path("{$path}/web.php"));
 
         Route::middleware(array_merge(["webapi"], $default_middlewares))
-            ->prefix($module->config("router.prefix"))
+            ->prefix($module->config("router.prefix") . "/api")
             ->namespace($module->config("router.namespace"))
             ->group(base_path("{$path}/webapi.php"));
 
         Route::middleware(array_merge(["api"], $default_middlewares))
-            ->prefix($module->config("router.prefix"))
+            ->prefix($module->config("router.prefix") . "/api")
             ->namespace($module->config("router.namespace"))
             ->group(base_path("{$path}/api.php"));
     }

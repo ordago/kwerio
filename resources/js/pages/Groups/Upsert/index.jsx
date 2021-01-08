@@ -13,16 +13,16 @@ import { useSnackbar } from "notistack"
 import React from "react"
 
 import { actions, adapter, asyncActions } from "../index.slice"
-import { endpoints } from "../../../routes/app"
+import { endpoints } from "../../../routes"
 import { adapter as modulesAdapter } from "../../Modules/index.slice"
 import { notify } from "../../../utils/errors"
 import Abilities from "../../../components/Abilities/index.jsx"
-import AccountMenu from "../../../components/Menus/AccountMenu"
 import Page from "../../../components/Page"
 import useStyles from "./index.styles"
 import useT from "../../../hooks/useT"
 import useUser from "../../../hooks/useUser"
 import useUuid from "../../../hooks/useUuid"
+import { actions as appActions } from '../../../App.slice.js'
 
 function Upsert({ match }) {
   const state = useSelector(state => state.groups),
@@ -53,7 +53,8 @@ function Upsert({ match }) {
     <Page
       title={t("Groups")}
       loading={state.loading}
-      menu={() => <AccountMenu match={match} />}
+      menu="app.permissionsMenu"
+      menuActions={appActions}
       content={() => (
         <>
           {user.can(ability) && (

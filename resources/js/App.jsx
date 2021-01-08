@@ -1,6 +1,6 @@
 import "fontsource-roboto"
 
-import { BrowserRouter, Route, Switch } from "react-router-dom"
+import { BrowserRouter, Switch } from "react-router-dom"
 import { CssBaseline } from "@material-ui/core"
 import { Provider, useSelector, useDispatch } from "react-redux"
 import { SnackbarProvider } from "notistack"
@@ -9,27 +9,18 @@ import { jssPreset, StylesProvider, createMuiTheme, ThemeProvider } from "@mater
 import React from "react"
 import rtl from "jss-rtl"
 
-import { endpoints } from "./routes/app"
 import { fetch_metadata, fetch_translations } from "./App.slice"
 import Main from "./components/Main"
-import Suspense from "./components/Suspense"
+import useRoutes from "./hooks/useRoutes"
 import useStyles from "./App.styles"
 
-const Groups = React.lazy(() => import("./pages/Groups")),
-  GroupsUpsert = React.lazy(() => import("./pages/Groups/Upsert")),
-  Users = React.lazy(() => import("./pages/Users")),
-  UsersUpsert = React.lazy(() => import("./pages/Users/Upsert")),
-  ApiUsers = React.lazy(() => import("./pages/ApiUsers")),
-  ApiUsersUpsert = React.lazy(() => import("./pages/ApiUsers/Upsert")),
-  Account = React.lazy(() => import("./pages/Account")),
-  Profile = React.lazy(() => import("./pages/Profile"))
-
-function InnerApp({ switchRoutes = () => {} }) {
+function InnerApp({ moduleRoutes }) {
   const { theme, config, user } = useSelector(state => state.app),
     dispatch = useDispatch(),
     classes = useStyles(),
     muiTheme = React.useMemo(() => createMuiTheme(theme), [theme]),
-    jss = create({ plugins: [...jssPreset().plugins, rtl()] })
+    jss = create({ plugins: [...jssPreset().plugins, rtl()] }),
+    routes = useRoutes(moduleRoutes)
 
   React.useEffect(() => {
     dispatch(fetch_metadata())
@@ -59,32 +50,7 @@ function InnerApp({ switchRoutes = () => {} }) {
             <CssBaseline />
             <BrowserRouter>
               <Main>
-                <Switch>
-
-                  {/* ACCOUNT / PERMISSIONS / GROUPS */}
-                  <Route exact path={endpoints.groups.create} render={props => <Suspense component={<GroupsUpsert {...props} />} />} />
-                  <Route exact path={endpoints.groups.index} render={props => <Suspense component={<Groups {...props} />} />} />
-                  <Route exact path={endpoints.groups.update} render={props => <Suspense component={<GroupsUpsert {...props} />} />} />
-
-                  {/* ACCOUNT / PERMISSIONS / USERS */}
-                  <Route exact path={endpoints.users.create} render={props => <Suspense component={<UsersUpsert {...props} />} />} />
-                  <Route exact path={endpoints.users.update} render={props => <Suspense component={<UsersUpsert {...props} />} />} />
-                  <Route exact path={endpoints.users.index} render={props => <Suspense component={<Users {...props} />} />} />
-
-                  {/* ACCOUNT / PERMISSIONS / API USERS */}
-                  <Route exact path={endpoints.apiUsers.index} render={props => <Suspense component={<ApiUsers {...props} />} />} />
-                  <Route exact path={endpoints.apiUsers.create} render={props => <Suspense component={<ApiUsersUpsert {...props} />} />} />
-                  <Route exact path={endpoints.apiUsers.update} render={props => <Suspense component={<ApiUsersUpsert {...props} />} />} />
-
-                  {/* ACCOUNT / SETTINGS */}
-                  <Route exact path={endpoints.account.index} render={props => <Suspense component={<Account {...props} />} />} />
-
-                  {/* OTHERS */}
-                  <Route exact path={endpoints.profile.index} render={props => <Suspense component={<Profile {...props} />} />} />
-
-                  {switchRoutes()}
-
-                </Switch>
+                <Switch>{routes}</Switch>
               </Main>
             </BrowserRouter>
           </div>
@@ -94,11 +60,12 @@ function InnerApp({ switchRoutes = () => {} }) {
   )
 }
 
-function App({ store, switchRoutes = () => {} }) {
+function App({ store, moduleRoutes = {}, module = () => {} }) {
   return (
     <React.StrictMode>
       <Provider store={store}>
-        <InnerApp switchRoutes={switchRoutes} />
+        {module()}
+        <InnerApp moduleRoutes={moduleRoutes} />
       </Provider>
     </React.StrictMode>
   )

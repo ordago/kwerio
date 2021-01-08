@@ -4,7 +4,8 @@ import { blue, pink } from '@material-ui/core/colors'
 import _ from "lodash"
 import axios from "axios"
 
-import { api } from "./routes/app"
+import { api } from "./routes"
+import menuReducers from './reducers/menu.js'
 
 const PREFIX = 'app'
 
@@ -89,6 +90,7 @@ const initialState = {
     appbar_height: 48,
     page_header_height: 40,
   },
+  permissionsMenu: [],
   menu: {
     open: false,
     data: [],
@@ -100,7 +102,8 @@ const slice = createSlice({
   name: PREFIX,
   initialState,
   reducers: {
-    toggleMenu: (state, action) => { state.menu.open = !state.menu.open },
+    ...menuReducers,
+    toggleMainMenu: (state, action) => { state.menu.open = !state.menu.open },
     togglePaletteType: (state) => {
       if (_.isUndefined(state.palette)) return
 
@@ -147,6 +150,7 @@ const slice = createSlice({
     [fetch_metadata.fulfilled]: (state, action) => {
       state.menu = action.payload.menu
       state.user = action.payload.user
+      state.permissionsMenu = action.payload.permissions_menu
       state.theme.direction = action.payload.user.dir
     },
 
