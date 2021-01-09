@@ -14,7 +14,6 @@ class Group extends Model {
 
     protected $guarded = [];
     protected $hidden = ["pivot"];
-    protected $with = ["modules", "abilities"];
 
     public static function boot() {
         parent::boot();

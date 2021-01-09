@@ -49,16 +49,3 @@ Route::middleware(["auth", "root"])->group(function() {
         Route::get("/", [ModuleController::class, "index"]);
     });
 });
-
-// -------------------------------------------------------------- TESTING -- #
-Route::prefix("~test")->group(function() {
-    Route::get("/", function() { return ["type" => "web_no_auth"]; });
-
-    Route::middleware("auth")->group(function() {
-        Route::get("/protected", function() { return ["type" => "web_auth"]; });
-
-        Route::middleware("root")->group(function() {
-            Route::get("/root-access", function() { return ["type" => "root_access"]; });
-        });
-    });
-});

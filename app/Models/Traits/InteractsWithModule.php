@@ -18,38 +18,19 @@ trait InteractsWithModule {
     }
 
     /**
-     * Check if user is allowed to access to given module(s).
-     *
-     * @param array|string $module
-     * @return bool
-     */
-    function can_access_either_modules($modules) {
-        if ($this->is_root()) {
-            return true;
-        }
-
-        $modules = is_array($modules) ? $modules : func_get_args();
-
-        return (bool) array_intersect(
-            $this->modules()->pluck("uuid")->toArray(),
-            $modules
-        );
-    }
-
-    /**
      * Check if user can access all the given modules.
      *
      * @param string|array $modules
      * @return bool
      */
     function can_access_modules($modules) {
-        if ($this->is_root()) {
+        if ($this->is_root() || $this->is_owner()) {
             return true;
         }
 
         $modules = is_array($modules) ? $modules : func_get_args();
         $accessable = array_intersect(
-            $this->modules()->pluck("uuid")->toArray(),
+            $this->modules()->pluck("uid")->toArray(),
             $modules
         );
 

@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
+use Kwerio\AuthUser as Authenticatable;
 
 class User extends Authenticatable {
     use HasFactory,
@@ -15,10 +15,10 @@ class User extends Authenticatable {
         Traits\LocalizeDatetimeAttributes,
         Traits\InteractsWithGroup,
         Traits\InteractsWithModule,
-        Traits\InteractsWithAbility;
+        Traits\InteractsWithAbility,
+        Traits\Authorizable;
 
     protected $guarded = [];
-    protected $with = ["groups", "abilities"];
 
     protected $casts = [
         "email_verified_at" => "datetime",

@@ -69,7 +69,7 @@ class AbilitiesTableSeeder extends Seeder
                 $abilities = [];
 
                 foreach ($config["abilities"] as $ability => $description) {
-                    $abilities[] = $firstOrCreate($ability, $description, $moduleModel->id)->id;
+                    $abilities[] = $firstOrCreate("{$module['uid']}/{$ability}", $description, $moduleModel->id)->id;
                 }
 
                 $group->abilities()->syncWithoutDetaching($abilities);

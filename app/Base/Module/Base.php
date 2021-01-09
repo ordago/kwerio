@@ -9,8 +9,7 @@ use Illuminate\Support\Facades\{
 };
 
 abstract class Base {
-    use Traits\InteractsWithAuthorization,
-        Traits\InteractsWithView,
+    use Traits\InteractsWithView,
         Traits\InteractsWithRoute;
 
     /**

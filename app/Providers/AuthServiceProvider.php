@@ -48,7 +48,11 @@ class AuthServiceProvider extends ServiceProvider
 
         foreach ($abilitiesTableSeeder->abilities as $ability => $description) {
             Gate::define($ability, function($user) use($ability) {
-                return $user->has_abilities($ability);
+                if ($user->is_owner()) {
+                    return true;
+                }
+
+                return $user->isAbleTo($ability);
             });
         }
     }

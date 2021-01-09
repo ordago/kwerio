@@ -24,28 +24,23 @@ trait InteractsWithGroup {
         return $this->member_of("root");
     }
 
+    /**
+     * Check if user is a member of any of the given groups.
+     *
+     * @param string|array $groups
+     * @return bool
+     */
     function member_of($groups) {
+        if ($this->is_owner()) {
+            return true;
+        }
+
         $groups = is_array($groups) ? $groups : func_get_args();
 
         return count($groups) === count(array_intersect(
             $this->groups->pluck("slug")->toArray(),
             $groups
         ));
-    }
-
-    /**
-     * Check if user member either one of the given groups.
-     *
-     * @param string|array
-     * @return bool
-     */
-    function member_of_either($groups) {
-        $groups = is_array($groups) ? $groups : func_get_args();
-
-        return (bool) array_intersect(
-            $this->groups->pluck("slug")->toArray(),
-            $groups
-        );
     }
 
     /**

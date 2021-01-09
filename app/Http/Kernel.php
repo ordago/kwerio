@@ -65,6 +65,6 @@ class Kernel extends HttpKernel
 
         "root" => \App\Http\Middleware\Root::class,
         "webapi" => \App\Http\Middleware\WebApi::class,
-        "access" => \Kwerio\Middleware\Access::class,
+        "access.module" => \Kwerio\Middleware\AccessModule::class,
     ];
 }

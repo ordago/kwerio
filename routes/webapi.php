@@ -42,12 +42,3 @@ Route::middleware(["auth:web,api", "root"])->group(function() {
         Route::post("/all", [ModuleController::class, "all"]);
     });
 });
-
-// -------------------------------------------------------------- TESTING -- #
-Route::prefix("~test/api")->group(function() {
-    Route::get("/", function() { return ["type" => "webapi_no_auth"]; });
-
-    Route::middleware("auth")->group(function() {
-        Route::get("/protected", function() { return ["type" => "webapi_auth"]; });
-    });
-});

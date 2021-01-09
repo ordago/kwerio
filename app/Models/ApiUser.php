@@ -10,7 +10,8 @@ class ApiUser extends Model {
     use HasFactory,
         Traits\LocalizeDatetimeAttributes,
         Traits\InteractsWithGroup,
-        Traits\InteractsWithAbility;
+        Traits\InteractsWithAbility,
+        Traits\Authorizable;
 
     protected $guarded = [];
     protected $with = ["user"];
