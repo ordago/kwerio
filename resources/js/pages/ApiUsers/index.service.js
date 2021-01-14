@@ -58,6 +58,7 @@ export default ({ actions }) => ({
       dispatch(actions.fillUpsert(data.items[0]))
 
       if (route_to_index) {
+        dispatch(actions.resetUpsert())
         history.push(endpoints.apiUsers.index)
       }
 
