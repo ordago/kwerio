@@ -1,10 +1,9 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit"
-import Form from '@euvoor/form'
+import Form from "@euvoor/form"
 
-import groupable from '../../components/Groupable/index.js'
-import { PREFIX, fetch_by_uuid, upsert, metadata } from "./index.service"
-import { api } from "../../routes"
-import PaginatedTable from "../../components/PaginatedTable"
+import { PREFIX, upsert } from "./index.service"
+import groupable from "../../components/Groupable/index"
+import paginatedTable from "../../components/PaginatedTable/index"
 
 export const adapter = createEntityAdapter({
   selectId: apiUsers => apiUsers.uuid,
@@ -12,7 +11,7 @@ export const adapter = createEntityAdapter({
 
 export const form = Form({
   ...groupable.form,
-  name: { },
+  name: {  },
   expires_at: {
     validator: {
       required: false,
@@ -25,8 +24,6 @@ export const form = Form({
     },
   },
 })
-
-const paginatedTable = PaginatedTable(PREFIX, api.apiUsers, adapter)
 
 const initialState = adapter.getInitialState({
   ...paginatedTable.initialState,
@@ -49,10 +46,9 @@ const slice = createSlice({
   name: PREFIX,
   initialState,
   reducers: {
-    ...paginatedTable.reducers,
+    ...paginatedTable.init_reducers(adapter),
     ...groupable.reducers,
     ...form.reducers,
-    upsertOne: adapter.upsertOne,
     fillUpsert: (state, action) => {
       const item = action.payload
 
@@ -77,7 +73,7 @@ const slice = createSlice({
     },
   },
   extraReducers: {
-    ...paginatedTable.extraReducers,
+    ...paginatedTable.init_extraReducers("apiUsers"),
 
     // upsert
     [upsert.pending]: (state, action) => {
@@ -97,12 +93,5 @@ const slice = createSlice({
 })
 
 export const actions = slice.actions
-export const tableAsyncActions = paginatedTable.asyncActions("apiUsers", actions)
-
-export const asyncActions = {
-  upsert,
-  fetch_by_uuid,
-  metadata,
-}
 
 export default slice.reducer

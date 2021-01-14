@@ -5,7 +5,7 @@ return [
     "router" => [
         "prefix" => "/",
         "namespace" => "\Modules\Home\Http\Controllers",
-        "middleware" => ["auth", "access.module:Home"],
+        "middleware" => ["access.module:Home"],
     ],
     "abilities" => [
 

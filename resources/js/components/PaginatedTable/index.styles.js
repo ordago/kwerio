@@ -5,7 +5,6 @@ export default makeStyles(theme => createStyles({
   root: {
 
   },
-
   touchedAt: {
     backgroundColor: green[50],
   },

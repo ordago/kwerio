@@ -6,7 +6,7 @@ import {
   Divider
 } from "@material-ui/core"
 import { is_disabled } from "@euvoor/form"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import { useHistory } from "react-router-dom"
 import { useSnackbar } from "notistack"
 import React from "react"
@@ -24,21 +24,20 @@ import PersonalInfo from "./PersonalInfo"
 import useT from "../../../hooks/useT"
 import useUuid from "../../../hooks/useUuid"
 import { actions as appActions } from '../../../App.slice.js'
+import useRequest from '../../../hooks/useRequest'
+import services from '../index.service'
 
 function Upsert({ match }) {
   const state = useSelector(state => state.users),
-    { enqueueSnackbar } = useSnackbar(),
-    dispatch = useDispatch(),
     { email, first_name, last_name, locale } = state.upsert,
     history = useHistory(),
     translations = useSelector(state => state.app.t),
     t = useT(translations),
-    uuid = useUuid({ reducer: "users", match, adapter, asyncActions, actions }),
+    request = useRequest({ reducer: "users", services: services({ actions }) }),
+    uuid = useUuid({ reducer: "users", match, adapter, request, actions }),
     permissionsMenu = useSelector(state => state.app.permissionsMenu)
 
-  React.useEffect(() => {
-    dispatch(asyncActions.metadata()).then(action => notify(action, enqueueSnackbar))
-  }, [])
+  React.useEffect(() => { request.metadata() }, [])
 
   return (
     <Page
@@ -65,16 +64,7 @@ function Upsert({ match }) {
           <CardActions>
             <Button
               disabled={is_disabled({ email })}
-              onClick={() => {
-                dispatch(asyncActions.upsert())
-                  .then(action => notify(action, enqueueSnackbar))
-                  .then(action => {
-                    if (!_.isUndefined(action)) {
-                      enqueueSnackbar(`Success`, { variant: "success" })
-                      history.push(endpoints.users.index)
-                    }
-                  })
-              }}
+              onClick={() => { request.upsert() }}
             >
               save
             </Button>

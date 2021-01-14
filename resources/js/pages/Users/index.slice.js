@@ -1,10 +1,10 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit"
 import Form, { types } from "@euvoor/form"
 
-import { PREFIX, fetch_by_uuid, upsert, extraReducers, metadata } from "./index.service"
-import { api } from "../../routes"
-import PaginatedTable from "../../components/PaginatedTable/index"
+import generate_extra_reducers from "../../utils/generate-extra-reducers"
 import groupable from "../../components/Groupable/index"
+import paginatedTable from "../../components/PaginatedTable/index"
+import services from "./index.service"
 
 export const adapter = createEntityAdapter({
   selectId: user => user.uuid,
@@ -50,11 +50,29 @@ export const form = Form({
   },
 })
 
-const paginatedTable = PaginatedTable(PREFIX, api.users, adapter)
+const extraReducers = generate_extra_reducers("users", services, {
+  upsert: {
+    fulfilled: (state, action) => {
+      state.rsc.total = action.payload.total
+    },
+  },
+  fetch_by_uuid: {
+    fulfilled: (state, action) => {
+      state.rsc.total = action.payload.total
+    }
+  },
+  metadata: {
+    fulfilled: (state, action) => {
+      console.log(action)
+      state.languages = action.payload.languages
+      state.timezones = action.payload.timezones
+      state.localeIsoFormats = action.payload.localeIsoFormats
+    }
+  }
+})
 
 const initialState = adapter.getInitialState({
   ...paginatedTable.initialState,
-  loading: false,
   upsert: {
     ...form.state,
     uuid: null,
@@ -72,13 +90,12 @@ const initialState = adapter.getInitialState({
 })
 
 const slice = createSlice({
-  name: PREFIX,
+  name: "users",
   initialState,
   reducers: {
+    ...paginatedTable.init_reducers(adapter),
     ...form.reducers,
-    ...paginatedTable.reducers,
     ...groupable.reducers,
-    upsertOne: adapter.upsertOne,
     resetUpsert: (state, action) => {
       state.upsert = {
         uuid: null,
@@ -105,17 +122,11 @@ const slice = createSlice({
     },
   },
   extraReducers: {
-    ...paginatedTable.extraReducers,
     ...extraReducers,
+    ...paginatedTable.init_extraReducers("users"),
   },
 })
 
 export const actions = slice.actions
-export const tableAsyncActions = paginatedTable.asyncActions("users", actions)
-export const asyncActions = {
-  upsert,
-  fetch_by_uuid,
-  metadata,
-}
 
 export default slice.reducer

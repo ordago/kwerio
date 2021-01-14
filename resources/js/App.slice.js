@@ -1,11 +1,11 @@
+import { blue, pink } from "@material-ui/core/colors"
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
-import { blue, pink } from '@material-ui/core/colors'
 
 import _ from "lodash"
 import axios from "axios"
 
 import { api } from "./routes"
-import menuReducers from './reducers/menu.js'
+import menu from "./slices/metadata/menu"
 
 const PREFIX = 'app'
 
@@ -102,7 +102,7 @@ const slice = createSlice({
   name: PREFIX,
   initialState,
   reducers: {
-    ...menuReducers,
+    ...menu.reducers,
     toggleMainMenu: (state, action) => { state.menu.open = !state.menu.open },
     togglePaletteType: (state) => {
       if (_.isUndefined(state.palette)) return

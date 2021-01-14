@@ -23,13 +23,6 @@ export function notify(action, enqueueSnackbar) {
 }
 
 /**
- * A wrapper arround rejectWithValue
- */
-export function reject_with_value(err, rejectWithValue) {
-  return rsc_catched_error(err, rejectWithValue)
-}
-
-/**
  * Handle a catched err from an ajax request.
  *
  * @param {Error} err
@@ -37,9 +30,7 @@ export function reject_with_value(err, rejectWithValue) {
  * @return {mixed}
  * @throws {Error}
  */
-export function rsc_catched_error(err, rejectWithValue) {
-  console.error(err)
-
+export function reject_with_error(err, rejectWithValue) {
   if (_.hasIn(err, "response.data")) {
     return rejectWithValue(err.response.data)
   }

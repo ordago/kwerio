@@ -3,16 +3,15 @@ import { useHistory } from "react-router-dom"
 import { useSelector } from "react-redux"
 import React from "react"
 
-import { actions, adapter, tableAsyncActions } from "./index.slice"
-import { endpoints } from "../../routes"
-import AccountMenu from "../../components/Menus/AccountMenu"
+import { actions, adapter } from "./index.slice"
+import { api, endpoints } from "../../routes/index.jsx"
+import { actions as appActions } from "../../App.slice"
 import Page from "../../components/Page"
 import PaginatedTable from "../../components/PaginatedTable/index.jsx"
 import Toolbar from "../../components/PaginatedTable/Toolbar"
 import useStyles from "./index.styles"
 import useT from "../../hooks/useT"
 import useUser from "../../hooks/useUser"
-import { actions as appActions } from '../../App.slice'
 
 function Users({ match }) {
   const classes = useStyles(),
@@ -31,20 +30,16 @@ function Users({ match }) {
       menuActions={appActions}
       content={() => (
         <Paper>
-          <Toolbar
-            actions={actions}
-            tableAsyncActions={tableAsyncActions}
-            onAddButtonClick={() => history.push(endpoints.users.create)}
-            canSearch={user.can("root/user_list")}
-            canCreate={user.can("root/user_create")}
-          />
-
-          {user.can("root/user_list") && (
+          {user.canAny(["root/user_list", "root/user_create", "root/user_update"]) && (
             <PaginatedTable
-              reducerName="users"
+              toolbar
+              canSearch={user.can("root/user_list")}
+              canCreate={user.can("root/user_create")}
+              reducer="users"
               adapter={adapter}
+              api={api.users}
+              endpoint={endpoints.users}
               actions={actions}
-              asyncActions={tableAsyncActions}
               onRowClick={item => history.push(endpoints.users.update.replace(/:uuid/, item.uuid))}
             />
           )}

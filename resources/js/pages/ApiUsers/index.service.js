@@ -7,7 +7,7 @@ import { actions } from "./index.slice"
 import { api } from "../../routes"
 import { actions as groupsActions } from "../Groups/index.slice"
 import { actions as modulesActions } from "../Modules/index.slice"
-import { rsc_catched_error } from "../../utils/errors"
+import { reject_with_error } from "../../utils/errors"
 
 export const PREFIX = "API_USERS"
 
@@ -40,7 +40,7 @@ export const metadata = createAsyncThunk(`${PREFIX}/metadata`, async (uuid, { ge
   }
 
   catch (err) {
-    return rsc_catched_error(err, rejectWithValue)
+    return reject_with_error(err, rejectWithValue)
   }
 })
 
@@ -58,7 +58,7 @@ export const fetch_by_uuid = createAsyncThunk(`${PREFIX}/fetch-by-uuid`, async (
   }
 
   catch (err) {
-    return rsc_catched_error(err, rejectWithValue)
+    return reject_with_error(err, rejectWithValue)
   }
 })
 
@@ -104,6 +104,6 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (token_unhashed
   }
 
   catch (err) {
-    return rsc_catched_error(err, rejectWithValue)
+    return reject_with_error(err, rejectWithValue)
   }
 })

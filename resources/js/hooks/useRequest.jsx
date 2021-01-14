@@ -1,0 +1,191 @@
+import { createAsyncThunk } from "@reduxjs/toolkit"
+import { useDispatch } from "react-redux"
+import qs from "qs"
+import { useSnackbar  } from 'notistack'
+
+import axios from "axios"
+
+import { reject_with_error } from "../utils/errors"
+
+/**
+ * Parse url option.
+ *
+ * @param {object} options
+ * @return string
+ * @throws Error
+ */
+function _parse_url(options, args) {
+  if (typeof options.url === "function") return options.url(args)
+  else if (typeof options.url === "string") return options.url
+  throw `Unsupported type of url: ${typeof options.url}`
+}
+
+/**
+ * Parse method type.
+ *
+ * @param {object} options
+ * @param {object} args
+ * @return string
+ * @throws Error
+ */
+function _parse_method(options, args) {
+  if (typeof options.method === "function") return options.method(args)
+  if (typeof options.method === "string") return options.method
+  throw `Unsupported type of method: ${typeof options.method}`
+}
+
+/**
+ * Parse request data.
+ *
+ * @param {object} options
+ * @param {object} args
+ * @return {mixed}
+ */
+function _parse_data(options, args) {
+  if (typeof options.data === "string") return options.data
+
+  let data = options.data
+
+  if (typeof options.data === "function") {
+    data = options.data(args)
+  }
+
+  if (options.method === "get" && typeof data !== "string") {
+    return qs.stringify(data)
+  }
+
+  return data
+}
+
+/**
+ * useRequest hook
+ */
+function useRequest({
+  services,
+  prefix = null,
+  reducer = "module",
+}) {
+  const dispatch = useDispatch(),
+    { enqueueSnackbar } = useSnackbar()
+
+  let asyncActions = {}
+
+  const defaultOptions = {
+    url: null,                              // [REQUEST] Endpoint that the request will be sent to.
+    method: "post",                         // Method to be in the request.
+    notifySuccessMessage: true,             // Display a notification message on success.
+    notifyFailedMessage: true,              // Display a notification message on failure.
+    data: null,                             // Data to be sent in the request.
+    cancelCallback: args => false,          // Do not do the request if cancel callback is true.
+    beforeCallback: args => {},             // Callback before the request is sent.
+    afterCallback: (response, args) => {},  // Callback after the request is sent.
+    failedCallback: (error, args) => {},    // Callback if request failed.
+    finallyCallback: args => {},            // Callback after everything is finished (finally).
+  }
+
+  if (!prefix) prefix = reducer
+
+  for (let service in services) {
+    asyncActions[service] = (params = {}) => dispatch(createAsyncThunk(
+      `${prefix}/${service}`,
+      async (__, { dispatch, getState, rejectWithValue }) => {
+        let asyncAction = services[service]({
+          params,
+          dispatch,
+          state: getState(),
+          rejectWithValue,
+        })
+
+        const args = {
+          params,                       // The parameters sent when calling request.
+          dispatch,                     // Redux dispatch.
+          getState,                     // Redux state.
+          rejectWithValue,              // Reduxjs toolkit rejectWithValue.
+          reducer,                      // Name of the reducer.
+          state: getState()[reducer],   // State of the current reducer.
+        },
+          options = {
+            ...defaultOptions,          // Seed default options
+            ...services[service](args), // Custom user configuration.
+          }
+
+        options.beforeCallback(args)
+
+        try {
+          // Send HTTP request to options.url..
+          const response = await axios({
+            url: _parse_url(options, args),
+            method: _parse_method(options, args),
+            data: _parse_data(options, args)
+          })
+
+          options.afterCallback(response, args)
+
+          // Display success message, if any..
+          if (options.notifySuccessMessage) {
+            if ("message" in response.data) {
+              let variant = ("variant" in response.data) ? response.data.variant : "success"
+              enqueueSnackbar(response.data.message, { variant })
+            }
+          }
+
+          // Call option[status] if available..
+          if (response.status in options) {
+            return options[response.status]({ data: response.data, ...args })
+          }
+
+          return response.data
+        }
+
+        catch (err) {
+          options.failedCallback(err, args)
+
+          // Display error message if any..
+          if (options.notifyFailedMessage) {
+            if ("response" in err) {
+              const message = ("message" in err.response.data)
+                ? err.response.data.message
+                : `${err.response.statusText} [${err.response.status}]`
+
+              const variant = ("variant" in err.response.data) ? err.response.data.variant : "error"
+
+              enqueueSnackbar(message, { variant })
+
+              // Call option[status] if available..
+              if (err.response.status in options) {
+                return options[err.response.status]({ response: err.response, error: err, ...args })
+              }
+            } else {
+              console.error(err)
+            }
+          }
+
+          return reject_with_error(err, rejectWithValue)
+        }
+
+        finally {
+          options.finallyCallback(args)
+        }
+      }, {
+        condition: (__, { getState, extra }) => {
+          const args = {
+            params,
+            getState,
+            state: getState()[reducer],
+          }
+
+          const item = {
+            ...defaultOptions,
+            ...services[service](args),
+          }
+
+          return ! item.cancelCallback(args)
+        }
+      }
+    )())
+  }
+
+  return asyncActions
+}
+
+export default useRequest

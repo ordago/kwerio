@@ -2,12 +2,12 @@ import { createAsyncThunk } from "@reduxjs/toolkit"
 
 import axios from "axios"
 
-import { actions, form, adapter } from "./index.slice"
+import { actions as abilitiesActions } from "../Abilities/index.slice"
+import { actions, form } from "./index.slice"
 import { api } from "../../routes"
-import { move_to_start, needs_more } from "../../utils/service"
-import { rsc_catched_error ,show_under_form_fields } from "../../utils/errors"
-import { actions as modulesActions } from '../Modules/index.slice.js'
-import { actions as abilitiesActions } from '../Abilities/index.slice.js'
+import { actions as modulesActions } from "../Modules/index.slice"
+import { move_to_start } from "../../utils/table"
+import { reject_with_error, show_under_form_fields } from "../../utils/errors"
 
 export const PREFIX = "GROUPS"
 
@@ -41,7 +41,7 @@ export const metadata = createAsyncThunk(`${PREFIX}/metadata`, async (__, { getS
   }
 
   catch (err) {
-    return rsc_catched_error(err, rejectWithValue)
+    return reject_with_error(err, rejectWithValue)
   }
 })
 
@@ -64,7 +64,7 @@ export const fetch_by_uuid = createAsyncThunk(`${PREFIX}/fetch_by_uuid`, async (
   }
 
   catch (err) {
-    return rsc_catched_error(err, rejectWithValue)
+    return reject_with_error(err, rejectWithValue)
   }
 })
 
@@ -104,7 +104,7 @@ export const upsert = createAsyncThunk(`${PREFIX}/upsert`, async (__, { dispatch
   }
 
   catch (err) {
-    return rsc_catched_error(err, rejectWithValue)
+    return reject_with_error(err, rejectWithValue)
   }
 })
 

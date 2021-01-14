@@ -251,7 +251,9 @@ class UserController extends Controller {
 
             DB::commit();
 
-            return resolve(Normalizer::class)->normalize($user->fresh(), [$this, "_normalize_callback"]);
+            return resolve(Normalizer::class)
+                ->set_message("User {$user->email} upserted successfully")
+                ->normalize($user->fresh(), [$this, "_normalize_callback"]);
         }
 
         catch (\Throwable $e) {

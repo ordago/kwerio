@@ -12,21 +12,23 @@ import {
   TableSortLabel
 } from "@material-ui/core"
 import { useDispatch, useSelector } from "react-redux"
-import { useSnackbar } from "notistack"
 import React from "react"
 import clsx from "clsx"
 
 import _ from "lodash"
 
-import { notify } from "../../utils/errors"
+import { init_services } from "./index"
+import Toolbar from "./Toolbar"
+import useRequest from "../../hooks/useRequest"
 import useStyles from "./index.styles"
 import useT from "../../hooks/useT"
 
 function PaginatedTable({
-  reducerName,                  // Reducer name.
+  reducer,                      // Reducer name.
   adapter,                      // Data to display in the table.
   actions,                      // Slice actions.
-  asyncActions,                 // Slice async actions.
+  api,                          // Api to use for making requests.
+  endpoint,                     // Endpoints for the current entity.
   hover = true,                 // Enable hover on the table.
   canCheck = true,              // Rows can be checked using checkbox.
   renderCell = null,            // Custom cell renderer.
@@ -35,14 +37,21 @@ function PaginatedTable({
   primaryKey = "uuid",          // Primary key used in the data as 'id'.
   slugKey = "slug",             // Name of the slug key.
   size = "small",               // Size of the table. (medium, small).
+
+  // Components..
+  toolbar = false,              // Show table toolbar
+  canSearch = false,
+  canCreate = false,
+  searchLabel = null,
+  createButtonLabel = null,
 }) {
   const dispatch = useDispatch(),
-    state = useSelector(state => state[reducerName]),
-    { enqueueSnackbar } = useSnackbar(),
+    state = useSelector(state => state[reducer]),
     selector = adapter.getSelectors(),
     classes = useStyles(),
     translations = useSelector(state => state.app.t),
-    t = useT(translations)
+    t = useT(translations),
+    request = useRequest({ reducer, services: init_services(api, actions) })
 
   let data = selector.selectAll(state),
     offset = state.page * state.per_page
@@ -69,7 +78,7 @@ function PaginatedTable({
       _toggle_check_all(false)
     }
 
-    dispatch(asyncActions.index()).then(action => notify(action, enqueueSnackbar))
+    request.index()
   }, [])
 
   if (nb_checked > 0 && nb_checked < data.length) {
@@ -78,6 +87,19 @@ function PaginatedTable({
 
   return (
     <Box>
+      {toolbar && (
+        <Toolbar
+          actions={actions}
+          api={api}
+          endpoint={endpoint}
+          reducer={reducer}
+          canSearch={canSearch}
+          canCreate={canCreate}
+          searchLabel={searchLabel}
+          createButtonLabel={createButtonLabel}
+        />
+      )}
+
       <TableContainer className={classes.root}>
         <Table size={size}>
           <TableHead>
@@ -113,7 +135,7 @@ function PaginatedTable({
 
                         dispatch(actions.removeAll())
                         dispatch(actions.handleSort(col))
-                        dispatch(asyncActions.index())
+                        request.index()
                       }}
                     >
                       {t(col.label)}
@@ -173,14 +195,16 @@ function PaginatedTable({
                     _toggle_check_all(false)
                   }
 
-                  dispatch(asyncActions.onChangePage(page))
+                  dispatch(actions.setPage(page))
+                  request.index()
                 }}
                 onChangeRowsPerPage={e => {
                   if (nb_checked > 0) {
                     _toggle_check_all(false)
                   }
 
-                  dispatch(asyncActions.onChangeRowsPerPage(e.target.value))
+                  dispatch(actions.setPerPage(e.target.value))
+                  request.index()
                 }}
                 count={state.rsc.total}
               />

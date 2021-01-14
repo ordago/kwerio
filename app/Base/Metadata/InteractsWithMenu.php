@@ -79,9 +79,9 @@ trait InteractsWithMenu {
             })
             ->filter(function($module) use($user, $modules) {
                 if ($module["hidden"]) return false;
-                $uuid = $modules->where("uid", $module["uid"])->first()->uuid;
-                if (is_null($uuid)) return false;
-                return $user->can_access_modules($uuid);
+                $uid = $modules->where("uid", $module["uid"])->first()->uid;
+                if (is_null($uid)) return false;
+                return $user->can_access_modules($uid);
             })
             ->map(function($module) use($modules) {
                 return [

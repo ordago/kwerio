@@ -8,6 +8,20 @@ use Illuminate\Database\Eloquent\Collection;
 use Closure;
 
 class Normalizer {
+    private $message;
+    private $message_variant = "success";
+
+    /**
+     * Set response message.
+     *
+     * @return array
+     */
+    function set_message($message) {
+        $this->message = $message;
+
+        return $this;
+    }
+
     /**
      * Normalize the given data to a paginated data.
      *
@@ -26,13 +40,20 @@ class Normalizer {
             return $mapCallback($item);
         });
 
-        return [
+        $response = [
             "items" => $items,
             "current_page" => $paginator->currentPage(),
             "next_page" => $this->_get_next_page($paginator),
             "last_page" => $this->_get_last_page($paginator),
             "total" => $paginator->total(),
         ];
+
+        if ($this->message) {
+            $response["message"] = $this->message;
+            $response["variant"] = $this->message_variant;
+        }
+
+        return $response;
     }
 
     /**

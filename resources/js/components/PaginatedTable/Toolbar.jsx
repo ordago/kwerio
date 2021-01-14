@@ -3,26 +3,23 @@ import { useDispatch, useSelector } from "react-redux"
 import { useHistory } from "react-router-dom"
 import React, { useState, useRef } from "react"
 
+import { init_services } from "./"
+import useRequest from "../../hooks/useRequest"
 import useStyles from "./Toolbar.styles"
 import useT from "../../hooks/useT"
 
 let timer
 
 function Toolbar({
-
   // Actions.
   actions,
-  tableAsyncActions,
+  api,
+  endpoint,
+  reducer = "module",
 
-  // Search.
-  hasSearch = true,
+  // Labels
   searchLabel = null,
-  onSearch = null,
-
-  // Add button
-  hasAddButton = true,
-  buttonLabel = null,
-  onAddButtonClick = () => {},
+  createButtonLabel = null,
 
   // Abilities
   canSearch = false,
@@ -34,26 +31,23 @@ function Toolbar({
     [q, setQ] = useState(""),
     q_ref = useRef(),
     translations = useSelector(state => state.app.t),
-    t = useT(translations)
+    t = useT(translations),
+    request = useRequest({ reducer, services: init_services(api, actions) })
 
   if (searchLabel === null) searchLabel = t("Search")
-  if (buttonLabel === null) buttonLabel = t("Create new")
+  if (createButtonLabel === null) createButtonLabel = t("Create new")
 
   q_ref.current = q
 
   function handleChange(e) {
-    if (onSearch !== null) {
-      onSearch(e)
-    } else {
-      setQ(e.target.value)
-      clearTimeout(timer)
+    setQ(e.target.value)
+    clearTimeout(timer)
 
-      timer = setTimeout(() => {
-        dispatch(actions.removeAll())
-        dispatch(actions.setQ(q_ref.current))
-        dispatch(tableAsyncActions.index())
-      }, 1000)
-    }
+    timer = setTimeout(() => {
+      dispatch(actions.removeAll())
+      dispatch(actions.setQ(q_ref.current))
+      request.index()
+    }, 1000)
   }
 
   return (
@@ -68,7 +62,7 @@ function Toolbar({
             alignItems="flex-start"
           >
             <Box>
-              {canSearch && hasSearch && (
+              {canSearch && (
                 <TextField
                   label={searchLabel}
                   name="search"
@@ -81,8 +75,8 @@ function Toolbar({
 
             <Box>
               {canCreate && (
-                <Button onClick={onAddButtonClick}>
-                  {buttonLabel}
+                <Button onClick={() => history.push(endpoint.create)}>
+                  {createButtonLabel}
                 </Button>
               )}
             </Box>

@@ -5,6 +5,7 @@ import React from "react"
 
 import App from "Kwerio/App"
 import createStore from "Kwerio/store"
+import module from './index.slice'
 
 const reducers = {
 

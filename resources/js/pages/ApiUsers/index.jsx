@@ -5,15 +5,11 @@ import React from "react"
 
 import _ from "lodash"
 
-import { actions, adapter, tableAsyncActions } from "./index.slice"
-import { endpoints } from "../../routes"
+import { actions as appActions } from "../../App.slice"
 import Page from "../../components/Page"
-import PaginatedTable from "../../components/PaginatedTable/index.jsx"
-import Toolbar from "../../components/PaginatedTable/Toolbar"
 import useStyles from "./index.styles"
 import useT from "../../hooks/useT"
 import useUser from "../../hooks/useUser"
-import { actions as appActions } from '../../App.slice.js'
 
 function ApiUsers({ match }) {
   const classes = useStyles(),
@@ -58,24 +54,6 @@ function ApiUsers({ match }) {
       menuActions={appActions}
       content={() => (
         <Paper>
-          <Toolbar
-            actions={actions}
-            tableAsyncActions={tableAsyncActions}
-            onAddButtonClick={() => history.push(endpoints.apiUsers.create)}
-            canSearch={user.can("root/api_user_list")}
-            canCreate={user.can("root/api_user_create")}
-          />
-
-          {user.can("root/api_user_list") && (
-            <PaginatedTable
-              reducerName="apiUsers"
-              adapter={adapter}
-              actions={actions}
-              asyncActions={tableAsyncActions}
-              renderCell={_renderCell}
-              onRowClick={row => history.push(endpoints.apiUsers.update.replace(/:uuid/, row.uuid))}
-            />
-          )}
         </Paper>
       )}
     />
