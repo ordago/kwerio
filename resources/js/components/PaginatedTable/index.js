@@ -25,10 +25,15 @@ export const initialState = {
 }
 
 export const init_services = (api, actions) => ({
-  index: () => ({
-    url: api.index,
+  index: ({ params }) => ({
+    url: (args) => params.requests.index.url ? params.requests.index.url(args) : api.index,
+    method: params.requests.index.method,
     cancelCallback: ({ state }) => ! needs_more(state.ids.length, state.page, state.per_page),
     data: ({ state }) => {
+      if (params.requests.index.requestBody) {
+        return params.requests.index.requestBody(state)
+      }
+
       let sorts = state.columns
         .filter(col => ("sort" in col) && col.sort === true)
         .sort((left, right) => {
@@ -44,8 +49,9 @@ export const init_services = (api, actions) => ({
         sorts,
       }
     },
-    200: ({ dispatch, data }) => {
-      dispatch(actions.upsertMany(data.items))
+    200: (args) => {
+      const data = params.requests.index.convertResponseBody ? params.requests.index.convertResponseBody(args) : args.data
+      args.dispatch(actions.upsertMany(data.items))
       return data
     }
   }),

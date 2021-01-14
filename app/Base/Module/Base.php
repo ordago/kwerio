@@ -86,7 +86,11 @@ abstract class Base {
      *
      * @return mixed
      */
-    function config(string $key) {
+    function config(string $key = null) {
+        if (!$key) {
+            return config("{$this->uid}");
+        }
+
         return config("{$this->uid}.{$key}");
     }
 }

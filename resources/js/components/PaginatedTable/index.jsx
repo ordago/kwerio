@@ -44,6 +44,16 @@ function PaginatedTable({
   canCreate = false,
   searchLabel = null,
   createButtonLabel = null,
+
+  // Customize request
+  requests = {
+    index: {                      // Index request.
+      url: null,                  // Url to make the request to.
+      method: "post",             // Type of request method.
+      requestBody: null,          // Request body to be sent.
+      convertResponseBody: null,  // Converts response body to an acceptable format by the table.
+    }
+  },
 }) {
   const dispatch = useDispatch(),
     state = useSelector(state => state[reducer]),
@@ -78,7 +88,7 @@ function PaginatedTable({
       _toggle_check_all(false)
     }
 
-    request.index().then(() => {
+    request.index({ requests }).then(() => {
       dispatch(actions.moveTouchedToStart())
     })
   }, [])
@@ -138,7 +148,7 @@ function PaginatedTable({
 
                         dispatch(actions.removeAll())
                         dispatch(actions.handleSort(col))
-                        request.index()
+                        request.index({ requests })
                       }}
                     >
                       {t(col.label)}
@@ -199,7 +209,7 @@ function PaginatedTable({
                   }
 
                   dispatch(actions.setPage(page))
-                  request.index()
+                  request.index({ requests })
                 }}
                 onChangeRowsPerPage={e => {
                   if (nb_checked > 0) {
@@ -207,7 +217,7 @@ function PaginatedTable({
                   }
 
                   dispatch(actions.setPerPage(e.target.value))
-                  request.index()
+                  request.index({ requests })
                 }}
                 count={state.rsc.total || 0}
               />
