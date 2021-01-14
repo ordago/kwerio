@@ -5,8 +5,11 @@ import React from "react"
 
 import _ from "lodash"
 
+import { actions, adapter } from "./index.slice"
+import { api, endpoints } from "../../routes/index.jsx"
 import { actions as appActions } from "../../App.slice"
 import Page from "../../components/Page"
+import PaginatedTable from "../../components/PaginatedTable/index.jsx"
 import useStyles from "./index.styles"
 import useT from "../../hooks/useT"
 import useUser from "../../hooks/useUser"
@@ -54,6 +57,20 @@ function ApiUsers({ match }) {
       menuActions={appActions}
       content={() => (
         <Paper>
+          {user.canAny(["root/api_user_list", "root/api_user_create", "root/api_user_update"]) && (
+            <PaginatedTable
+              toolbar
+              canSearch={user.can("root/api_user_list")}
+              canCreate={user.can("root/api_user_create")}
+              reducer="apiUsers"
+              adapter={adapter}
+              api={api.apiUsers}
+              endpoint={endpoints.apiUsers}
+              actions={actions}
+              onRowClick={item => history.push(endpoints.apiUsers.update.replace(/:uuid/, item.uuid))}
+              renderCell={_renderCell}
+            />
+          )}
         </Paper>
       )}
     />

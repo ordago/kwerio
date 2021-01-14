@@ -1,9 +1,10 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit"
 import Form from "@euvoor/form"
 
-import { PREFIX, upsert } from "./index.service"
+import generate_extra_reducers from "../../utils/generate-extra-reducers"
 import groupable from "../../components/Groupable/index"
 import paginatedTable from "../../components/PaginatedTable/index"
+import services from "./index.service"
 
 export const adapter = createEntityAdapter({
   selectId: apiUsers => apiUsers.uuid,
@@ -25,6 +26,24 @@ export const form = Form({
   },
 })
 
+const extraReducers = generate_extra_reducers("apiUsers", services, {
+  upsert: {
+    fulfilled: (state, action) => {
+      state.rsc.total = action.payload.total
+    },
+  },
+  fetch_by_uuid: {
+    fulfilled: (state, action) => {
+      state.rsc.total = action.payload.total
+    }
+  },
+  metadata: {
+    fulfilled: (state, action) => {
+      state.rsc.total = action.payload.total
+    }
+  },
+})
+
 const initialState = adapter.getInitialState({
   ...paginatedTable.initialState,
   loading: false,
@@ -43,7 +62,7 @@ const initialState = adapter.getInitialState({
 })
 
 const slice = createSlice({
-  name: PREFIX,
+  name: "apiUsers",
   initialState,
   reducers: {
     ...paginatedTable.init_reducers(adapter),
@@ -73,22 +92,8 @@ const slice = createSlice({
     },
   },
   extraReducers: {
+    ...extraReducers,
     ...paginatedTable.init_extraReducers("apiUsers"),
-
-    // upsert
-    [upsert.pending]: (state, action) => {
-      state.loading = true
-      state.error = false
-    },
-    [upsert.rejected]: (state, action) => {
-      state.loading = false
-      state.error = true
-      console.error(action)
-    },
-    [upsert.fulfilled]: (state, action) => {
-      state.loading = false
-      state.error = false
-    }
   },
 })
 
