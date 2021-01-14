@@ -61,6 +61,23 @@ export const init_reducers = (adapter) => ({
     state.q = ""
     state.page = 0
   },
+  moveTouchedToStart: (state, action) => {
+    let entities = []
+
+    for (let i = 0; i < state.ids.length; i ++) {
+      let entity = state.entities[state.ids[i]]
+
+      if ("touched_at" in entity) {
+        entities.push({ touched_at: entity.touched_at, idx: i })
+      }
+    }
+
+    entities.sort((a, b) => a.touched_at - b.touched_at)
+
+    for (let i = 0; i < entities.length; i ++) {
+      state.ids.unshift(state.ids.splice(entities[i].idx, 1)[0])
+    }
+  },
   setQ: (state, action) => {
     state.page = 0
     state.rsc.page = 0

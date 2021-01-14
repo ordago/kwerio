@@ -1,8 +1,5 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit"
 
-import { PREFIX } from "./index.service"
-import * as services from "./index.service"
-
 export const adapter = createEntityAdapter({
   selectId: module => module.uuid,
 })
@@ -27,11 +24,10 @@ const slice = createSlice({
     }
   },
   extraReducers: {
-    ...services.reducers,
+
   },
 })
 
 export const actions = slice.actions
-export const asyncActions = services
 
 export default slice.reducer

@@ -57,8 +57,6 @@ const services = ({ actions }) => ({
     200: ({ dispatch, data, history, state }) => {
       const route_to_index = ! state.upsert.uuid
 
-      console.log(route_to_index)
-
       dispatch(actions.upsertOne({ ...data.items[0], touched_at: Date.now() }))
       dispatch(actions.resetTableTrackers())
       dispatch(actions.fillUpsert(data.items[0]))

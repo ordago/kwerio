@@ -78,7 +78,9 @@ function PaginatedTable({
       _toggle_check_all(false)
     }
 
-    request.index()
+    request.index().then(() => {
+      dispatch(actions.moveTouchedToStart())
+    })
   }, [])
 
   if (nb_checked > 0 && nb_checked < data.length) {
@@ -207,7 +209,7 @@ function PaginatedTable({
                   dispatch(actions.setPerPage(e.target.value))
                   request.index()
                 }}
-                count={state.rsc.total}
+                count={state.rsc.total || 0}
               />
             </TableRow>
           </TableFooter>
