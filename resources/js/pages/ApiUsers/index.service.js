@@ -1,5 +1,5 @@
 import { actions as abilitiesActions } from "../Abilities/index.slice"
-import { api } from "../../routes/index.jsx"
+import { api, endpoints } from "../../routes/index.jsx"
 import { actions as groupsActions } from "../Groups/index.slice"
 import { actions as modulesActions } from "../Modules/index.slice"
 
@@ -50,10 +50,16 @@ export default ({ actions }) => ({
       groups: state.upsert.groups.value,
       abilities: state.upsert.abilities.value,
     }),
-    200: ({ dispatch, data }) => {
+    200: ({ dispatch, data, state, history }) => {
+      const route_to_index = ! state.upsert.uuid
+
       dispatch(actions.upsertOne({ ...data.items[0], touched_at: Date.now() }))
       dispatch(actions.resetTableTrackers())
       dispatch(actions.fillUpsert(data.items[0]))
+
+      if (route_to_index) {
+        history.push(endpoints.apiUsers.index)
+      }
 
       return data
     },

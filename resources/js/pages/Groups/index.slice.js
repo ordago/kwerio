@@ -41,7 +41,7 @@ const initialState = adapter.getInitialState({
     uuid: null,
   },
   columns: [
-    { slug: "name", label: "Name", sort: true, sortDirection: "asc", sortOrder: 2 },
+    { slug: "name", label: "Name", sort: true, sortDirection: "asc", sortOrder: 3 },
     { slug: "updated_at", label: "Updated at", sort: true, sortDirection: "desc", sortOrder: 1 },
     { slug: "created_at", label: "Created at", sort: true, sortDirection: "desc", sortOrder: 2 },
   ],

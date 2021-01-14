@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit"
 import { useDispatch } from "react-redux"
 import qs from "qs"
 import { useSnackbar  } from 'notistack'
+import { useHistory } from 'react-router-dom'
 
 import axios from "axios"
 
@@ -66,7 +67,8 @@ function useRequest({
   reducer = "module",
 }) {
   const dispatch = useDispatch(),
-    { enqueueSnackbar } = useSnackbar()
+    { enqueueSnackbar } = useSnackbar(),
+    history = useHistory()
 
   let asyncActions = {}
 
@@ -103,6 +105,7 @@ function useRequest({
           rejectWithValue,              // Reduxjs toolkit rejectWithValue.
           reducer,                      // Name of the reducer.
           state: getState()[reducer],   // State of the current reducer.
+          history,
         },
           options = {
             ...defaultOptions,          // Seed default options
