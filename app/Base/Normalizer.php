@@ -23,6 +23,21 @@ class Normalizer {
     }
 
     /**
+     * Normalize error message.
+     *
+     * @param string  $message
+     * @param integer $status
+     * @return array
+     */
+    function error($message, $status = 500) {
+        return response()->json([
+            "message" => $message,
+            "error" => true,
+            "variant" => "error",
+        ], $status);
+    }
+
+    /**
      * Normalize the given data to a paginated data.
      *
      * @param mixed $items
@@ -30,9 +45,13 @@ class Normalizer {
      * @param integer $total
      * @return array
      */
-    function normalize($items, $mapCallback, $total = null) {
+    function normalize($items, $mapCallback = null, $total = null) {
         $paginator = $this->_parse($items, $total);
         $items = $paginator->map(function($item) use($mapCallback) {
+            if (!$mapCallback) {
+                return $item;
+            }
+
             if (is_array($mapCallback)) {
                 return call_user_func_array($mapCallback, [$item]);
             }
@@ -135,6 +154,6 @@ class Normalizer {
      * @return integer
      */
     private function _get_current_page() {
-        return request()->has("page") ? $request->get("page") : 1;
+        return request()->has("page") ? request()->get("page") : 1;
     }
 }

@@ -14,7 +14,7 @@ import Main from "./components/Main"
 import useRoutes from "./hooks/useRoutes"
 import useStyles from "./App.styles"
 
-function InnerApp({ moduleRoutes }) {
+function InnerApp({ moduleRoutes, module }) {
   const { theme, config, user } = useSelector(state => state.app),
     dispatch = useDispatch(),
     classes = useStyles(),
@@ -50,6 +50,7 @@ function InnerApp({ moduleRoutes }) {
             <CssBaseline />
             <BrowserRouter>
               <Main>
+                {module()}
                 <Switch>{routes}</Switch>
               </Main>
             </BrowserRouter>
@@ -64,8 +65,7 @@ function App({ store, moduleRoutes = {}, module = () => {} }) {
   return (
     <React.StrictMode>
       <Provider store={store}>
-        {module()}
-        <InnerApp moduleRoutes={moduleRoutes} />
+        <InnerApp module={module} moduleRoutes={moduleRoutes} />
       </Provider>
     </React.StrictMode>
   )
