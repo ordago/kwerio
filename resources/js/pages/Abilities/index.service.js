@@ -1,5 +1,3 @@
-export const PREFIX = "ABILITIES"
+export default ({ actions }) => ({
 
-export const reducers = {
-
-}
+})

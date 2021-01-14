@@ -1,13 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit"
 
-import { PREFIX } from "./index.service"
-
 const initialState = {
 
 }
 
 const slice = createSlice({
-  name: PREFIX,
+  name: "userProfile",
   initialState: {
 
   },

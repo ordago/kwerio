@@ -1,5 +1,3 @@
-export const PREFIX = "MODULES"
+export default ({ actions }) => ({
 
-export const reducers = {
-
-}
+})

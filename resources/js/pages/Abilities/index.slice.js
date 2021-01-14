@@ -18,7 +18,7 @@ const initialState = adapter.getInitialState({
 })
 
 const slice = createSlice({
-  name: PREFIX,
+  name: "abilities",
   initialState,
   reducers: {
     upsertMany: adapter.upsertMany,
