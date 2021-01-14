@@ -63,7 +63,6 @@ const extraReducers = generate_extra_reducers("users", services, {
   },
   metadata: {
     fulfilled: (state, action) => {
-      console.log(action)
       state.languages = action.payload.languages
       state.timezones = action.payload.timezones
       state.localeIsoFormats = action.payload.localeIsoFormats

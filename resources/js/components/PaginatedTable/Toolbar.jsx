@@ -15,6 +15,7 @@ function Toolbar({
   actions,
   api,
   endpoint,
+  request,
   reducer = "module",
 
   // Labels
@@ -31,8 +32,7 @@ function Toolbar({
     [q, setQ] = useState(""),
     q_ref = useRef(),
     translations = useSelector(state => state.app.t),
-    t = useT(translations),
-    request = useRequest({ reducer, services: init_services(api, actions) })
+    t = useT(translations)
 
   if (searchLabel === null) searchLabel = t("Search")
   if (createButtonLabel === null) createButtonLabel = t("Create new")

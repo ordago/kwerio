@@ -3,8 +3,11 @@ import { useHistory } from "react-router-dom"
 import { useSelector } from "react-redux"
 import React from "react"
 
+import { actions, adapter } from "./index.slice"
+import { api, endpoints } from "../../routes/index.jsx"
 import { actions as appActions } from "../../App.slice"
 import Page from "../../components/Page"
+import PaginatedTable from "../../components/PaginatedTable/index.jsx"
 import useT from "../../hooks/useT"
 import useUser from "../../hooks/useUser"
 
@@ -13,8 +16,7 @@ function Groups({ match }) {
     history = useHistory(),
     translations = useSelector(state => state.app.t),
     t = useT(translations),
-    user = useUser(),
-    permissionsMenu = useSelector(state => state.app.permissionsMenu)
+    user = useUser()
 
   return (
     <Page
@@ -24,6 +26,19 @@ function Groups({ match }) {
       menuActions={appActions}
       content={() => (
         <Paper>
+          {user.canAny(["root/group_list", "root/group_create", "root/group_update"]) && (
+            <PaginatedTable
+              toolbar
+              canSearch={user.can("root/group_list")}
+              canCreate={user.can("root/group_create")}
+              reducer="groups"
+              adapter={adapter}
+              api={api.groups}
+              endpoint={endpoints.groups}
+              actions={actions}
+              onRowClick={item => history.push(endpoints.groups.update.replace(/:uuid/, item.uuid))}
+            />
+          )}
         </Paper>
       )}
     />

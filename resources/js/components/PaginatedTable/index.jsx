@@ -89,6 +89,7 @@ function PaginatedTable({
     <Box>
       {toolbar && (
         <Toolbar
+          request={request}
           actions={actions}
           api={api}
           endpoint={endpoint}

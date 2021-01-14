@@ -1,16 +1,17 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit"
 import Form from "@euvoor/form"
 
-import { PREFIX, extraReducers } from "./index.service"
 import abilities from "../../components/Abilities/index"
+import generate_extra_reducers from "../../utils/generate-extra-reducers"
 import paginatedTable from "../../components/PaginatedTable/index"
+import services from "./index.service"
 
 export const adapter = createEntityAdapter({
   selectId: group => group.uuid,
 })
 
 export const form = Form({
-  name: {  },
+  name: { },
   ...abilities.form,
   modules: {
     validator: {
@@ -20,9 +21,21 @@ export const form = Form({
   },
 })
 
+const extraReducers = generate_extra_reducers("groups", services, {
+  upsert: {
+    fulfilled: (state, action) => {
+      state.rsc.total = action.payload.total
+    },
+  },
+  fetch_by_uuid: {
+    fulfilled: (state, action) => {
+      state.rsc.total = action.payload.total
+    },
+  },
+})
+
 const initialState = adapter.getInitialState({
   ...paginatedTable.initialState,
-  loading: false,
   upsert: {
     ...form.state,
     uuid: null,
@@ -35,7 +48,7 @@ const initialState = adapter.getInitialState({
 })
 
 const slice = createSlice({
-  name: PREFIX,
+  name: "groups",
   initialState,
   reducers: {
     ...form.reducers,
@@ -45,10 +58,10 @@ const slice = createSlice({
       state.rsc.total = action.payload
     },
     resetUpsert: (state, action) => {
-      state.upsert.uuid = null
-      state.upsert.name.value = ""
-      state.upsert.modules.value = []
-      state.upsert.abilities.value = []
+      state.upsert = {
+        uuid: null,
+        ...form.state,
+      }
     },
     handleChange: (state, action) => {
       form.reducers.handleChange(state.upsert, action)

@@ -27,8 +27,8 @@ const services = ({ actions }) => ({
   }),
 
   fetch_by_uuid: ({ params }) => ({
-    url: () => api.users.fetch_by_uuid,
-      data: {
+    url: api.users.fetch_by_uuid,
+    data: {
       uuid: params,
     },
     200: ({ dispatch, data }) => {
@@ -41,7 +41,7 @@ const services = ({ actions }) => ({
 
   upsert: () => ({
     url: ({ state }) => state.upsert.uuid ? api.users.update : api.users.create,
-      data: ({ state }) => ({
+    data: ({ state }) => ({
       uuid: state.upsert.uuid,
       email: state.upsert.email.value,
       first_name: state.upsert.first_name.value,
@@ -57,7 +57,7 @@ const services = ({ actions }) => ({
     200: ({ dispatch, data }) => {
       if (data.items.length === 1) {
         dispatch(actions.upsertOne({ ...data.items[0], touched_at: Date.now() }))
-        dispatch(actions.softReset())
+        dispatch(actions.resetTableTrackers())
         dispatch(actions.fillUpsert(data.items[0]))
       }
 

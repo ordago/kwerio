@@ -16,7 +16,7 @@ class Normalizer {
      *
      * @return array
      */
-    function set_message($message) {
+    function message($message) {
         $this->message = $message;
 
         return $this;

@@ -166,7 +166,9 @@ class GroupController extends Controller {
 
             DB::commit();
 
-            return $normalizer->normalize($group->fresh(), [$this, "_normalize_callback"]);
+            return $normalizer
+                ->message("Group '{$group->name}' upserted successfully")
+                ->normalize($group->fresh(), [$this, "_normalize_callback"]);
         }
 
         catch (\Throwable $e) {

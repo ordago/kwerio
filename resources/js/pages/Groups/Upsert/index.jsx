@@ -8,40 +8,35 @@ import {
 } from "@material-ui/core"
 import { is_disabled } from "@euvoor/form"
 import { useDispatch, useSelector } from "react-redux"
-import { useHistory } from "react-router-dom"
-import { useSnackbar } from "notistack"
 import React from "react"
 
-import { actions, adapter, asyncActions } from "../index.slice"
-import { endpoints } from "../../../routes"
+import { actions, adapter } from "../index.slice"
+import { actions as appActions } from "../../../App.slice"
 import { adapter as modulesAdapter } from "../../Modules/index.slice"
-import { notify } from "../../../utils/errors"
 import Abilities from "../../../components/Abilities/index.jsx"
 import Page from "../../../components/Page"
+import services from "../index.service"
+import useRequest from "../../../hooks/useRequest"
 import useStyles from "./index.styles"
 import useT from "../../../hooks/useT"
 import useUser from "../../../hooks/useUser"
 import useUuid from "../../../hooks/useUuid"
-import { actions as appActions } from '../../../App.slice.js'
 
 function Upsert({ match }) {
   const state = useSelector(state => state.groups),
     { name, modules } = state.upsert,
     classes = useStyles(),
     dispatch = useDispatch(),
-    { enqueueSnackbar } = useSnackbar(),
-    history = useHistory(),
     translations = useSelector(state => state.app.t),
     t = useT(translations),
-    uuid = useUuid({ reducer: "groups", match, adapter, asyncActions, actions }),
+    request = useRequest({ reducer: "groups", services: services({ actions }) }),
+    uuid = useUuid({ reducer: "groups", match, adapter, request, actions }),
     modulesState = useSelector(state => state.modules),
     modulesSelector = modulesAdapter.getSelectors(),
     modules_options = modulesSelector.selectAll(modulesState),
     user = useUser()
 
-  React.useEffect(() => {
-    dispatch(asyncActions.metadata()).then(action => notify(action, enqueueSnackbar))
-  }, [])
+  React.useEffect(() => { request.metadata() }, [])
 
   let ability = "root/group_create"
 
@@ -109,16 +104,7 @@ function Upsert({ match }) {
               <CardActions>
                 <Button
                   disabled={is_disabled({ name })}
-                  onClick={() => {
-                    dispatch(asyncActions.upsert())
-                      .then(action => notify(action, enqueueSnackbar))
-                      .then(action => {
-                        if (!_.isUndefined(action)) {
-                          enqueueSnackbar(`Success`, { variant: "success" })
-                          history.push(endpoints.groups.index)
-                        }
-                      })
-                  }}
+                  onClick={() => { request.upsert() }}
                 >
                   save
                 </Button>

@@ -57,7 +57,7 @@ export const init_reducers = (adapter) => ({
   updateMany: adapter.updateMany,
   updateOne: adapter.updateOne,
   removeAll: adapter.removeAll,
-  softReset: (state, action) => {
+  resetTableTrackers: (state, action) => {
     state.q = ""
     state.page = 0
   },
