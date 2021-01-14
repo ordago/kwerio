@@ -7,7 +7,7 @@ const initialState = {
 }
 
 const slice = createSlice({
-  name: PREFIX,
+  name: "account",
   initialState: {
 
   },

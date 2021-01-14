@@ -1,1 +1,3 @@
-export const PREFIX = "ACCOUNT"
+export default ({ actions }) => ({
+
+})
