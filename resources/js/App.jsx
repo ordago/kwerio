@@ -2,10 +2,12 @@ import "fontsource-roboto"
 
 import { BrowserRouter, Switch } from "react-router-dom"
 import { CssBaseline } from "@material-ui/core"
+import { MuiPickersUtilsProvider  } from "@material-ui/pickers"
 import { Provider, useSelector, useDispatch } from "react-redux"
 import { SnackbarProvider } from "notistack"
 import { create } from "jss"
 import { jssPreset, StylesProvider, createMuiTheme, ThemeProvider } from "@material-ui/core/styles"
+import DayjsUtils from "@date-io/dayjs"
 import React from "react"
 import rtl from "jss-rtl"
 
@@ -37,26 +39,28 @@ function InnerApp({ moduleRoutes, module }) {
 
   return (
     <StylesProvider jss={jss}>
-      <ThemeProvider theme={muiTheme}>
-        <SnackbarProvider
-          maxSnack={3}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
-          autoHideDuration={3000}
-        >
-          <div className={classes.root}>
-            <CssBaseline />
-            <BrowserRouter>
-              <Main>
-                {module()}
-                <Switch>{routes}</Switch>
-              </Main>
-            </BrowserRouter>
-          </div>
-        </SnackbarProvider>
-      </ThemeProvider>
+      <MuiPickersUtilsProvider utils={DayjsUtils}>
+        <ThemeProvider theme={muiTheme}>
+          <SnackbarProvider
+            maxSnack={3}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "center",
+            }}
+            autoHideDuration={3000}
+          >
+            <div className={classes.root}>
+              <CssBaseline />
+              <BrowserRouter>
+                <Main>
+                  {module()}
+                  <Switch>{routes}</Switch>
+                </Main>
+              </BrowserRouter>
+            </div>
+          </SnackbarProvider>
+        </ThemeProvider>
+      </MuiPickersUtilsProvider>
     </StylesProvider>
   )
 }

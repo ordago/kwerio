@@ -29,12 +29,12 @@ export const init_services = (api, actions) => ({
     url: (args) => params.requests.index.url ? params.requests.index.url(args) : api.index,
     method: params.requests.index.method,
     cancelCallback: ({ state }) => ! needs_more(state.ids.length, state.page, state.per_page),
-    data: ({ state }) => {
+    data: (args) => {
       if (params.requests.index.requestBody) {
-        return params.requests.index.requestBody(state)
+        return params.requests.index.requestBody(args)
       }
 
-      let sorts = state.columns
+      let sorts = args.state.columns
         .filter(col => ("sort" in col) && col.sort === true)
         .sort((left, right) => {
           if (left.sortOrder > right.sortOrder) return 1
@@ -44,8 +44,8 @@ export const init_services = (api, actions) => ({
         .map(col => ({ name: col.slug, dir: col.sortDirection }))
 
       return {
-        page: state.rsc.page + 1,
-        q: state.q,
+        page: args.state.rsc.page + 1,
+        q: args.state.q,
         sorts,
       }
     },
@@ -55,14 +55,33 @@ export const init_services = (api, actions) => ({
       return data
     }
   }),
+
+  delete: ({ params }) => ({
+    url: (args) => params.requests.delete.url ? params.requests.delete.url(args) : api.delete,
+    method: params.requests.delete.method,
+    data: (args) => {
+
+    },
+    200: (args) => {
+      const data = params.requests.delete.convertResponseBody ? params.requests.delete.convertResponseBody(args) : args.data
+      args.dispatch(actions.removeMany(data.items))
+      return data
+    },
+  })
 })
 
 export const init_reducers = (adapter) => ({
-  upsertMany: adapter.upsertMany,
-  upsertOne: adapter.upsertOne,
+  addMany: adapter.addMany,
+  addOne: adapter.addOne,
+  removeAll: adapter.removeAll,
+  removeMany: adapter.removeMany,
+  removeOne: adapter.removeOne,
+  setAll: adapter.setAll,
   updateMany: adapter.updateMany,
   updateOne: adapter.updateOne,
-  removeAll: adapter.removeAll,
+  upsertMany: adapter.upsertMany,
+  upsertOne: adapter.upsertOne,
+
   resetTableTrackers: (state, action) => {
     state.q = ""
     state.page = 0
@@ -122,13 +141,18 @@ export const init_reducers = (adapter) => ({
   }
 })
 
-export const init_extraReducers = (prefix) => generate_extra_reducers(prefix, { index: [] }, {
+export const init_extraReducers = (prefix) => generate_extra_reducers(prefix, init_services(), {
   index: {
     fulfilled: (state, action) => {
       state.rsc.total = action.payload.total
       state.rsc.page = action.payload.next_page - 1
-    }
-  }
+    },
+  },
+  delete: {
+    fulfilled: (state, action) => {
+      state.rsc.total = action.payload.total
+    },
+  },
 })
 
 export default {

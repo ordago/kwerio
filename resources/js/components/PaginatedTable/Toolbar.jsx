@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from "react-redux"
 import { useHistory } from "react-router-dom"
 import React, { useState, useRef } from "react"
 
-import { init_services } from "./"
-import useRequest from "../../hooks/useRequest"
+import Suspense from "../Suspense"
 import useStyles from "./Toolbar.styles"
 import useT from "../../hooks/useT"
+
+const ConfirmDeletionDialog = React.lazy(() => import("./ConfirmDeletionDialog"))
 
 let timer
 
@@ -15,7 +16,8 @@ function Toolbar({
   actions,
   api,
   endpoint,
-  request,
+  request,              // useRequest
+  requests,             // Supported requests by the table
   reducer = "module",
 
   // Labels
@@ -25,6 +27,11 @@ function Toolbar({
   // Abilities
   canSearch = false,
   canCreate = false,
+  canDelete = false,
+
+  // From table
+  nbChecked,
+  itemsToDelete,
 }) {
   const classes = useStyles(),
     dispatch = useDispatch(),
@@ -32,7 +39,8 @@ function Toolbar({
     [q, setQ] = useState(""),
     q_ref = useRef(),
     translations = useSelector(state => state.app.t),
-    t = useT(translations)
+    t = useT(translations),
+    [open_confirm_deletion_dialog, setOpenConfirmDeletionDialog] = useState(false)
 
   if (searchLabel === null) searchLabel = t("Search")
   if (createButtonLabel === null) createButtonLabel = t("Create new")
@@ -74,6 +82,32 @@ function Toolbar({
             </Box>
 
             <Box>
+              {canDelete && nbChecked > 0 && (
+                <>
+                  <Button
+                    className={classes.deleteBtn}
+                    onClick={() => setOpenConfirmDeletionDialog(true)}
+                  >
+                    Delete {nbChecked} items
+                  </Button>
+
+                  {open_confirm_deletion_dialog && (
+                    <Suspense component={<ConfirmDeletionDialog
+                      open={open_confirm_deletion_dialog}
+                      classes={classes}
+                      nbChecked={nbChecked}
+                      onClose={() => setOpenConfirmDeletionDialog(false)}
+                      onDelete={() => {
+                        request
+                          .delete({ requests, items: itemsToDelete })
+                          .then(() => {
+                            setOpenConfirmDeletionDialog(false)
+                          })
+                      }}
+                    />} />
+                  )}
+                </>
+              )}
               {canCreate && (
                 <Button onClick={() => history.push(endpoint.create)}>
                   {createButtonLabel}

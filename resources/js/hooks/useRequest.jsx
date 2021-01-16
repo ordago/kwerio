@@ -124,17 +124,35 @@ function useRequest({
 
           options.afterCallback(response, args)
 
+          // Call option[status] if available..
+          let status_handled = false,
+            status_results = null
+
+          if (response.status in options) {
+            status_results = options[response.status]({ data: response.data, ...args })
+            status_handled = true
+          }
+
           // Display success message, if any..
           if (options.notifySuccessMessage) {
+            let message = null,
+              variant = "success"
+
             if ("message" in response.data) {
-              let variant = ("variant" in response.data) ? response.data.variant : "success"
-              enqueueSnackbar(response.data.message, { variant })
+              message = response.data.message
+              variant = ("variant" in response.data) ? response.data.variant : variant
+            } else if (status_handled && ("message" in status_results)) {
+              message = status_results.message
+              variant = ("variant" in status_results) ? status_results.variant : variant
+            }
+
+            if (message) {
+              enqueueSnackbar(message, { variant })
             }
           }
 
-          // Call option[status] if available..
-          if (response.status in options) {
-            return options[response.status]({ data: response.data, ...args })
+          if (status_handled) {
+            return status_results
           }
 
           return response.data

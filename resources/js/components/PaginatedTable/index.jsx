@@ -14,14 +14,15 @@ import {
 import { useDispatch, useSelector } from "react-redux"
 import React from "react"
 import clsx from "clsx"
-
-import _ from "lodash"
+import { merge } from "lodash"
 
 import { init_services } from "./index"
-import Toolbar from "./Toolbar"
+import Suspense from "../Suspense"
 import useRequest from "../../hooks/useRequest"
 import useStyles from "./index.styles"
 import useT from "../../hooks/useT"
+
+const Toolbar = React.lazy(() => import("./Toolbar.jsx"))
 
 function PaginatedTable({
   reducer,                      // Reducer name.
@@ -42,18 +43,12 @@ function PaginatedTable({
   toolbar = false,              // Show table toolbar
   canSearch = false,
   canCreate = false,
+  canDelete = false,
   searchLabel = null,
   createButtonLabel = null,
 
   // Customize request
-  requests = {
-    index: {                      // Index request.
-      url: null,                  // Url to make the request to.
-      method: "post",             // Type of request method.
-      requestBody: null,          // Request body to be sent.
-      convertResponseBody: null,  // Converts response body to an acceptable format by the table.
-    }
-  },
+  requests = { },
 }) {
   const dispatch = useDispatch(),
     state = useSelector(state => state[reducer]),
@@ -62,6 +57,23 @@ function PaginatedTable({
     translations = useSelector(state => state.app.t),
     t = useT(translations),
     request = useRequest({ reducer, services: init_services(api, actions) })
+
+  const defaultRequests = {
+    index: {                      // Index request.
+      url: null,                  // Url to make the request to.
+      method: "post",             // Type of request method.
+      requestBody: null,          // Request body to be sent.
+      convertResponseBody: null,  // Converts response body to an acceptable format by the table.
+    },
+    delete: {                     // Delete request.
+      url: null,
+      method: "delete",
+      requestBody: null,
+      convertResponseBody: null,
+    },
+  }
+
+  requests = merge(defaultRequests, requests)
 
   let data = selector.selectAll(state),
     offset = state.page * state.per_page
@@ -80,7 +92,9 @@ function PaginatedTable({
     }))))
   }
 
-  const nb_checked = selector.selectAll(state).filter(item => _.get(item, "checked", false)).length
+  const checkedItems = selector.selectAll(state).filter(item => ("checked" in item) && item.checked === true),
+    nb_checked = checkedItems.length
+
   let checkbox_all = { }
 
   React.useEffect(() => {
@@ -100,17 +114,22 @@ function PaginatedTable({
   return (
     <Box>
       {toolbar && (
-        <Toolbar
-          request={request}
-          actions={actions}
-          api={api}
-          endpoint={endpoint}
-          reducer={reducer}
-          canSearch={canSearch}
-          canCreate={canCreate}
-          searchLabel={searchLabel}
-          createButtonLabel={createButtonLabel}
-        />
+        <Suspense component={<Toolbar
+            request={request}
+            requests={requests}
+            actions={actions}
+            api={api}
+            endpoint={endpoint}
+            reducer={reducer}
+            canSearch={canSearch}
+            canCreate={canCreate}
+            canDelete={canDelete}
+            searchLabel={searchLabel}
+            createButtonLabel={createButtonLabel}
+            nbChecked={nb_checked}
+            itemsToDelete={checkedItems}
+          />
+        } />
       )}
 
       <TableContainer className={classes.root}>
@@ -164,15 +183,15 @@ function PaginatedTable({
             {data.map(row => (
               <TableRow
                 hover={hover}
-                selected={_.get(row, "checked", false)}
+                selected={("checked" in row) && row.checked === true}
                 key={row[primaryKey]}
                 onClick={() => onRowClick(row)}
-                className={clsx({ [classes.touchedAt]: _.hasIn(row, "touched_at") })}
+                className={clsx({ [classes.touchedAt]: ("touched_at" in row) })}
               >
                 {canCheck && (
                   <TableCell key={row[primaryKey]}>
                     <Checkbox
-                      checked={_.get(row, "checked", false)}
+                      checked={("checked" in row) && row.checked === true}
                       onChange={e => dispatch(actions.updateOne({
                         id: row[primaryKey],
                         changes: { checked: e.target.checked }
@@ -184,7 +203,7 @@ function PaginatedTable({
                   </TableCell>
                 )}
                 {state.columns.map(col => {
-                  if (_.isFunction(renderCell)) {
+                  if (typeof renderCell === "function") {
                     return renderCell(row, col)
                   }
 

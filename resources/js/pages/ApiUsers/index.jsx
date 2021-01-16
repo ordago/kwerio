@@ -23,7 +23,7 @@ function ApiUsers({ match }) {
     loading = state.loading,
     user = useUser()
 
-  function _renderCell(row, col) {
+  function _render_cell(row, col) {
     if (col.slug === "expired_at" && _.isEmpty(row[col.slug])) {
       return (
         <TableCell key={col.slug}>
@@ -68,7 +68,7 @@ function ApiUsers({ match }) {
               endpoint={endpoints.apiUsers}
               actions={actions}
               onRowClick={item => history.push(endpoints.apiUsers.update.replace(/:uuid/, item.uuid))}
-              renderCell={_renderCell}
+              renderCell={_render_cell}
             />
           )}
         </Paper>
