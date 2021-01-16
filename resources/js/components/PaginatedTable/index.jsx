@@ -41,6 +41,7 @@ function PaginatedTable({
 
   // Components..
   toolbar = false,              // Show table toolbar
+  addButtons = () => [],
   canSearch = false,
   canCreate = false,
   canDelete = false,
@@ -128,6 +129,7 @@ function PaginatedTable({
             createButtonLabel={createButtonLabel}
             nbChecked={nb_checked}
             itemsToDelete={checkedItems}
+            addButtons={addButtons}
           />
         } />
       )}

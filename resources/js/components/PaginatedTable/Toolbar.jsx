@@ -19,6 +19,7 @@ function Toolbar({
   request,              // useRequest
   requests,             // Supported requests by the table
   reducer = "module",
+  addButtons = () => [],
 
   // Labels
   searchLabel = null,
@@ -82,6 +83,7 @@ function Toolbar({
             </Box>
 
             <Box>
+              {addButtons()}
               {canDelete && nbChecked > 0 && (
                 <>
                   <Button

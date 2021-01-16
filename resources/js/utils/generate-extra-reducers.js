@@ -17,7 +17,11 @@ export default (prefix, services, overrides = {}) => {
 
     extraReducers[`${prefix}/${service}/rejected`] = (state, action) => {
       console.error(action)
-      console.log(action.error.stack)
+
+      if (("error" in action) && ("stack" in action.error)) {
+        console.log(action.error.stack)
+      }
+
       state.error = true
       state.loading = false
 
