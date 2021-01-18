@@ -141,7 +141,7 @@ function useRequest({
             if ("message" in response.data) {
               message = response.data.message
               variant = ("variant" in response.data) ? response.data.variant : variant
-            } else if (status_handled && ("message" in status_results)) {
+            } else if (status_handled && status_results && ("message" in status_results)) {
               message = status_results.message
               variant = ("variant" in status_results) ? status_results.variant : variant
             }
