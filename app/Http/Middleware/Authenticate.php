@@ -16,6 +16,10 @@ class Authenticate extends Middleware
     protected function redirectTo($request) {
         $module = resolve(LoginModule::class);
 
+        if ($request->bearerToken()) {
+            abort(403);
+        }
+
         if (! $request->expectsJson()) {
             return $module->route_prefix("/");
         }
