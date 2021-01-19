@@ -26,7 +26,13 @@ export const initialState = {
 
 export const init_services = (api, actions) => ({
   index: ({ params }) => ({
-    url: (args) => params.requests.index.url ? params.requests.index.url(args) : api.index,
+    url: (args) => params.requests.index.url
+      ? (
+        (typeof params.requests.index.url === "function")
+          ? params.requests.index.url(args)
+          : params.requests.index.url
+      )
+      : api.index,
     method: params.requests.index.method,
     cancelCallback: ({ state }) => ! needs_more(state.ids.length, state.page, state.per_page),
     data: (args) => {
