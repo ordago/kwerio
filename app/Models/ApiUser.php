@@ -10,6 +10,7 @@ class ApiUser extends Model {
     use HasFactory,
         Traits\LocalizeDatetimeAttributes,
         Traits\InteractsWithGroup,
+        Traits\InteractsWithModule,
         Traits\InteractsWithAbility,
         Traits\Authorizable;
 

@@ -42,7 +42,9 @@ RUN set -eux \
         libpng-dev \
         tzdata \
         pwgen \
-        dos2unix
+        dos2unix \
+        net-tools \
+        htop
 
 # ----------------------------------------------------------------------------
 #                                                           Install binaries -
