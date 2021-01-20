@@ -6,6 +6,14 @@ export default makeStyles(theme => createStyles({
 
   },
 
+  duplicateBtn: {
+    marginRight: theme.spacing(2),
+  },
+
+  duplicateBtnTextPrimary: {
+
+  },
+
   deleteBtn: {
     backgroundColor: red[500],
     marginRight: theme.spacing(2),

@@ -119,6 +119,10 @@ class Normalizer {
             return $paginator;
         }
 
+        if (is_array($items)) {
+            $items = new Collection($items);
+        }
+
         // Parse a collection of models..
         if ($items instanceof Collection) {
             if (is_null($total)) {

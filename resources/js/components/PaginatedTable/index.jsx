@@ -47,6 +47,7 @@ function PaginatedTable({
   canSearch = false,
   canCreate = false,
   canDelete = false,
+  canDuplicate = false,
   searchLabel = null,
   createButtonLabel = null,
 
@@ -72,6 +73,12 @@ function PaginatedTable({
     delete: {                     // Delete request.
       url: null,
       method: "delete",
+      requestBody: null,
+      convertResponseBody: null,
+    },
+    duplicate: {
+      url: null,
+      method: "post",
       requestBody: null,
       convertResponseBody: null,
     },
@@ -128,10 +135,12 @@ function PaginatedTable({
             canSearch={canSearch}
             canCreate={canCreate}
             canDelete={canDelete}
+            canDuplicate={canDuplicate}
             searchLabel={searchLabel}
             createButtonLabel={createButtonLabel}
             nbChecked={nb_checked}
             itemsToDelete={checkedItems}
+            itemsToDuplicate={checkedItems}
             addButtons={addButtons}
           />
         } />

@@ -15,12 +15,12 @@ class CreateUserablesTable extends Migration
     {
         Schema::create('userables', function (Blueprint $table) {
             $table->id();
-            $table->uuid("uuid");
+            $table->uuid("uuid")->index();
             $table->unsignedBigInteger("user_id");
             $table->enum("user_type", ["web", "api"]);
             $table->string("user_model");
             $table->morphs("userable");
-            $table->enum("action", ["create", "read", "update", "soft_delete", "delete"]);
+            $table->enum("action", ["create", "read", "update", "soft_delete", "delete", "duplicate"]);
             $table->timestamp("created_at");
         });
     }

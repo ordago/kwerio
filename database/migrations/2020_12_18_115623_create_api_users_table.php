@@ -15,7 +15,7 @@ class CreateApiUsersTable extends Migration
     {
         Schema::create('api_users', function (Blueprint $table) {
             $table->id();
-            $table->uuid("uuid");
+            $table->uuid("uuid")->index();
             $table->timestamps();
             $table->unsignedBigInteger("user_id");
             $table->string("name")->nullable();

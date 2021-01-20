@@ -1,13 +1,17 @@
 import { Box, Button, Divider, TextField } from "@material-ui/core"
 import { useDispatch, useSelector } from "react-redux"
 import { useHistory } from "react-router-dom"
+import AddIcon from "@material-ui/icons/Add"
+import DeleteIcon from "@material-ui/icons/Delete"
+import FileCopyIcon from "@material-ui/icons/FileCopy"
 import React, { useState, useRef } from "react"
 
 import Suspense from "../Suspense"
 import useStyles from "./Toolbar.styles"
 import useT from "../../hooks/useT"
 
-const ConfirmDeletionDialog = React.lazy(() => import("./ConfirmDeletionDialog"))
+const ConfirmDeletionDialog = React.lazy(() => import("./ConfirmDeletionDialog")),
+  ConfirmDuplicationDialog = React.lazy(() => import("./ConfirmDuplicationDialog"))
 
 let timer
 
@@ -29,10 +33,12 @@ function Toolbar({
   canSearch = false,
   canCreate = false,
   canDelete = false,
+  canDuplicate = false,
 
   // From table
   nbChecked,
   itemsToDelete,
+  itemsToDuplicate,
 }) {
   const classes = useStyles(),
     dispatch = useDispatch(),
@@ -41,7 +47,8 @@ function Toolbar({
     q_ref = useRef(),
     translations = useSelector(state => state.app.t),
     t = useT(translations),
-    [open_confirm_deletion_dialog, setOpenConfirmDeletionDialog] = useState(false)
+    [open_confirm_deletion_dialog, setOpenConfirmDeletionDialog] = useState(false),
+    [open_confirm_duplication_dialog, setOpenConfirmDuplicationDialog] = useState(false)
 
   if (searchLabel === null) searchLabel = t("Search")
   if (createButtonLabel === null) createButtonLabel = t("Create new")
@@ -84,11 +91,39 @@ function Toolbar({
 
             <Box>
               {addButtons()}
+              {canDuplicate && nbChecked > 0 && (
+                <>
+                  <Button
+                    className={classes.duplicateBtn}
+                    startIcon={<FileCopyIcon />}
+                    onClick={() => setOpenConfirmDuplicationDialog(true)}
+                  >
+                    duplicate {nbChecked} items
+                  </Button>
+
+                  {open_confirm_duplication_dialog && (
+                    <Suspense component={<ConfirmDuplicationDialog
+                      open={open_confirm_duplication_dialog}
+                      classes={classes}
+                      nbChecked={nbChecked}
+                      onClose={() => setOpenConfirmDuplicationDialog(false)}
+                      onDuplicate={() => {
+                        request
+                          .duplicate({ requests, items: itemsToDuplicate })
+                          .then(() => {
+                            setOpenConfirmDuplicationDialog(false)
+                          })
+                      }}
+                    />} />
+                  )}
+                </>
+              )}
               {canDelete && nbChecked > 0 && (
                 <>
                   <Button
                     className={classes.deleteBtn}
                     onClick={() => setOpenConfirmDeletionDialog(true)}
+                    startIcon={<DeleteIcon />}
                   >
                     Delete {nbChecked} items
                   </Button>
@@ -111,7 +146,10 @@ function Toolbar({
                 </>
               )}
               {canCreate && (
-                <Button onClick={() => history.push(endpoint.create)}>
+                <Button
+                  onClick={() => history.push(endpoint.create)}
+                  startIcon={<AddIcon />}
+                >
                   {createButtonLabel}
                 </Button>
               )}

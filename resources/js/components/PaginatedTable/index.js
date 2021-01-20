@@ -68,9 +68,15 @@ export const init_services = (api, actions, primaryKey = "uuid") => ({
   delete: ({ params }) => ({
     url: (args) => params.requests.delete.url ? params.requests.delete.url(args) : api.delete,
     method: params.requests.delete.method,
-    data: (args) => ({
-      [`${primaryKey}s`]: args.params.items.map(item => item[primaryKey]),
-    }),
+    data: (args) => {
+      if (params.requests.delete.requestBody) {
+        return params.requests.delete.requestBody(args)
+      }
+
+      return {
+        [`${primaryKey}s`]: args.params.items.map(item => item[primaryKey]),
+      }
+    },
     200: (args) => {
       const data = params.requests.delete.convertResponseBody ? params.requests.delete.convertResponseBody(args) : args.data,
         items = data.items.map(item => {
@@ -82,6 +88,36 @@ export const init_services = (api, actions, primaryKey = "uuid") => ({
         })
 
       args.dispatch(actions.removeMany(items))
+
+      return data
+    },
+  }),
+
+  duplicate: ({ params }) => ({
+    url: (args) => params.requests.duplicate.url ? params.requests.duplicate.url(args) : api.duplicate,
+    method: params.requests.duplicate.method,
+    data: (args) => {
+      if (params.requests.duplicate.requestBody) {
+        return params.requests.duplicate.requestBody(args)
+      }
+
+      return {
+        [`${primaryKey}s`]: args.params.items.map(item => item[primaryKey]),
+      }
+    },
+    200: (args) => {
+      if (params.requests.duplicate.convertResponseBody) {
+        return params.requests.duplicate.convertResponseBody(args)
+      }
+
+      const data = args.data,
+        items = data.items.map(item => {
+          item.touched_at = Date.now()
+          return item
+        })
+
+      args.dispatch(actions.upsertMany(items))
+      args.dispatch(actions.moveTouchedToStart())
 
       return data
     },
@@ -170,6 +206,11 @@ export const init_extraReducers = (prefix) => generate_extra_reducers(prefix, in
     fulfilled: (state, action) => {
       state.rsc.total = action.payload.total
     },
+  },
+  duplicate: {
+    fulfilled: (state, action) => {
+      state.rsc.total = action.payload.total
+    }
   },
 })
 

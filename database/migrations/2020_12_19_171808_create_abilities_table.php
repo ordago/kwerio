@@ -15,7 +15,7 @@ class CreateAbilitiesTable extends Migration
     {
         Schema::create('abilities', function (Blueprint $table) {
             $table->id();
-            $table->uuid("uuid");
+            $table->uuid("uuid")->index();
             $table->timestamps();
             $table->unsignedBigInteger("module_id")->index()->nullable();
             $table->string("name");
