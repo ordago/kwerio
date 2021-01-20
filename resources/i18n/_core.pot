@@ -130,3 +130,24 @@ msgstr ""
 
 msgid "Updated"
 msgstr ""
+
+msgid "Created at"
+msgstr ""
+
+msgid "Updated at"
+msgstr ""
+
+msgid "Create"
+msgstr ""
+
+msgid "Delete item"
+msgstr ""
+
+msgid "Delete %s items"
+msgstr ""
+
+msgid "Duplicate item"
+msgstr ""
+
+msgid "Duplicate %s items"
+msgstr ""
