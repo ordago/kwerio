@@ -24,7 +24,7 @@ export const initialState = {
   }
 }
 
-export const init_services = (api, actions) => ({
+export const init_services = (api, actions, primaryKey = "uuid") => ({
   index: ({ params }) => ({
     url: (args) => params.requests.index.url
       ? (
@@ -68,12 +68,21 @@ export const init_services = (api, actions) => ({
   delete: ({ params }) => ({
     url: (args) => params.requests.delete.url ? params.requests.delete.url(args) : api.delete,
     method: params.requests.delete.method,
-    data: (args) => {
-
-    },
+    data: (args) => ({
+      [`${primaryKey}s`]: args.params.items.map(item => item[primaryKey]),
+    }),
     200: (args) => {
-      const data = params.requests.delete.convertResponseBody ? params.requests.delete.convertResponseBody(args) : args.data
-      args.dispatch(actions.removeMany(data.items))
+      const data = params.requests.delete.convertResponseBody ? params.requests.delete.convertResponseBody(args) : args.data,
+        items = data.items.map(item => {
+          if ((typeof item === "object") && (primaryKey in item)) {
+            return item[primaryKey]
+          }
+
+          return item
+        })
+
+      args.dispatch(actions.removeMany(items))
+
       return data
     },
   })
