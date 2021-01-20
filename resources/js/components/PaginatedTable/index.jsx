@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux"
 import React from "react"
 import clsx from "clsx"
 import { merge } from "lodash"
+import { useHistory } from "react-router-dom"
 
 import { init_services } from "./index"
 import Suspense from "../Suspense"
@@ -33,11 +34,12 @@ function PaginatedTable({
   hover = true,                 // Enable hover on the table.
   canCheck = true,              // Rows can be checked using checkbox.
   renderCell = null,            // Custom cell renderer.
-  onRowClick = () => { },       // Click event for the row.
+  onRowClick = null,            // Click event for the row.
   onSort = () => { },           // Callback to handle sorting.
   primaryKey = "uuid",          // Primary key used in the data as 'id'.
   slugKey = "slug",             // Name of the slug key.
   size = "small",               // Size of the table. (medium, small).
+  disableRowClick = false,      // Disable row click.
 
   // Components..
   toolbar = false,              // Show table toolbar
@@ -57,7 +59,8 @@ function PaginatedTable({
     classes = useStyles(),
     translations = useSelector(state => state.app.t),
     t = useT(translations),
-    request = useRequest({ reducer, services: init_services(api, actions) })
+    request = useRequest({ reducer, services: init_services(api, actions) }),
+    history = useHistory()
 
   const defaultRequests = {
     index: {                      // Index request.
@@ -187,7 +190,13 @@ function PaginatedTable({
                 hover={hover}
                 selected={("checked" in row) && row.checked === true}
                 key={row[primaryKey]}
-                onClick={() => onRowClick(row)}
+                onClick={() => {
+                  if (onRowClick) {
+                    onRowClick(row)
+                  } else if (!disableRowClick) {
+                    history.push(endpoint.update.replace(/:uuid/, row[primaryKey]))
+                  }
+                }}
                 className={clsx({ [classes.touchedAt]: ("touched_at" in row) })}
               >
                 {canCheck && (

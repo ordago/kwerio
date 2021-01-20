@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { useParams } from "react-router-dom"
 
 import _ from "lodash"
 
 export default function({
   reducer,
-  match,
   adapter,
   request,
   actions,
 }) {
-  const uuid = _.get(match, "params.uuid"),
+  const params = useParams(),
+    uuid = _.get(params, "uuid"),
     state = useSelector(state => state[reducer]),
     selector = adapter.getSelectors(),
     item = selector.selectById(state, uuid),

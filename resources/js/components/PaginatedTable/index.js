@@ -47,7 +47,10 @@ export const init_services = (api, actions) => ({
           else if (left.sortOrder < right.sortOrder) return -1
           return 0
         })
-        .map(col => ({ name: col.slug, dir: col.sortDirection }))
+        .map(col => ({
+          name: col.slug,
+          dir: col.sortDirection || "asc",
+        }))
 
       return {
         page: args.state.rsc.page + 1,
@@ -127,7 +130,7 @@ export const init_reducers = (adapter) => ({
     state.rsc.page = 0
 
     state.columns.map((col, idx) => {
-      if (!_.hasIn(col, "sort")) {
+      if (!("sort" in col)) {
         return col
       }
 
@@ -137,7 +140,7 @@ export const init_reducers = (adapter) => ({
         return col
       }
 
-      if (!_.hasIn(col, "sortOrder")) {
+      if (!("sortOrder" in col)) {
         col.sortOrder = idx + 1
       }
 

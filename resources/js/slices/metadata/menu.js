@@ -1,4 +1,7 @@
 export default {
+  fulfilled: (state, action) => {
+    state.menu = action.payload.menu
+  },
   reducers: {
     toggleMenu: (state, action) => {
       const { menu, item } = action.payload

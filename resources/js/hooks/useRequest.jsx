@@ -163,7 +163,9 @@ function useRequest({
 
           // Display error message if any..
           if (options.notifyFailedMessage) {
-            if ("response" in err) {
+            if (typeof err === "string") {
+              console.error(err)
+            } else if ("response" in err) {
               const message = ("message" in err.response.data)
                 ? err.response.data.message
                 : `${err.response.statusText} [${err.response.status}]`

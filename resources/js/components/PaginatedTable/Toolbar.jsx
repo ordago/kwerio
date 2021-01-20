@@ -55,7 +55,7 @@ function Toolbar({
     timer = setTimeout(() => {
       dispatch(actions.removeAll())
       dispatch(actions.setQ(q_ref.current))
-      request.index()
+      request.index({ requests })
     }, 1000)
   }
 

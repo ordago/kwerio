@@ -59,11 +59,12 @@ const services = ({ actions }) => ({
 
       dispatch(actions.upsertOne({ ...data.items[0], touched_at: Date.now() }))
       dispatch(actions.resetTableTrackers())
-      dispatch(actions.fillUpsert(data.items[0]))
 
       if (route_to_index) {
         dispatch(actions.resetUpsert())
         history.push(endpoints.users.index)
+      } else {
+        dispatch(actions.fillUpsert(data.items[0]))
       }
 
       return data

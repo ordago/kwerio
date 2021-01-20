@@ -60,6 +60,12 @@ const initialState = {
         variant: "outlined",
         autoComplete: "new-password",
       },
+      MuiFormControl: {
+        margin: "dense",
+        size: "small",
+        variant: "outlined",
+        fullWidth: true,
+      },
       MuiFab: {
         size: "small",
       },
