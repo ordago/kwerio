@@ -1,17 +1,29 @@
 import {
   Divider,
   FormControlLabel,
-  Grid,
   Switch,
+  Table,
+  TableCell,
+  TableRow,
   Typography,
 } from "@material-ui/core"
 import { useDispatch, useSelector } from "react-redux"
 import React from "react"
+import { makeStyles, createStyles } from "@material-ui/core/styles"
 
 import { adapter } from "../../pages/Abilities/index.slice"
 import useT from "../../hooks/useT"
 
 // @see js/pages/Groups/Upsert/index.jsx for example usage.
+
+const useStyles = makeStyles(theme => createStyles({
+  abilitiesTable: {
+    marginBottom: theme.spacing(5),
+  },
+  checkAll: {
+    marginBottom: theme.spacing(5),
+  },
+}))
 
 function Abilities({
   parentAdapter,  // Adapter of the element that the abilities will be extracted from.
@@ -27,7 +39,8 @@ function Abilities({
     t = useT(translations),
     myState = useSelector(state => state.abilities),
     selector = adapter.getSelectors(),
-    dispatch = useDispatch()
+    dispatch = useDispatch(),
+    classes = useStyles()
 
   let parent_values = []
 
@@ -64,6 +77,14 @@ function Abilities({
     return abilities.map(ab => ab.abilities.map(item => item.uuid)).flat().length === state.upsert.abilities.value.length
   }
 
+  function _get_ability_name(name) {
+    if (name.startsWith("root/") || name.indexOf("/") === -1) {
+      return name
+    }
+
+    return name.substring(name.indexOf("/") + 1)
+  }
+
   return (
     <>
       {abilities.length > 0 && (
@@ -74,6 +95,7 @@ function Abilities({
 
           <FormControlLabel
             label={t("Check all abilities")}
+            className={classes.checkAll}
             control={
               <Switch
                 checked={_is_check_all_checked()}
@@ -89,21 +111,26 @@ function Abilities({
             <React.Fragment key={item.name}>
               <Typography variant="h6">{item.name}</Typography>
 
-              <Grid container>
+              <Table padding="none" hover="true" className={classes.abilitiesTable}>
                 {item.abilities.map(ability => (
-                  <Grid item xs={12} key={ability.uuid}>
-                    <FormControlLabel
-                      label={t(ability.description)}
-                      control={
-                        <Switch
-                          onChange={() => dispatch(actions.toggleAbility(ability.uuid))}
-                          checked={_is_ability_checked(ability.uuid)}
-                        />
-                      }
-                    />
-                  </Grid>
+                  <TableRow key={ability.uuid} selected={_is_ability_checked(ability.uuid)}>
+                    <TableCell>
+                      <Switch
+                        onChange={() => dispatch(actions.toggleAbility(ability.uuid))}
+                        checked={_is_ability_checked(ability.uuid)}
+                      />
+                    </TableCell>
+
+                    <TableCell>
+                      {_get_ability_name(ability.name)}
+                    </TableCell>
+
+                    <TableCell>
+                      {t(ability.description)}
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </Grid>
+              </Table>
             </React.Fragment>
           ))}
         </>
