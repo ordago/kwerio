@@ -41,12 +41,6 @@ export const endpoints = {
     create: `${PERMISSIONS_ENDPOINT}/api-users/create`,
     update: `${PERMISSIONS_ENDPOINT}/api-users/:uuid`,
   },
-  modules: {
-    index: `${MODULES_ENDPOINT}`,
-  },
-  account: {
-    index: `${SETTINGS_ENDPOINT}/account`,
-  },
 }
 
 export const api = {
@@ -72,9 +66,6 @@ export const api = {
     fetch_by_uuid: `${API_PERMISSIONS_ENDPOINT}/api-users/fetch-by-uuid`,
     metadata: `${API_PERMISSIONS_ENDPOINT}/api-users/metadata`,
   },
-  modules: {
-    index: `${API_MODULES_ENDPOINT}/modules`,
-  },
 }
 
 export const components = {
@@ -92,9 +83,6 @@ export const components = {
   [endpoints.apiUsers.index]: props => <Suspense component={<ApiUsers {...props} />} />,
   [endpoints.apiUsers.create]: props => <Suspense component={<ApiUsersUpsert {...props} />} />,
   [endpoints.apiUsers.update]: props => <Suspense component={<ApiUsersUpsert {...props} />} />,
-
-  /* ACCOUNT / SETTINGS */
-  [endpoints.account.index]: props => <Suspense component={<Account {...props} />} />,
 
   /* OTHERS */
   [endpoints.profile.index]: props => <Suspense component={<Profile {...props} />} />,

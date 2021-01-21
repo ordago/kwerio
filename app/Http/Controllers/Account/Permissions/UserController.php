@@ -102,9 +102,11 @@ class UserController extends Controller {
 
         $data = $request->validate([
             "page" => "required|numeric",
-            "sorts" => "required|array",
-            "q" => "",
+            "sorts" => "nullable|array",
+            "q" => "nullable",
         ]);
+
+        $data["sorts"] = empty($data["sorts"]) ? [] : $data["sorts"];
 
         $query = UserModel::query();
 
@@ -221,11 +223,11 @@ class UserController extends Controller {
         try {
             $user = UserModel::updateOrCreate(["uuid" => @$data["uuid"]], array_filter([
                 "email" => $data["email"],
-                "first_name" => $data["first_name"],
-                "last_name" => $data["last_name"],
-                "locale" => $data["locale"],
-                "timezone" => $data["timezone"],
-                "locale_iso_format" => $data["locale_iso_format"],
+                "first_name" => $data["first_name"] ?? null,
+                "last_name" => $data["last_name"] ?? null,
+                "locale" => $data["locale"] ?? null,
+                "timezone" => $data["timezone"] ?? null,
+                "locale_iso_format" => $data["locale_iso_format"] ?? null,
                 "password" => empty($data["password"]) ? null : Hash::make($data["password"]),
                 "is_rtl" => empty($data["locale"]) ? null : is_rtl($data["locale"]),
             ], function($value) {
@@ -233,7 +235,7 @@ class UserController extends Controller {
             }))
                 ->fresh();
 
-            $groups = GroupModel::whereIn("uuid", $data["groups"])->get(["id"]);
+            $groups = GroupModel::whereIn("uuid", $data["groups"] ?? [])->get(["id"]);
             $user->groups()->sync($groups);
 
             $abilities = [];

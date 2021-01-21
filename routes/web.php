@@ -7,8 +7,6 @@ use App\Http\Controllers\{
     Account\Permissions\UserController,
     Account\Permissions\ApiUserController,
     Account\Permissions\GroupController,
-    Account\Settings\AccountController,
-    Account\ModuleController,
 };
 
 Route::middleware(["auth"])->group(function() {
@@ -37,15 +35,5 @@ Route::middleware(["auth", "root"])->group(function() {
             Route::get("/api-users/create", [ApiUserController::class, "show_create_page"]);
             Route::get("/api-users/{uuid}", [ApiUserController::class, "show_update_page"]);
         });
-
-        // ------------------------------------------- ACCOUNT - SETTINGS -- #
-        Route::prefix("settings")->group(function() {
-            Route::get("/account", [AccountController::class, "show_page"]);
-        });
-    });
-
-    // ---------------------------------------------------------- MODULES -- #
-    Route::prefix("modules")->group(function() {
-        Route::get("/", [ModuleController::class, "index"]);
     });
 });

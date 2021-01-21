@@ -10,6 +10,8 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
+use Kwerio\Normalizer;
+
 use App\Models\{
     ApiUser as ApiUserModel,
     User as UserModel,
@@ -22,6 +24,7 @@ class ApiUserController extends Controller {
     private $token = null;
 
     private $rules = [
+        "uuid" => "nullable",
         "name" => "required",
         "is_hashed" => "nullable|boolean",
         "expires_at" => "nullable",
@@ -71,12 +74,16 @@ class ApiUserController extends Controller {
      *
      * @return array
      */
-    function index(Request $request) {
+    function index(Request $request, Normalizer $normalizer) {
+        $this->authorize("root/api_user_list");
+
         $data = $request->validate([
             "page" => "required|numeric",
-            "sorts" => "array",
+            "sorts" => "nullable|array",
             "q" => "nullable",
         ]);
+
+        $data["sorts"] = empty($data["sorts"]) ? [] : $data["sorts"];
 
         $query = ApiUserModel::query();
 
@@ -97,7 +104,7 @@ class ApiUserController extends Controller {
 
         $items = $query->paginate(config("app.per_page"));
 
-        return $this->_normalize($items);
+        return $normalizer->normalize($items, [$this, "_normalize_callback"]);
     }
 
     /**
@@ -128,7 +135,7 @@ class ApiUserController extends Controller {
 
         $token = null;
 
-        if ($data["is_hashed"]) {
+        if (!empty($data["is_hashed"])) {
             $apiUser = ApiUserModel::whereUuid($data["uuid"])->firstOrFail();
 
             if ($apiUser->is_hashed === false) {
@@ -146,11 +153,18 @@ class ApiUserController extends Controller {
      * @return array
      */
     private function _upsert($data, $original_token = null) {
-        DB::beginTransaction();
-
         try {
+            DB::beginTransaction();
+
             $appends = [];
             $this->token = null;
+
+            $data["is_hashed"] = isset($data["is_hashed"]) ? $data["is_hashed"] : false;
+            $data["uuid"] = isset($data["uuid"]) ? $data["uuid"] : null;
+            $data["expires_at"] = isset($data["expires_at"]) ? $data["expires_at"] : null;
+            $data["token_unhashed"] = isset($data["token_unhashed"]) ? $data["token_unhashed"] : null;
+            $data["groups"] = isset($data["groups"]) ? $data["groups"] : [];
+            $data["abilities"] = isset($data["abilities"]) ? $data["abilities"] : [];
 
             // Creating token..
             if (is_string($original_token)) {
@@ -203,9 +217,9 @@ class ApiUserController extends Controller {
 
             DB::commit();
 
-            return $this->_normalize(
-                $apiUser->whereUuid($apiUser->uuid)->get()
-            );
+            return resolve(Normalizer::class)
+                ->message("Api user '{$apiUser->name}' upserted successfully")
+                ->normalize($apiUser->fresh(), [$this, "_normalize_callback"]);
         }
 
         catch (\Throwable $e) {
@@ -214,7 +228,14 @@ class ApiUserController extends Controller {
         }
     }
 
-    function fetch_by_uuid(Request $request) {
+    /**
+     * Fetch api user by its uuid.
+     *
+     * @param Request    $request
+     * @param Normalizer $normalizer
+     * @return array
+     */
+    function fetch_by_uuid(Request $request, Normalizer $normalizer) {
         $abilities = ["root/api_user_list", "root/api_user_update"];
 
         if (!Gate::any($abilities)) {
@@ -225,8 +246,9 @@ class ApiUserController extends Controller {
             "uuid" => "required|exists:api_users,uuid",
         ]);
 
-        return $this->_normalize(
-            ApiUserModel::whereUuid($data["uuid"])->get()
+        return $normalizer->normalize(
+            ApiUserModel::whereUuid($data["uuid"])->get(),
+            [$this, "_normalize_callback"]
         );
     }
 
@@ -260,35 +282,19 @@ class ApiUserController extends Controller {
      * @param LengthAwarePaginator|Collect $apiUsers
      * @return array
      */
-    private function _normalize($apiUsers) {
-        $items = $apiUsers->map(function($apiUser) {
-            return [
-                "uuid" => $apiUser->uuid,
-                "name" => $apiUser->name,
-                "is_hashed" => (bool) $apiUser->is_hashed,
-                "token" => $apiUser->token,
-                "email" => $apiUser->user->email,
-                "groups" => $apiUser->groups->pluck("uuid")->toArray(),
-                "abilities" => $apiUser->abilities->pluck("uuid")->toArray(),
-                "token_unhashed" => $this->token,
-                "expires_at" => $apiUser->expires_at,
-                "created_at" => $apiUser->created_at,
-                "updated_at" => $apiUser->udpated_at,
-            ];
-        });
-
-        if (method_exists($apiUsers, "total")) {
-            $total = $apiUsers->total();
-        } else {
-            $total = ApiUserModel::count();
-        }
-
-        $page = request()->get("page") ?? 1;
-
+    function _normalize_callback(ApiUserModel $apiUser) {
         return [
-            "items" => $items,
-            "total" => $total,
-            "next_page" => $total === config("app.per_page") ? $page + 1 : $page,
+            "uuid" => $apiUser->uuid,
+            "name" => $apiUser->name,
+            "is_hashed" => (bool) $apiUser->is_hashed,
+            "token" => $apiUser->token,
+            "email" => $apiUser->user->email,
+            "groups" => $apiUser->groups->pluck("uuid")->toArray(),
+            "abilities" => $apiUser->abilities->pluck("uuid")->toArray(),
+            "token_unhashed" => $this->token,
+            "expires_at" => $apiUser->expires_at,
+            "created_at" => $apiUser->created_at,
+            "updated_at" => $apiUser->udpated_at,
         ];
     }
 }

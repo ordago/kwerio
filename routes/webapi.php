@@ -7,8 +7,6 @@ use App\Http\Controllers\{
     Account\Permissions\UserController,
     Account\Permissions\ApiUserController,
     Account\Permissions\GroupController,
-    Account\Settings\AccountController,
-    Account\ModuleController,
 };
 
 Route::middleware(["auth:web,api", "root"])->group(function() {
@@ -34,11 +32,5 @@ Route::middleware(["auth:web,api", "root"])->group(function() {
             Route::post("/api-users/fetch-by-uuid", [ApiUserController::class, "fetch_by_uuid"]);
             Route::post("/api-users/metadata", [ApiUserController::class, "metadata"]);
         });
-    });
-
-    // ---------------------------------------------------------- MODULES -- #
-    Route::prefix("modules")->group(function() {
-        Route::post("/", [ModuleController::class, "paginate"]);
-        Route::post("/all", [ModuleController::class, "all"]);
     });
 });

@@ -73,9 +73,11 @@ class GroupController extends Controller {
 
         $data = $request->validate([
             "page" => "required|numeric",
-            "sorts" => "required|array",
-            "q" => "",
+            "sorts" => "nullable|array",
+            "q" => "nullable",
         ]);
+
+        $data["sorts"] = empty($data["sorts"]) ? [] : $data["sorts"];
 
         $query = GroupModel::query();
 
@@ -103,8 +105,8 @@ class GroupController extends Controller {
 
         $data = $request->validate([
             "name" => "required|unique:groups,name",
-            "modules" => "",
-            "abilities" => "",
+            "modules" => "nullable|array",
+            "abilities" => "nullable|array",
         ]);
 
         return $this->_upsert($data);
@@ -125,8 +127,8 @@ class GroupController extends Controller {
                 "required",
                 Rule::unique("groups")->ignore($request->get("uuid"), "uuid"),
             ],
-            "modules" => "",
-            "abilities" => "",
+            "modules" => "nullable|array",
+            "abilities" => "nullable|array",
         ]);
 
         return $this->_upsert($data);
@@ -139,10 +141,13 @@ class GroupController extends Controller {
      * @return Group
      */
     private function _upsert(array $data) {
-        DB::beginTransaction();
-
         try {
+            DB::beginTransaction();
+
             $normalizer = resolve(Normalizer::class);
+
+            $data["modules"] = empty($data["modules"]) ? [] : $data["modules"];
+            $data["abilities"] = empty($data["abilities"]) ? [] : $data["abilities"];
 
             $group = GroupModel::updateOrCreate(["uuid" => @$data["uuid"]], [
                 "slug" => Str::slug($data["name"]),
