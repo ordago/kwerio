@@ -145,11 +145,11 @@ msgstr "إنشاء"
 msgid "Delete item"
 msgstr "حذف العنصر"
 
-msgid "Delete %% items"
-msgstr "حذف s% عنصر"
+msgid "Delete %s items"
+msgstr "حذف %s عناصر"
 
 msgid "Duplicate item"
 msgstr "تكرار العنصر"
 
-msgid "Duplicate %% items"
-msgstr "تكرار s% عناصر"
+msgid "Duplicate %s items"
+msgstr "تكرار %s العناصر"
