@@ -44,7 +44,9 @@ RUN set -eux \
         pwgen \
         dos2unix \
         net-tools \
-        htop
+        htop \
+        telnet \
+        netcat-openbsd
 
 # ----------------------------------------------------------------------------
 #                                                           Install binaries -
