@@ -30,7 +30,7 @@ if (!function_exists("all_languages")) {
      *
      * @return array
      */
-    function all_languages() {
+    function all_languages($to_array = false) {
         $locales = collect(ResourceBundle::getLocales(""))->map(function($locale) {
             return [
                 "locale" => $locale,
@@ -38,6 +38,10 @@ if (!function_exists("all_languages")) {
                 "native_name" => Locale::getDisplayName($locale, $locale),
             ];
         });
+
+        if ($to_array) {
+            return $locales->toArray();
+        }
 
         return $locales;
     }
