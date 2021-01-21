@@ -1,5 +1,5 @@
 import { Box, Button, Divider, TextField } from "@material-ui/core"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { useHistory } from "react-router-dom"
 import AddIcon from "@material-ui/icons/Add"
 import DeleteIcon from "@material-ui/icons/Delete"
@@ -45,13 +45,12 @@ function Toolbar({
     history = useHistory(),
     [q, setQ] = useState(""),
     q_ref = useRef(),
-    translations = useSelector(state => state.app.t),
-    t = useT(translations),
+    t = useT(),
     [open_confirm_deletion_dialog, setOpenConfirmDeletionDialog] = useState(false),
     [open_confirm_duplication_dialog, setOpenConfirmDuplicationDialog] = useState(false)
 
   if (searchLabel === null) searchLabel = t("Search")
-  if (createButtonLabel === null) createButtonLabel = t("Create new")
+  if (createButtonLabel === null) createButtonLabel = t("Create New")
 
   q_ref.current = q
 
@@ -98,7 +97,7 @@ function Toolbar({
                     startIcon={<FileCopyIcon />}
                     onClick={() => setOpenConfirmDuplicationDialog(true)}
                   >
-                    duplicate {nbChecked} items
+                    {nbChecked === 1 ? t("Duplicate item") : t("Duplicate %s items", [nbChecked])}
                   </Button>
 
                   {open_confirm_duplication_dialog && (
@@ -125,7 +124,7 @@ function Toolbar({
                     onClick={() => setOpenConfirmDeletionDialog(true)}
                     startIcon={<DeleteIcon />}
                   >
-                    Delete {nbChecked} items
+                    {nbChecked === 1 ? t("Delete item") : t("Delete %s items", [nbChecked])}
                   </Button>
 
                   {open_confirm_deletion_dialog && (

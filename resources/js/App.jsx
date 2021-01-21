@@ -11,7 +11,7 @@ import DayjsUtils from "@date-io/dayjs"
 import React from "react"
 import rtl from "jss-rtl"
 
-import { fetch_metadata, fetch_translations } from "./App.slice"
+import { fetch_metadata } from "./App.slice"
 import Main from "./components/Main"
 import useRoutes from "./hooks/useRoutes"
 import useStyles from "./App.styles"
@@ -32,8 +32,6 @@ function InnerApp({ moduleRoutes, module }) {
         if (user.is_rtl) {
           document.body.setAttribute("dir", user.dir)
         }
-
-        dispatch(fetch_translations(user.locale))
       })
   }, [])
 

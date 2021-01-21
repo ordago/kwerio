@@ -4,7 +4,10 @@ const po2json = require("po2json"),
   _ = require("lodash")
 
 // Load all the available translations. (kwerio core + modules)
-const resources = [__dirname + "/resources/i18n"],
+const resources = [{
+  name: "core",
+  dir: __dirname + "/resources/i18n"
+}],
   modules = fs.readdirSync("./modules", { withFileTypes: true })
 
 for (let i = 0; i < modules.length; i ++) {
@@ -12,7 +15,10 @@ for (let i = 0; i < modules.length; i ++) {
     let i18n = `${__dirname}/modules/${modules[i].name}/resources/i18n`
 
     if (fs.existsSync(i18n)) {
-      resources.push(i18n)
+      resources.push({
+        name: modules[i].name,
+        dir: i18n,
+      })
     } else {
       console.error(`[ MISSING ]  Module '${modules[i].name}' does not have translations`)
     }
@@ -28,16 +34,9 @@ fs.rmdirSync(public, { recursive: true })
 for (let i = 0; i < resources.length; i ++) {
   let rsc = resources[i]
 
-  // Every translation provided must include `ns` file, this
-  // file is used as a namespace to lazy load translations when needed.
-  if (!fs.existsSync(`${rsc}/ns`)) {
-    throw new Error(`ns file does not exists in '${rsc}'`)
-  }
-
   // Create the output directory
-  let files = fs.readdirSync(rsc),
-    name = fs.readFileSync(`${rsc}/ns`, "utf8").trim(),
-    output_dir = `${public}/${name}`
+  let files = fs.readdirSync(rsc.dir),
+    output_dir = `${public}/${rsc.name}`
 
   if (!fs.existsSync(output_dir)) {
     fs.mkdirSync(output_dir, { mode: 0755, recursive: true })
@@ -49,7 +48,7 @@ for (let i = 0; i < resources.length; i ++) {
       continue
     }
 
-    po2json.parseFile(`${rsc}/${files[i]}`, (err, data) => {
+    po2json.parseFile(`${rsc.dir}/${files[i]}`, (err, data) => {
       if (err !== null) {
         console.error(err)
       } else {
@@ -74,7 +73,7 @@ for (let i = 0; i < resources.length; i ++) {
           } else {
             // The only case i saw now is [null, "value"], if there is any
             // other penguins, report them as errors, so they can be fixed.
-            throw new Error(`PO value in '${rsc}/${files[i]}' has an unknown value`)
+            throw new Error(`PO value in '${rsc.dir}/${files[i]}' has an unknown value`)
           }
         }
 

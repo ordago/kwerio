@@ -12,10 +12,11 @@ import {
   TableSortLabel
 } from "@material-ui/core"
 import { useDispatch, useSelector } from "react-redux"
+import { useHistory } from "react-router-dom"
 import React from "react"
 import clsx from "clsx"
+
 import { merge } from "lodash"
-import { useHistory } from "react-router-dom"
 
 import { init_services } from "./index"
 import Suspense from "../Suspense"
@@ -58,8 +59,7 @@ function PaginatedTable({
     state = useSelector(state => state[reducer]),
     selector = adapter.getSelectors(),
     classes = useStyles(),
-    translations = useSelector(state => state.app.t),
-    t = useT(translations),
+    t = useT(),
     request = useRequest({ reducer, services: init_services(api, actions) }),
     history = useHistory()
 
@@ -240,6 +240,10 @@ function PaginatedTable({
           <TableFooter>
             <TableRow>
               <TablePagination
+                labelRowsPerPage={`${t("Rows per page")}:`}
+                labelDisplayedRows={({ from, to, count }) => (
+                  `${from}-${to} ${t("of")} ${count !== -1 ? count : `${t("more than")} ${to}`}`
+                )}
                 rowsPerPage={state.per_page}
                 page={state.page}
                 onChangePage={(_, page) => {

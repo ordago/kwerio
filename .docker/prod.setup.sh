@@ -50,7 +50,8 @@ if [ -n "$(ls -A storage/logs 2>/dev/null)" ]; then
 fi
 
 if [ ! -d public/i18n ]; then
-    node po2json.js
+    su - www-data -c "mkdir public/i18n"
+    su - www-data -c "node po2json.js"
 fi
 
 chmod g+s storage/logs

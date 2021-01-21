@@ -1,12 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 import { useDispatch } from "react-redux"
+import { useHistory } from "react-router-dom"
+import { useSnackbar  } from "notistack"
 import qs from "qs"
-import { useSnackbar  } from 'notistack'
-import { useHistory } from 'react-router-dom'
 
 import axios from "axios"
 
 import { reject_with_error } from "../utils/errors"
+import useT from "./useT"
 
 /**
  * Parse url option.
@@ -68,7 +69,8 @@ function useRequest({
 }) {
   const dispatch = useDispatch(),
     { enqueueSnackbar } = useSnackbar(),
-    history = useHistory()
+    history = useHistory(),
+    t = useT()
 
   let asyncActions = {}
 
@@ -147,7 +149,7 @@ function useRequest({
             }
 
             if (message) {
-              enqueueSnackbar(message, { variant })
+              enqueueSnackbar(t(message), { variant })
             }
           }
 
@@ -172,7 +174,7 @@ function useRequest({
 
               const variant = ("variant" in err.response.data) ? err.response.data.variant : "error"
 
-              enqueueSnackbar(message, { variant })
+              enqueueSnackbar(t(message), { variant })
 
               // Call option[status] if available..
               if (err.response.status in options) {

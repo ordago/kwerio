@@ -12,7 +12,9 @@ import ExpandLessIcon from "@material-ui/icons/ExpandLess"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import React from "react"
 
-import _ from "lodash"
+import { get, hasIn } from "lodash"
+
+import useT from "../hooks/useT"
 
 const useStyles = makeStyles(theme => createStyles({
   parent: {
@@ -29,7 +31,8 @@ function PageMenu({ menu = null, actions }) {
     classes = useStyles(config),
     match = useRouteMatch(),
     history = useHistory(),
-    dispatch = useDispatch()
+    dispatch = useDispatch(),
+    t = useT()
 
   if (!menu) menu = "module.menu"
 
@@ -40,7 +43,7 @@ function PageMenu({ menu = null, actions }) {
     return []
   }
 
-  const menu_items = _.get(state, menu)
+  const menu_items = get(state, menu)
 
   /**
    * Check if menu is selected or not based on the url path.
@@ -77,9 +80,7 @@ function PageMenu({ menu = null, actions }) {
           selected={_is_menu_selected(list)}
           onClick={() => _handle_click(list)}
         >
-          <ListItemText
-            primary={list.text}
-          />
+          <ListItemText primary={t(list.text)} />
           {("children" in list) && (
             <>
               {list.open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
@@ -96,7 +97,7 @@ function PageMenu({ menu = null, actions }) {
                 className={classes.nested}
                 selected={_is_menu_selected(item)}
               >
-                <ListItemText primary={item.text} />
+                <ListItemText primary={t(item.text)} />
               </ListItem>
             ))}
           </Collapse>
@@ -110,7 +111,7 @@ function PageMenu({ menu = null, actions }) {
       {menu_items.map(list => (
         <React.Fragment key={list.id}>
           {("is_header" in list) && (
-            <List subheader={("is_header" in list) && <ListSubheader>{list.text}</ListSubheader>}>
+            <List subheader={("is_header" in list) && <ListSubheader>{t(list.text)}</ListSubheader>}>
               {("children" in list) && list.children.map(item => _render_list(item))}
             </List>
           )}

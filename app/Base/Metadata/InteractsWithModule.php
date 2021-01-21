@@ -18,10 +18,12 @@ trait InteractsWithModule {
         $class = "Modules\\{$module}\\Module";
         $module = new $class;
 
-        return [
+        $this->attributes["module"] = [
             "name" => $module->name,
             "slug" => $module->slug,
             "uid" => $module->uid,
         ];
+
+        return $this;
     }
 }
