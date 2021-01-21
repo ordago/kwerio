@@ -21,7 +21,6 @@ tags.temp
 /public/fonts
 /public/hot
 core
-/public/i18n
 /public/*.js.LICENSE.txt
 /public/images
 /docs
