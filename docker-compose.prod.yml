@@ -7,6 +7,7 @@ services:
       context: .
       dockerfile: .docker/prod.Dockerfile
     container_name: ${DOCKER_CONTAINER_NAME}
+    restart: unless-stopped
     tty: true
     stdin_open: true
     working_dir: /var/www/html
