@@ -50,6 +50,7 @@ function PaginatedTable({
   canSearch = false,
   canCreate = false,
   canDelete = false,
+  canDeleteFn = () => true,
   canDuplicate = false,
   searchLabel = null,
   createButtonLabel = null,
@@ -142,6 +143,7 @@ function PaginatedTable({
             canSearch={canSearch}
             canCreate={canCreate}
             canDelete={canDelete}
+            canDeleteFn={canDeleteFn}
             canDuplicate={canDuplicate}
             searchLabel={searchLabel}
             createButtonLabel={createButtonLabel}

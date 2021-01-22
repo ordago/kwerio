@@ -20,7 +20,7 @@ class CreateUserablesTable extends Migration
             $table->enum("user_type", ["web", "api"]);
             $table->string("user_model");
             $table->morphs("userable");
-            $table->enum("action", ["create", "read", "update", "soft_delete", "delete", "duplicate"]);
+            $table->string("action")->index();
             $table->timestamp("created_at");
         });
     }

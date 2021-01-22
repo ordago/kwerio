@@ -33,6 +33,7 @@ function Toolbar({
   canSearch = false,
   canCreate = false,
   canDelete = false,
+  canDeleteFn = () => true,
   canDuplicate = false,
 
   // From table
@@ -118,7 +119,7 @@ function Toolbar({
                   )}
                 </>
               )}
-              {canDelete && nbChecked > 0 && (
+              {canDelete && nbChecked > 0 && canDeleteFn(itemsToDelete) && (
                 <>
                   <Button
                     className={classes.deleteBtn}
