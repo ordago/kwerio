@@ -34,6 +34,7 @@ function Toolbar({
   canCreate = false,
   canDelete = false,
   canDeleteFn = () => true,
+  afterDeleteFn = action => action,
   canDuplicate = false,
 
   // From table
@@ -138,8 +139,9 @@ function Toolbar({
                       onDelete={() => {
                         request
                           .delete({ requests, items: itemsToDelete })
-                          .then(() => {
+                          .then(action => {
                             setOpenConfirmDeletionDialog(false)
+                            return afterDeleteFn(action)
                           })
                       }}
                     />} />

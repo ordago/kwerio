@@ -41,7 +41,8 @@ function PaginatedTable({
   slugKey = "slug",             // Name of the slug key.
   size = "small",               // Size of the table. (medium, small).
   disableRowClick = false,      // Disable row click.
-  canIndex = false,
+  canIndex = null,
+  afterIndexFn = data => data,
   highlightRowIf = [],          // Highligh row if the given condition is met.
 
   // Components..
@@ -51,6 +52,7 @@ function PaginatedTable({
   canCreate = false,
   canDelete = false,
   canDeleteFn = () => true,
+  afterDeleteFn = data => data,
   canDuplicate = false,
   searchLabel = null,
   createButtonLabel = null,
@@ -120,14 +122,17 @@ function PaginatedTable({
       _toggle_check_all(false)
     }
 
-    request.index({ requests }).then(() => {
+    request.index({ requests }).then(action => {
       dispatch(actions.moveTouchedToStart())
+      afterIndexFn(action)
     })
   }, [canIndex])
 
   if (nb_checked > 0 && nb_checked < data.length) {
     checkbox_all = { indeterminate: true }
   }
+
+  canIndex = canIndex === null ? canSearch : canIndex
 
   return (
     <Box>
@@ -144,6 +149,7 @@ function PaginatedTable({
             canCreate={canCreate}
             canDelete={canDelete}
             canDeleteFn={canDeleteFn}
+            afterDeleteFn={afterDeleteFn}
             canDuplicate={canDuplicate}
             searchLabel={searchLabel}
             createButtonLabel={createButtonLabel}

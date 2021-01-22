@@ -147,9 +147,14 @@ class Normalizer {
      * @return integer
      */
     private function _get_total_from_model($item) {
-        $class = get_class($item);
-        $model = new $class;
-        return $model->count();
+        if ($item) {
+            $class = get_class($item);
+            $model = new $class;
+
+            return $model->count();
+        }
+
+        return 0;
     }
 
     /**
