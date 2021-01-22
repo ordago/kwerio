@@ -39,6 +39,7 @@ function Toolbar({
   nbChecked,
   itemsToDelete,
   itemsToDuplicate,
+  checkedItems,
 }) {
   const classes = useStyles(),
     dispatch = useDispatch(),
@@ -89,7 +90,7 @@ function Toolbar({
             </Box>
 
             <Box>
-              {addButtons()}
+              {addButtons(checkedItems)}
               {canDuplicate && nbChecked > 0 && (
                 <>
                   <Button

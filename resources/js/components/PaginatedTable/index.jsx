@@ -41,6 +41,8 @@ function PaginatedTable({
   slugKey = "slug",             // Name of the slug key.
   size = "small",               // Size of the table. (medium, small).
   disableRowClick = false,      // Disable row click.
+  canIndex = false,
+  highlightRowIf = [],          // Highligh row if the given condition is met.
 
   // Components..
   toolbar = false,              // Show table toolbar
@@ -109,6 +111,10 @@ function PaginatedTable({
   let checkbox_all = { }
 
   React.useEffect(() => {
+    if (!canIndex) {
+      return
+    }
+
     if (nb_checked > 0) {
       _toggle_check_all(false)
     }
@@ -116,7 +122,7 @@ function PaginatedTable({
     request.index({ requests }).then(() => {
       dispatch(actions.moveTouchedToStart())
     })
-  }, [])
+  }, [canIndex])
 
   if (nb_checked > 0 && nb_checked < data.length) {
     checkbox_all = { indeterminate: true }
@@ -132,6 +138,7 @@ function PaginatedTable({
             api={api}
             endpoint={endpoint}
             reducer={reducer}
+            canIndex={canIndex}
             canSearch={canSearch}
             canCreate={canCreate}
             canDelete={canDelete}
@@ -141,133 +148,147 @@ function PaginatedTable({
             nbChecked={nb_checked}
             itemsToDelete={checkedItems}
             itemsToDuplicate={checkedItems}
+            checkedItems={checkedItems}
             addButtons={addButtons}
           />
         } />
       )}
 
-      <TableContainer className={classes.root}>
-        <Table size={size}>
-          <TableHead>
-            <TableRow>
-              {canCheck && (
-                <TableCell>
-                  <Checkbox
-                    { ...checkbox_all }
-                    checked={nb_checked > 0}
-                    color="primary"
-                    onChange={e => {
-                      const updates = data.map(item => ({
-                          id: item[primaryKey],
-                          changes: { checked: e.target.checked }
-                        }))
-
-                      dispatch(actions.updateMany(updates))
-                    }}
-                    onClick={e => e.stopPropagation()}
-                  />
-                </TableCell>
-              )}
-              {state.columns.map(col => (
-                <TableCell key={col[slugKey]}>
-                  {col.sort && (
-                    <TableSortLabel
-                      active={true}
-                      direction={col.sortDirection}
-                      onClick={() => {
-                        if (nb_checked > 0) {
-                          _toggle_check_all(false)
-                        }
-
-                        dispatch(actions.removeAll())
-                        dispatch(actions.handleSort(col))
-                        request.index({ requests })
-                      }}
-                    >
-                      {t(col.label)}
-                    </TableSortLabel>
-                  )}
-                  {!col.sort && (col.label)}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {data.map(row => (
-              <TableRow
-                hover={hover}
-                selected={("checked" in row) && row.checked === true}
-                key={row[primaryKey]}
-                onClick={() => {
-                  if (onRowClick) {
-                    onRowClick(row)
-                  } else if (!disableRowClick) {
-                    history.push(endpoint.update.replace(/:uuid/, row[primaryKey]))
-                  }
-                }}
-                className={clsx({ [classes.touchedAt]: ("touched_at" in row) })}
-              >
+      {canIndex && (
+        <TableContainer className={classes.root}>
+          <Table size={size}>
+            <TableHead>
+              <TableRow>
                 {canCheck && (
-                  <TableCell key={row[primaryKey]}>
+                  <TableCell>
                     <Checkbox
-                      checked={("checked" in row) && row.checked === true}
-                      onChange={e => dispatch(actions.updateOne({
-                        id: row[primaryKey],
-                        changes: { checked: e.target.checked }
-                      }))}
-                      onClick={e => e.stopPropagation()}
+                      { ...checkbox_all }
+                      checked={nb_checked > 0}
                       color="primary"
-                      value={row[primaryKey]}
+                      onChange={e => {
+                        const updates = data.map(item => ({
+                            id: item[primaryKey],
+                            changes: { checked: e.target.checked }
+                          }))
+
+                        dispatch(actions.updateMany(updates))
+                      }}
+                      onClick={e => e.stopPropagation()}
                     />
                   </TableCell>
                 )}
-                {state.columns.map(col => {
-                  if (typeof renderCell === "function") {
-                    return renderCell(row, col)
-                  }
+                {state.columns.map(col => (
+                  <TableCell key={col[slugKey]}>
+                    {col.sort && (
+                      <TableSortLabel
+                        active={true}
+                        direction={col.sortDirection}
+                        onClick={() => {
+                          if (nb_checked > 0) {
+                            _toggle_check_all(false)
+                          }
 
-                  return (
-                    <TableCell key={col[slugKey]}>
-                      {row[col[slugKey]]}
-                    </TableCell>
-                  )
-                })}
+                          dispatch(actions.removeAll())
+                          dispatch(actions.handleSort(col))
+                          request.index({ requests })
+                        }}
+                      >
+                        {t(col.label)}
+                      </TableSortLabel>
+                    )}
+                    {!col.sort && (col.label)}
+                  </TableCell>
+                ))}
               </TableRow>
-            ))}
-          </TableBody>
+            </TableHead>
 
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                labelRowsPerPage={`${t("Rows per page")}:`}
-                labelDisplayedRows={({ from, to, count }) => (
-                  `${from}-${to} ${t("of")} ${count !== -1 ? count : `${t("more than")} ${to}`}`
-                )}
-                rowsPerPage={state.per_page}
-                page={state.page}
-                onChangePage={(_, page) => {
-                  if (nb_checked > 0) {
-                    _toggle_check_all(false)
-                  }
+            <TableBody>
+              {data.map(row => (
+                <TableRow
+                  hover={hover}
+                  selected={("checked" in row) && row.checked === true}
+                  key={row[primaryKey]}
+                  onClick={() => {
+                    if (onRowClick) {
+                      onRowClick(row)
+                    } else if (!disableRowClick) {
+                      history.push(endpoint.update.replace(/:uuid/, row[primaryKey]))
+                    }
+                  }}
+                  className={(() => {
+                    let highlights = { }
 
-                  dispatch(actions.setPage(page))
-                  request.index({ requests })
-                }}
-                onChangeRowsPerPage={e => {
-                  if (nb_checked > 0) {
-                    _toggle_check_all(false)
-                  }
+                    for (let i = 0; i < highlightRowIf.length; i ++) {
+                      highlights[highlightRowIf[i].classes] = highlightRowIf[i].condition(row)
+                    }
 
-                  dispatch(actions.setPerPage(e.target.value))
-                  request.index({ requests })
-                }}
-                count={state.rsc.total || 0}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
+                    highlights[classes.touchedAt] = ("touched_at" in row)
+
+                    return clsx(highlights)
+                  })()}
+                >
+                  {canCheck && (
+                    <TableCell key={row[primaryKey]}>
+                      <Checkbox
+                        checked={("checked" in row) && row.checked === true}
+                        onChange={e => dispatch(actions.updateOne({
+                          id: row[primaryKey],
+                          changes: { checked: e.target.checked }
+                        }))}
+                        onClick={e => e.stopPropagation()}
+                        color="primary"
+                        value={row[primaryKey]}
+                      />
+                    </TableCell>
+                  )}
+                  {state.columns.map(col => {
+                    if (typeof renderCell === "function") {
+                      return renderCell(row, col)
+                    }
+
+                    return (
+                      <TableCell key={col[slugKey]}>
+                        {row[col[slugKey]]}
+                      </TableCell>
+                    )
+                  })}
+                </TableRow>
+              ))}
+            </TableBody>
+
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  labelRowsPerPage={`${t("Rows per page")}:`}
+                  labelDisplayedRows={({ from, to, count }) => (
+                    `${from}-${to} ${t("of")} ${count !== -1 ? count : `${t("more than")} ${to}`}`
+                  )}
+                  rowsPerPage={state.per_page}
+                  page={state.page}
+                  onChangePage={(_, page) => {
+                    if (nb_checked > 0) {
+                      _toggle_check_all(false)
+                    }
+
+                    dispatch(actions.setPage(page))
+                    request.index({ requests })
+                  }}
+                  onChangeRowsPerPage={e => {
+                    if (nb_checked > 0) {
+                      _toggle_check_all(false)
+                    }
+
+                    dispatch(actions.setPerPage(e.target.value))
+                    request.index({ requests })
+                  }}
+                  count={state.rsc.total || 0}
+                />
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </TableContainer>
+      )}
+
     </Box>
   )
 }
