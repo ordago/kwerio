@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -eux
 
 apt-get update
 apt-get upgrade -y
@@ -13,6 +13,15 @@ cd /var/www/html
 groupmod --non-unique --gid $GROUP_ID www-data
 usermod --non-unique --uid $USER_ID --shell /bin/bash www-data
 
+if [ ! -d /var/www/html/vendor ]; then
+    su - www-data -c "cd /var/www/html; composer install --optimize-autoloader --no-dev"
+    su - www-data -c "cd /var/www/html; php artisan key:generate"
+fi
+
+if [ ! -L public/storage ]; then
+    su - www-data -c "cd /var/www/html; php artisan storage:link"
+fi
+
 if [ ! -d /var/www/.config ]; then
     mkdir /var/www/.config
     chown www-data:www-data /var/www/.config
@@ -23,42 +32,29 @@ if [ ! -d /var/www/.npm ]; then
     chown www-data:www-data /var/www/.npm
 fi
 
-if [ ! -d /var/www/html/vendor ]; then
-    composer install --optimize-autoloader --no-dev
-    php artisan key:generate
-fi
-
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-
-if [ ! -L public/storage ]; then
-    php artisan storage:link
-    chown -h www-data:www-data public/storage
-fi
-
 if [ ! -d /var/www/html/node_modules ]; then
-    npm install
+    su - www-data -c "cd /var/www/html; npm install"
     rm -f public/*.js
     rm -rf public/fonts
     rm -rf public/js
-    npm run prod
+    su - www-data -c "cd /var/www/html; npm run prod"
 fi
 
 if [ -n "$(ls -A storage/logs 2>/dev/null)" ]; then
     rm -rf storage/logs/*
 fi
 
+su - www-data -c "cd /var/www/html; php artisan config:cache"
+su - www-data -c "cd /var/www/html; php artisan route:cache"
+su - www-data -c "cd /var/www/html; php artisan view:cache"
+su - www-data -c "cd /var/www/html; php artisan event:cache"
+
 if [ ! -d public/i18n ]; then
-    su - www-data -c "mkdir public/i18n"
+    su - www-data -c "mkdir -p public/i18n"
     su - www-data -c "node po2json.js"
 fi
 
 chmod g+s storage/logs
-chmod 775 storage/logs
 setfacl -d -m u::rwX,g::rwX,o::r- storage/logs || true
-
-chown -R www-data:www-data storage
-chown -R www-data:www-data /var/www/html/public
 
 apache2-foreground

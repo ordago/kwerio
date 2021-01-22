@@ -1,5 +1,5 @@
 FROM composer:2.0.8 as composer
-FROM node:15.5.1-buster AS node
+FROM node:15.6.0-buster AS node
 FROM php:7.4.14-apache-buster
 
 LABEL maintainer="Oussama Elgoumri <euvoor@gmail.com>"
@@ -42,7 +42,11 @@ RUN set -eux \
         libpng-dev \
         tzdata \
         pwgen \
-        dos2unix
+        dos2unix \
+        net-tools \
+        htop \
+        telnet \
+        netcat-openbsd
 
 # ----------------------------------------------------------------------------
 #                                                           Install binaries -
@@ -98,15 +102,6 @@ RUN set -eux \
         headers \
         http2
 
-RUN set -eux \
-    && groupmod --non-unique --gid $GROUP_ID www-data \
-    && usermod \
-        --non-unique \
-        --uid $USER_ID \
-        --home /var/www \
-        --root /var/www \
-        --shell /bin/null \
-        www-data
 
 # ----------------------------------------------------------------------------
 #                                                                    Cleanup -

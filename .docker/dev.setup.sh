@@ -14,7 +14,8 @@ groupmod --non-unique --gid $GROUP_ID www-data
 usermod --non-unique --uid $USER_ID --shell /bin/bash www-data
 
 if [ ! -d /var/www/html/vendor ]; then
-    su - www-data -c "cd /var/www/html; composer install && php artisan key:generate"
+    su - www-data -c "cd /var/www/html; composer install"
+    su - www-data -c "cd /var/www/html; php artisan key:generate"
 fi
 
 if [ ! -L public/storage ]; then
