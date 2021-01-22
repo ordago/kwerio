@@ -25,6 +25,7 @@ exec:
 
 # ------------------------------------------------------------ PRODUCTION -- #
 prod:
+	test -f || cp .env.example .env
 	docker-compose --file docker-compose.prod.yml up \
 		--build \
 		--abort-on-container-exit \
