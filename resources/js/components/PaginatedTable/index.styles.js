@@ -6,6 +6,6 @@ export default makeStyles(theme => createStyles({
 
   },
   touchedAt: {
-    backgroundColor: green[50],
+    backgroundColor: theme.palette.type === "dark" ? green[900] : green[50],
   },
 }))
