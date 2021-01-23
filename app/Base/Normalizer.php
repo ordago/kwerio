@@ -2,6 +2,7 @@
 
 namespace Kwerio;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
@@ -147,7 +148,7 @@ class Normalizer {
      * @return integer
      */
     private function _get_total_from_model($item) {
-        if ($item) {
+        if ($item && $item instanceof Model) {
             $class = get_class($item);
             $model = new $class;
 

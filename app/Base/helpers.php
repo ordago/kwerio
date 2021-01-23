@@ -1,7 +1,51 @@
-<?php declare(strict_types=1);
+<?php
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use App\Models\ApiUser;
+
+if (!function_exists("get_token_for_request")) {
+    /**
+     * Get the token for the current request.
+     *
+     * @param Request|null $request
+     * @return string|null
+     */
+    function get_token_for_request($request = null) {
+        if ($request) {
+            $request = request();
+        }
+
+        $token = $request->query("token");
+
+        if (empty($token)) $token = $request->input("token");
+        if (empty($token)) $token = $request->bearerToken();
+        if (empty($token)) $token = $request->getPassword();
+
+        return $token;
+    }
+}
+
+if (!function_exists("localize_date")) {
+    /**
+     * Localize date based on user preferences.
+     *
+     * @param string|Carbon $value
+     * @return Carbon
+     */
+    function localize_date($value) {
+        $user = request()->user();
+
+        if (is_null($user) || get_class($user) === ApiUser::class) {
+            return (new Carbon($value));
+        }
+
+        return (new Carbon($value))
+            ->timezone($user->timezone)
+            ->locale($user->locale)
+            ->isoFormat($user->locale_iso_format);
+    }
+}
 
 if (!function_exists("get_locale_iso_formats")) {
     /**

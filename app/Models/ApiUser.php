@@ -15,7 +15,6 @@ class ApiUser extends Model {
         Traits\Authorizable;
 
     protected $guarded = [];
-    protected $with = ["user"];
 
     protected $casts = [
         "is_hashed" => "boolean",

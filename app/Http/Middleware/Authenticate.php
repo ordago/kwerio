@@ -16,7 +16,7 @@ class Authenticate extends Middleware
     protected function redirectTo($request) {
         $module = resolve(LoginModule::class);
 
-        if ($request->bearerToken()) {
+        if (get_token_for_request($request)) {
             abort(403);
         }
 

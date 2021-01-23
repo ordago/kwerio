@@ -51,7 +51,7 @@ export default ({ actions }) => ({
       abilities: state.upsert.abilities.value,
     }),
     200: ({ dispatch, data, state, history }) => {
-      const route_to_index = ! state.upsert.uuid
+      const route_to_index = ! state.upsert.uuid && ! state.upsert.is_hashed.value
 
       dispatch(actions.upsertOne({ ...data.items[0], touched_at: Date.now() }))
       dispatch(actions.resetTableTrackers())
@@ -60,6 +60,10 @@ export default ({ actions }) => ({
         dispatch(actions.resetUpsert())
         history.push(endpoints.apiUsers.index)
       } else {
+        if (state.upsert.is_hashed.value) {
+          history.push(endpoints.apiUsers.update.replace(/:uuid/, data.items[0].uuid))
+        }
+
         dispatch(actions.fillUpsert(data.items[0]))
       }
 

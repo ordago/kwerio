@@ -20,7 +20,7 @@ class WebApi
     public function handle(Request $request, Closure $next) {
         $middlewareGroups = app(Kernel::class)->getMiddlewareGroups();
 
-        $middlewares = is_null($request->bearerToken())
+        $middlewares = is_null(get_token_for_request($request))
             ? $middlewareGroups["web"]
             : $middlewareGroups["api"];
 

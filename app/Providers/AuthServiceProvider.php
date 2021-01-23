@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Auth\EloquentUserProvider;
 use Database\Seeders\AbilitiesTableSeeder;
-use Kwerio\ApiUserGuard;
+use Kwerio\TokenGuard;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use App\Models\User;
 use App\Extensions\ApiUserProvider;
@@ -33,8 +34,18 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Auth::extend("api-user", function($app, $name, array $config) {
-            return resolve(ApiUserGuard::class);
+        Auth::extend("token", function($app, $name, array $config) {
+            $guard = new TokenGuard(
+                new EloquentUserProvider($app["hash"], $app["config"]["auth.providers.{$config["provider"]}.model"]),
+                $app["request"],
+                "token",
+                "token",
+                false           // hash is defined in the token
+            );
+
+            $app->refresh("request", $guard, "setRequest");
+
+            return $guard;
         });
 
         $this->_register_abilities();
