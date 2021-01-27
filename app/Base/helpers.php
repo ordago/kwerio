@@ -4,6 +4,26 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use App\Models\ApiUser;
 
+if (!function_exists("duplicate_name")) {
+    /**
+     * Duplicate the given name.
+     *
+     * @param string $name
+     * @return string
+     */
+    function duplicate_name($name) {
+        if (empty($name)) {
+            $name = "";
+        }
+
+        preg_match("/.+ \((\d+)\)$/", $name, $m);
+        $name = isset($m[1]) ? $m[1] : $name;
+        $count = isset($m[2]) ? $m[2] + 1 : 2;
+
+        return "{$name} ({$count})";
+    }
+}
+
 if (!function_exists("get_token_for_request")) {
     /**
      * Get the token for the current request.
@@ -34,6 +54,10 @@ if (!function_exists("localize_date")) {
      * @return Carbon
      */
     function localize_date($value) {
+        if (empty($value)) {
+            return $value;
+        }
+
         $user = request()->user();
 
         if (is_null($user) || get_class($user) === ApiUser::class) {
