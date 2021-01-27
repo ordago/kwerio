@@ -11,16 +11,15 @@ if (!function_exists("duplicate_name")) {
      * @param string $name
      * @return string
      */
-    function duplicate_name($name) {
+    function name_to_duplicate($name) {
         if (empty($name)) {
             $name = "";
         }
 
-        preg_match("/.+ \((\d+)\)$/", $name, $m);
+        preg_match("/(.+)(?: \((\d+)\))$/", $name, $m);
         $name = isset($m[1]) ? $m[1] : $name;
-        $count = isset($m[2]) ? $m[2] + 1 : 2;
 
-        return "{$name} ({$count})";
+        return $name;
     }
 }
 
