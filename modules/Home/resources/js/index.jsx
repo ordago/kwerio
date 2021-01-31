@@ -1,22 +1,25 @@
-import { Box } from "@material-ui/core"
-import { Route } from "react-router-dom"
 import { render } from "react-dom"
 import React from "react"
 
 import App from "Kwerio/App"
 import createStore from "Kwerio/store"
-import module from './index.slice'
+
+import { components } from "./routes/index.jsx"
+import reducer from "./index.slice"
 
 const reducers = {
+  module: reducer,
+}
 
+function Module() {
+  return []
 }
 
 render(
   <App
     store={createStore(reducers)}
-    switchRoutes={() => (
-      <Route exact path="/" render={props => <Box>Home Module</Box>} />
-    )}
+    moduleRoutes={components}
+    module={() => <Module />}
   />,
   document.getElementById("root")
 )

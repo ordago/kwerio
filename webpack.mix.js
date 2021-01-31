@@ -1,8 +1,9 @@
 const mix = require('laravel-mix'),
-  fs = require("fs")
+  fs = require("fs"),
+  path = require("path")
 
 // -------------------------------------------------------------- Modules -- #
-mix.react("resources/js/index.jsx", "public/js/kwerio.js")
+mix.js("resources/js/index.jsx", "public/js/kwerio.js").react()
 
 const modules_dir = fs.opendirSync("./modules")
 
@@ -18,9 +19,6 @@ modules_dir.closeSync()
 
 // ----------------------------------------- Webpack Custom Configuration -- #
 mix.webpackConfig({
-  watchOptions: {
-    ignored: /node_modules/,
-  },
   resolve: {
     alias: {
       Kwerio: path.resolve(__dirname, "resources/js"),
@@ -29,16 +27,23 @@ mix.webpackConfig({
   },
 })
 
-mix.sourceMaps()
+mix.extract([
+  "react", "react-dom", "react-redux", "react-router-dom",
+  "reduxjs/toolkit",
+  "@material-ui/core",
+  "notistack",
+], "js/vendor.js")
 
 if (mix.inProduction()) {
   mix.version()
+} else {
+  mix.sourceMaps()
 }
 
-// ------------------------------------------------------------------ HMR -- #
+// -------------------------------------------------------------- Options -- #
 mix.options({
   hmrOptions: {
-    host: '127.0.0.1',
+    host: "127.0.0.1",
     port: 8080,
   },
 })

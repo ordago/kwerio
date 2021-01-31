@@ -127,7 +127,7 @@ if (!function_exists("rsc")) {
         }
 
         // Check if hmr is enabled.
-        if (file_exists(public_path("hot"))) {
+        if (is_file(public_path("hot"))) {
             $hot = parse_url(file_get_contents(public_path("hot")));
 
             if (isset($hot["port"]) && isset($hot["host"])) {

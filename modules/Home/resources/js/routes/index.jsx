@@ -1,7 +1,7 @@
 import React from 'react'
 import Suspense from 'Kwerio/components/Suspense'
 
-const Home = React.lazy(() => import("./pages/Home"))
+const Home = React.lazy(() => import("../pages/Home/index.jsx"))
 
 const ENDPOINT = "",
   API_ENDPOINT = "/_/home/api"
