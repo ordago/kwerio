@@ -1,7 +1,9 @@
 import {
   Collapse,
+  Icon,
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
   ListSubheader
 } from "@material-ui/core"
@@ -12,7 +14,7 @@ import ExpandLessIcon from "@material-ui/icons/ExpandLess"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import React from "react"
 
-import { get, hasIn } from "lodash"
+import { get } from "lodash"
 
 import useT from "../hooks/useT"
 
@@ -97,6 +99,9 @@ function PageMenu({ menu = null, actions }) {
                 className={classes.nested}
                 selected={_is_menu_selected(item)}
               >
+                {item.icon && (
+                  <ListItemIcon><Icon>{item.icon}</Icon></ListItemIcon>
+                )}
                 <ListItemText primary={t(item.text)} />
               </ListItem>
             ))}
