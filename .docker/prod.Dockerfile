@@ -1,6 +1,6 @@
-FROM composer:2.0.8 as composer
-FROM node:15.7.0-buster AS node
-FROM php:7.4.14-apache-buster
+FROM composer:2.0.9 as composer
+FROM node:15.8.0-buster AS node
+FROM php:8.0.1-apache-buster
 
 LABEL maintainer="Oussama Elgoumri <euvoor@gmail.com>"
 
@@ -42,11 +42,7 @@ RUN set -eux \
         libpng-dev \
         tzdata \
         pwgen \
-        dos2unix \
-        net-tools \
-        htop \
-        telnet \
-        netcat-openbsd
+        dos2unix
 
 # ----------------------------------------------------------------------------
 #                                                           Install binaries -
@@ -82,7 +78,7 @@ COPY .docker/dev.xdebug.ini PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 
 # Install pickle
 RUN set -eux \
-    && curl -L -o /usr/local/bin/pickle https://github.com/FriendsOfPHP/pickle/releases/download/v0.6.0/pickle.phar \
+    && curl -L -o /usr/local/bin/pickle https://github.com/FriendsOfPHP/pickle/releases/download/v0.7.0/pickle.phar \
     && chmod +x /usr/local/bin/pickle
 
 RUN set -eux \
