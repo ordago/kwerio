@@ -13,8 +13,13 @@ cd /var/www/html
 groupmod --non-unique --gid $GROUP_ID www-data
 usermod --non-unique --uid $USER_ID --shell /bin/bash www-data
 
+if [ ! -d /var/www/.composer ]; then
+    mkdir /var/www/.composer
+    chown www-data:www-data /var/www/.composer
+fi
+
 if [ ! -d /var/www/html/vendor ]; then
-    su - www-data -c "cd /var/www/html; composer install --optimize-autoloader --no-dev"
+    su - www-data -c "cd /var/www/html; COMPOSE_HTTP_TIMEOUT=-1 composer install --optimize-autoloader --no-dev"
     su - www-data -c "cd /var/www/html; php artisan key:generate"
 fi
 
