@@ -2,6 +2,8 @@
 
 set -eux
 
+hostname -I | awk -F "." '{ print $1"."$2"."$3".1 host.docker.internal" }' >> /etc/hosts
+
 apt-get update
 apt-get upgrade -y
 rm -rf /var/lib/apt/lists/*
