@@ -75,7 +75,8 @@ RUN set -eux \
         pcntl \
         pdo_mysql \
         pdo_pgsql \
-        gd
+        gd \
+        sockets
 
 RUN set -eux \
     && mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
