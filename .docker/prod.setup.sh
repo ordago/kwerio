@@ -6,8 +6,6 @@ apt-get update
 apt-get upgrade -y
 rm -rf /var/lib/apt/lists/*
 
-hostname -I | awk -F "." '{ print $1"."$2"."$3".1 host.docker.internal" }' >> /etc/hosts
-
 cd /var/www/html
 
 groupmod --non-unique --gid $GROUP_ID www-data
