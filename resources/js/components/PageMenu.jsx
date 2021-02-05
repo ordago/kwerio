@@ -82,6 +82,9 @@ function PageMenu({ menu = null, actions }) {
           selected={_is_menu_selected(list)}
           onClick={() => _handle_click(list)}
         >
+          {list.icon && (
+            <ListItemIcon><Icon>{list.icon}</Icon></ListItemIcon>
+          )}
           <ListItemText primary={t(list.text)} />
           {("children" in list) && (
             <>
