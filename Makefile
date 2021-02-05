@@ -2,15 +2,15 @@
 
 # ----------------------------------------------------------- DEVELOPMENT -- #
 up:
-ifeq ("$(wildcard $(.env))", "")
-	docker-compose --file docker-compose.dev.yml up \
-		--build \
-		--abort-on-container-exit \
-		--remove-orphans
-else
-	cp .env.example .env
-	echo "Please fill in .env file"
-endif
+	if [ -f .env ]; then \
+		docker-compose --file docker-compose.dev.yml up \
+			--build \
+			--abort-on-container-exit \
+			--remove-orphans; \
+	else \
+		cp .env.example .env; \
+		echo "Please fill in .env file"; \
+	fi;
 
 hot:
 	docker-compose --file docker-compose.dev.yml \
