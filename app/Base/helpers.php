@@ -4,7 +4,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use App\Models\ApiUser;
 
-if (!function_exists("duplicate_name")) {
+if (!function_exists("name_to_duplicate")) {
     /**
      * Duplicate the given name.
      *

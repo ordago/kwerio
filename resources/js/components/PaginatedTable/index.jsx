@@ -185,7 +185,7 @@ function PaginatedTable({
                     />
                   </TableCell>
                 )}
-                {state.columns.map(col => (
+                {state.columns && state.columns.map(col => (
                   <TableCell key={col[slugKey]}>
                     {col.sort && (
                       <TableSortLabel
