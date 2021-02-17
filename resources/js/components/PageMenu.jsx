@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useRouteMatch, useHistory } from "react-router-dom"
 import ExpandLessIcon from "@material-ui/icons/ExpandLess"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
-import React from "react"
+import React, { useState } from "react"
 
 import { get } from "lodash"
 
@@ -34,7 +34,8 @@ function PageMenu({ menu = null, actions }) {
     match = useRouteMatch(),
     history = useHistory(),
     dispatch = useDispatch(),
-    t = useT()
+    t = useT(),
+    [first_render, setFirstRender] = useState(true)
 
   if (!menu) menu = "module.menu"
 
@@ -52,7 +53,15 @@ function PageMenu({ menu = null, actions }) {
    */
   function _is_menu_selected(item) {
     if (("link" in item) && ("matches" in item)) {
-      return item.matches.indexOf(match.path) !== -1
+      const matches = item.matches.indexOf(match.path) !== -1
+
+      if (first_render) {
+        dispatch(actions.openParentOf({ menu, item }))
+
+        setFirstRender(false)
+      }
+
+      return matches
     }
 
     return ("link" in item) && item.link === match.path

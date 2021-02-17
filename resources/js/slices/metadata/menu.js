@@ -3,6 +3,27 @@ export default {
     state.menu = action.payload.menu
   },
   reducers: {
+    openParentOf: (state, action) => {
+      const { menu, item } = action.payload,
+        items = _get_menu_items(state, menu)
+
+      let parent = {}
+
+      loop1:
+      for (let i = 0; i < items.length; i ++) {
+        if ("children" in items[i]) {
+          parent = items[i]
+
+          for (let j = 0; j < items[i].children.length; i ++) {
+            if (items[i].children[j].id === item.id) {
+              parent.open = true
+              break loop1
+            }
+          }
+        }
+      }
+    },
+
     toggleMenu: (state, action) => {
       const { menu, item } = action.payload
 
@@ -10,13 +31,7 @@ export default {
         return
       }
 
-      let path = menu
-
-      if (menu.includes(".")) {
-        path = menu.split(".").slice(1).join(".")
-      }
-
-      const items = _.get(state, path)
+      const items = _get_menu_items(state, menu)
 
       for (let i = 0; i < items.length; i ++) {
         if (("open" in items[i]) && items[i].id === item.id) {
@@ -33,4 +48,14 @@ export default {
   state: {
     menu: [],
   }
+}
+
+function _get_menu_items(state, menu) {
+  let path = menu
+
+  if (menu.includes(".")) {
+    path = menu.split(".").slice(1).join(".")
+  }
+
+  return _.get(state, path)
 }
