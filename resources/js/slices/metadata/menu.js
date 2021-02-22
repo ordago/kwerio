@@ -14,7 +14,7 @@ export default {
         if ("children" in items[i]) {
           parent = items[i]
 
-          for (let j = 0; j < items[i].children.length; i ++) {
+          for (let j = 0; j < items[i].children.length; j ++) {
             if (items[i].children[j].id === item.id) {
               parent.open = true
               break loop1
