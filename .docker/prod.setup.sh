@@ -19,7 +19,13 @@ if [ ! -d /var/www/.composer ]; then
 fi
 
 if [ ! -d /var/www/html/vendor ]; then
-    su - www-data -c "cd /var/www/html; COMPOSE_HTTP_TIMEOUT=-1 composer install --optimize-autoloader --no-dev"
+    action="install"
+
+    if [ ! -f /var/www/html/composer.lock ]; then
+        action="update"
+    fi
+
+    su - www-data -c "cd /var/www/html; COMPOSE_HTTP_TIMEOUT=-1 composer ${action} --optimize-autoloader --no-dev"
     su - www-data -c "cd /var/www/html; php artisan key:generate"
 fi
 

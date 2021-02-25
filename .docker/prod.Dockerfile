@@ -74,8 +74,6 @@ RUN set -eux \
 RUN set -eux \
     && mv $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 
-COPY .docker/dev.xdebug.ini PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
-
 # Install pickle
 RUN set -eux \
     && curl -L -o /usr/local/bin/pickle https://github.com/FriendsOfPHP/pickle/releases/download/v0.7.0/pickle.phar \
@@ -97,7 +95,6 @@ RUN set -eux \
         rewrite \
         headers \
         http2
-
 
 # ----------------------------------------------------------------------------
 #                                                                    Cleanup -

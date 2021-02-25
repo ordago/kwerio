@@ -30,8 +30,12 @@ exec:
 
 # ------------------------------------------------------------ PRODUCTION -- #
 prod:
-	test -f .env || cp .env.example .env
-	docker-compose --file docker-compose.prod.yml up \
-		--build \
-		--abort-on-container-exit \
-		--remove-orphans
+	if [ -f .env ]; then \
+		docker-compose --file docker-compose.prod.yml up \
+			--build \
+			--abort-on-container-exit \
+			--remove-orphans; \
+	else \
+		cp .env.example .env; \
+		echo "Please fill in .env file"; \
+	fi;
