@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useRouteMatch, useHistory } from "react-router-dom"
 import ExpandLessIcon from "@material-ui/icons/ExpandLess"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
 import { get } from "lodash"
 
@@ -35,7 +35,7 @@ function PageMenu({ menu = null, actions }) {
     history = useHistory(),
     dispatch = useDispatch(),
     t = useT(),
-    [first_render, setFirstRender] = useState(true)
+    [menuToOpen, setMenuToOpen] = useState({})
 
   if (!menu) menu = "module.menu"
 
@@ -48,6 +48,16 @@ function PageMenu({ menu = null, actions }) {
 
   const menu_items = get(state, menu)
 
+  useEffect(() => {
+    console.log("xxxxxxxxxxxxxxxxx XXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXx")
+    if (menuToOpen !== null) {
+      dispatch(actions.openParentOf({
+        menu: menuToOpen.menu,
+        item: menuToOpen.item,
+      }))
+    }
+  }, [("menu" in menuToOpen)])
+
   /**
    * Check if menu is selected or not based on the url path.
    */
@@ -55,10 +65,8 @@ function PageMenu({ menu = null, actions }) {
     if (("link" in item) && ("matches" in item)) {
       const matches = item.matches.indexOf(match.path) !== -1
 
-      if (first_render) {
-        dispatch(actions.openParentOf({ menu, item }))
-
-        setFirstRender(false)
+      if (!("menu" in menuToOpen)) {
+        setMenuToOpen({ menu, item })
       }
 
       return matches
