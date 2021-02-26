@@ -49,7 +49,6 @@ function PageMenu({ menu = null, actions }) {
   const menu_items = get(state, menu)
 
   useEffect(() => {
-    console.log("xxxxxxxxxxxxxxxxx XXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXx")
     if (menuToOpen !== null) {
       dispatch(actions.openParentOf({
         menu: menuToOpen.menu,
