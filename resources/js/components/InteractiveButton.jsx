@@ -6,7 +6,6 @@ import React from "react"
 const useStyles = makeStyles(theme => createStyles({
   wrapper: {
     position: "relative",
-    margin: theme.spacing(1),
   },
   progress: {
     color: green[500],

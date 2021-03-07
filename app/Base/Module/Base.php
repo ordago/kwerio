@@ -3,10 +3,6 @@
 namespace Kwerio\Module;
 
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\{
-    Gate,
-    Auth,
-};
 
 abstract class Base {
     use Traits\InteractsWithView,
