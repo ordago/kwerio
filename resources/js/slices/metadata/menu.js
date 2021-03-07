@@ -51,6 +51,10 @@ export default {
 }
 
 function _get_menu_items(state, menu) {
+  if (!menu) {
+    return []
+  }
+
   let path = menu
 
   if (menu.includes(".")) {

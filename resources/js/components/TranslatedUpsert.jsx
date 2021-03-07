@@ -1,7 +1,5 @@
-import { Alert } from "@material-ui/lab"
 import {
   Box,
-  CircularProgress,
   Collapse,
   Divider,
   IconButton,
@@ -11,7 +9,6 @@ import {
   Paper,
   Tooltip
 } from "@material-ui/core"
-import { Link } from "react-router-dom"
 import { makeStyles, createStyles } from "@material-ui/core/styles"
 import { useDispatch, useSelector } from "react-redux"
 import ExpandLessIcon from "@material-ui/icons/ExpandLess"
@@ -19,11 +16,13 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import FormatLineSpacingIcon from "@material-ui/icons/FormatLineSpacing"
 import React, { useState, Fragment } from "react"
 import TranslateIcon from "@material-ui/icons/Translate"
+import { useParams } from "react-router-dom"
+import _ from "lodash"
 
 import InteractiveButton from "Kwerio/components/InteractiveButton"
+import RequireLanguages from "Kwerio/components/RequireLanguages"
 import useRequest from "Kwerio/hooks/useRequest"
 import useT from "Kwerio/hooks/useT"
-import RequireLanguages from "Kwerio/components/RequireLanguages"
 
 const useStyles = makeStyles(theme => createStyles({
   paper: {
@@ -65,10 +64,12 @@ function TranslatedUpsert({
   componentReducer,               // Component reducer name.
   componentActions,               // Component actions.
   componentServices,              // Component services.
-  componentState,                 // Component state
+  componentState,                 // Component state.
+  componentAdapter,               // Component adapter.
+  componentDidMount,              // Callback when component did mount.
 }) {
   const request = useRequest({ reducer, services: services({ actions }) }),
-    componentRequest = useRequest({ componentReducer, services: componentServices({ componentActions }) }),
+    componentRequest = useRequest({ reducer: componentReducer, services: componentServices({ actions: componentActions }) }),
     selector = adapter.getSelectors(),
     state = useSelector(state => state.languages),
     t = useT(),
@@ -76,7 +77,8 @@ function TranslatedUpsert({
     [show_native_name, setShowNativeName] = useState(false),
     [expand_all, setExpandAll] = useState(false),
     dispatch = useDispatch(),
-    [collapsed, setCollapsed] = useState({})
+    [collapsed, setCollapsed] = useState({}),
+    params = useParams()
 
   let languages = selector.selectAll(state)
 
@@ -97,6 +99,13 @@ function TranslatedUpsert({
 
       setCollapsed(collapsed)
       dispatch(componentActions.initUpsert(languages))
+
+      // Fetch data by uuid (when updating)
+      const uuid = _.get(params, "uuid")
+
+      if (uuid) {
+        componentRequest.fetch_by_uuid(uuid)
+      }
     }
 
     return () => {

@@ -9,6 +9,7 @@ export default function({
   adapter,
   request,
   actions,
+  resetUpsert = true,
 }) {
   const params = useParams(),
     uuid = _.get(params, "uuid"),
@@ -18,9 +19,20 @@ export default function({
     dispatch = useDispatch()
 
   useEffect(() => {
-    if (!_.isUndefined(uuid) && _.isUndefined(item)) request.fetch_by_uuid(uuid)
-    else if (!_.isUndefined(item)) dispatch(actions.fillUpsert(item))
-    else dispatch(actions.resetUpsert())
+    // Fetch item if not in store.
+    if (!_.isUndefined(uuid) && _.isUndefined(item)) {
+      request.fetch_by_uuid(uuid)
+    }
+
+    // Fill item upsert from store.
+    else if (!_.isUndefined(item)) {
+      dispatch(actions.fillUpsert(item))
+    }
+
+    // We are creating a new item, reset upsert.
+    else if (resetUpsert) {
+      dispatch(actions.resetUpsert())
+    }
   }, [])
 
   return uuid
