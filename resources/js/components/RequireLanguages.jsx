@@ -24,6 +24,7 @@ function RequireLanguages({
   actions,
   adapter,
   endpoint,
+  canIndex = false,
 }) {
   const request = useRequest({ reducer: "languages", services: services({ actions }) }),
     selector = adapter.getSelectors(),
@@ -50,7 +51,9 @@ function RequireLanguages({
       {state.loaded && languages.length === 0 && (
         <Alert severity="warning">
           {t("Please start by setting a default language.")}
-          <Link to={endpoint.index}>{t("Languages")}</Link>
+          {canIndex && (
+            <Link to={endpoint.index}>{t("Languages")}</Link>
+          )}
         </Alert>
       )}
       {state.loaded && languages.length > 0 && render(languages)}

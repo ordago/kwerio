@@ -66,7 +66,7 @@ function TranslatedUpsert({
   componentServices,              // Component services.
   componentState,                 // Component state.
   componentAdapter,               // Component adapter.
-  componentDidMount,              // Callback when component did mount.
+  onComponentDidMount = false,    // Callback when component did mount.
 }) {
   const request = useRequest({ reducer, services: services({ actions }) }),
     componentRequest = useRequest({ reducer: componentReducer, services: componentServices({ actions: componentActions }) }),
@@ -105,6 +105,10 @@ function TranslatedUpsert({
 
       if (uuid) {
         componentRequest.fetch_by_uuid(uuid)
+      }
+
+      if (onComponentDidMount) {
+        onComponentDidMount()
       }
     }
 

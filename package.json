@@ -5,7 +5,7 @@
         "development": "mix",
         "watch": "mix watch",
         "watch-poll": "mix watch -- --watch-options-poll=1000",
-        "hot": "mix watch --hot -- --public ${APP_URL} --client-progress",
+        "hot": "mix watch --hot -- --public ${APP_URL}",
         "prod": "npm run production",
         "production": "mix --production",
         "test": "cross-env jest",
