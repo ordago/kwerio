@@ -1,6 +1,6 @@
-FROM composer:2.0.9 as composer
-FROM node:15.8.0-buster AS node
-FROM php:8.0.2-apache-buster
+FROM composer:2.0.11 as composer
+FROM node:15.11.0-buster AS node
+FROM php:8.0.3-apache-buster
 
 LABEL maintainer="Oussama Elgoumri <euvoor@gmail.com>"
 
@@ -69,14 +69,15 @@ RUN set -eux \
         pcntl \
         pdo_mysql \
         pdo_pgsql \
-        gd
+        gd \
+        sockets
 
 RUN set -eux \
     && mv $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 
 # Install pickle
 RUN set -eux \
-    && curl -L -o /usr/local/bin/pickle https://github.com/FriendsOfPHP/pickle/releases/download/v0.7.0/pickle.phar \
+    && curl -L -o /usr/local/bin/pickle https://github.com/FriendsOfPHP/pickle/releases/download/v0.7.2/pickle.phar \
     && chmod +x /usr/local/bin/pickle
 
 RUN set -eux \
