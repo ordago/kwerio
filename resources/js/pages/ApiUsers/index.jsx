@@ -53,7 +53,7 @@ function ApiUsers({ match }) {
     <Page
       loading={loading}
       title={t("Api Users")}
-      menu="app.permissionsMenu"
+      menu="app.menu.data[1].children[0].children"
       menuActions={appActions}
       content={() => (
         <Paper>

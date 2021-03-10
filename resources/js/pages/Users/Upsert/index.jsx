@@ -34,15 +34,14 @@ function Upsert({ match }) {
     translations = useSelector(state => state.app.t),
     t = useT(translations),
     request = useRequest({ reducer: "users", services: services({ actions }) }),
-    uuid = useUuid({ reducer: "users", match, adapter, request, actions }),
-    permissionsMenu = useSelector(state => state.app.permissionsMenu)
+    uuid = useUuid({ reducer: "users", match, adapter, request, actions })
 
   React.useEffect(() => { request.metadata() }, [])
 
   return (
     <Page
       loading={state.loading}
-      menu="app.permissionsMenu"
+      menu="app.menu.data[1].children[0].children"
       menuActions={appActions}
       title={t("Users")}
       content={() => (

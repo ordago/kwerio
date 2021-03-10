@@ -58,7 +58,7 @@ function Upsert({ match }) {
   return (
     <Page
       loading={state.loading}
-      menu="app.permissionsMenu"
+      menu="app.menu.data[1].children[0].children"
       menuActions={appActions}
       title={t("Api Users")}
       content={() => (

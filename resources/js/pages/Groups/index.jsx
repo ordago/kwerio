@@ -22,7 +22,7 @@ function Groups({ match }) {
     <Page
       loading={state.loading}
       title={t("Groups")}
-      menu="app.permissionsMenu"
+      menu="app.menu.data[1].children[0].children"
       menuActions={appActions}
       content={() => (
         <Paper>

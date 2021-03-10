@@ -93,7 +93,6 @@ const initialState = {
     appbar_height: 48,
     page_header_height: 40,
   },
-  permissionsMenu: [],
   menu: {
     open: false,
     data: [],
@@ -154,7 +153,6 @@ const slice = createSlice({
       state.t = action.payload.translations
       state.menu = action.payload.menu
       state.user = action.payload.user
-      state.permissionsMenu = action.payload.permissions_menu
       state.theme.direction = action.payload.user.dir
     },
   },

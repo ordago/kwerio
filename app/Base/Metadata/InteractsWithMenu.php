@@ -11,27 +11,6 @@ trait InteractsWithMenu {
     private $settings = [];
 
     /**
-     * Get permissions menu.
-     *
-     * @return array
-     */
-    function permissions_menu() {
-        $this->_build_permissions();
-
-        if (count($this->permissions)) {
-            $menu = $this->permissions;
-            unset($menu["icon"]);
-            unset($menu["open"]);
-            unset($menu["link"]);
-            $menu["is_header"] = true;
-
-            $this->attributes["permissions_menu"] = [$menu];
-        }
-
-        return $this;
-    }
-
-    /**
      * Set user accessable menu.
      */
     function menu() {

@@ -26,7 +26,7 @@ function Users({ match }) {
     <Page
       loading={loading}
       title={t("Users")}
-      menu="app.permissionsMenu"
+      menu="app.menu.data[1].children[0].children"
       menuActions={appActions}
       content={() => (
         <Paper>

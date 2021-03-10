@@ -16,7 +16,6 @@ class MetadataController extends Controller {
         return $metadata
             ->user()
             ->menu()
-            ->permissions_menu()
             ->translations();
     }
 }
