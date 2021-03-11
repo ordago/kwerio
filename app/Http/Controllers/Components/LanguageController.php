@@ -168,6 +168,10 @@ class LanguageController extends Controller {
                 "module" => "required",
             ]);
 
+            $items = Language::whereIn("uuid", $data["uuids"])
+                ->where("module", $data["module"])
+                ->get();
+
             Language::whereIn("uuid", $data["uuids"])
                 ->where("module", $data["module"])
                 ->delete();
@@ -189,7 +193,9 @@ class LanguageController extends Controller {
 
             DB::commit();
 
-            return $data["uuids"];
+            return $normalizer
+                ->message("Languages deleted successfully")
+                ->normalize($items, [$this, "_normalize_callback"]);
         }
 
         catch (\Throwable $e) {

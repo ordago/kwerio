@@ -2,6 +2,7 @@ import { Button } from "@material-ui/core"
 import { useDispatch, useSelector } from "react-redux"
 import React from "react"
 import StarIcon from "@material-ui/icons/Star"
+import _ from "lodash"
 
 import PaginatedTable from "Kwerio/components/PaginatedTable/index.jsx"
 import useRequest from "Kwerio/hooks/useRequest"
@@ -41,9 +42,14 @@ function Languages({ reducer = "languages", endpoint }) {
       requests={{
         index: {
           extraParams: {
-            module: moduleState.uid,
+            module: _.get(moduleState, "uid", null),
           },
-        }
+        },
+        delete: {
+          extraParams: {
+            module: _.get(moduleState, "uid", null),
+          },
+        },
       }}
       canIndex={user.can("language_index")}
       afterIndexFn={() => dispatch(actions.loaded())}

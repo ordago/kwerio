@@ -76,6 +76,7 @@ export const init_services = (api, actions, primaryKey = "uuid") => ({
 
       return {
         [`${primaryKey}s`]: args.params.items.map(item => item[primaryKey]),
+        ...params.requests.index.extraParams,
       }
     },
     200: (args) => {

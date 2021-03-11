@@ -111,14 +111,20 @@ class LanguageTest extends TestCase {
 
         $uuids = Language::whereNull("default_at")->take(2)->pluck("uuid")->toArray();
 
-        $languages = $this->delete($this->api, [
+        $data = $this->delete($this->api, [
             "uuids" => $uuids,
             "module" => "Test",
         ])
             ->assertStatus(200)
             ->json();
 
-        $this->assertEquals($uuids, $languages);
+        $results = [];
+
+        foreach ($data["items"] as $item) {
+            $results[] = $item["uuid"];
+        }
+
+        $this->assertEmpty(array_diff($uuids, $results));
         $this->assertEquals(4, Language::where("module", "Test")->count());
         $this->assertEquals(1, Language::whereNotNull("default_at")->where("module", "Test")->count());
     }
@@ -137,14 +143,20 @@ class LanguageTest extends TestCase {
 
         $uuids = $uuids->add($uuid)->toArray();
 
-        $languages = $this->delete($this->api, [
+        $data = $this->delete($this->api, [
             "uuids" => $uuids,
             "module" => "Test",
         ])
             ->assertStatus(200)
             ->json();
 
-        $this->assertEquals($uuids, $languages);
+        $results = [];
+
+        foreach ($data["items"] as $language) {
+            $results[] = $language["uuid"];
+        }
+
+        $this->assertEmpty(array_diff($uuids, $results));
         $this->assertEquals(8, Language::where("module", "Test")->count());
         $this->assertEquals(1, Language::whereNotNull("default_at")->where("module", "Test")->count());
     }
