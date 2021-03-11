@@ -117,6 +117,40 @@ class LanguageController extends Controller {
     }
 
     /**
+     * Fetch languages metadata.
+     *
+     * @return arrya
+     */
+    function metadata(Request $request, Normalizer $normalizer) {
+        $module = $request->get("module");
+
+        if ($request->has("only_models") && $request->get("only_models") === true) {
+            $languages = Language::whereNull("disabled_at")
+                ->where("module", $module)
+                ->orderByDesc("default_at")
+                ->get();
+
+            return $normalizer->normalize($languages, [$this, "_normalize_callback"]);
+        }
+
+        $locales = Language::whereNull("disabled_at")
+            ->where("module", $module)
+            ->orderByDesc("default_at")
+            ->pluck("locale")
+            ->toArray();
+
+        $languages = array_map(function($language) use($locales) {
+            return array_merge($language, [
+                "disabled" => in_array($language["locale"], $locales)
+            ]);
+        }, all_languages(true));
+
+        return [
+            "languages" => array_values($languages),
+        ];
+    }
+
+    /**
      * Normalize language data.
      *
      * @param Language $language

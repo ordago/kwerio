@@ -8,4 +8,5 @@ export default {
     delete: API,
     duplicate: `${API}/duplicate`,
     set_as_default: `${API}/set-as-default`,
+    metadata: `${API}/metadata`,
 }

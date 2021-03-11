@@ -1,6 +1,6 @@
-export default ({ actions, api, endpoints }) => ({
+export default ({ actions, api, endpoint }) => ({
   metadata: ({ params }) => ({
-    url: endpoint.metadata,
+    url: api.metadata,
     cancelCallback: ({ state }) => state.languages.length > 0,
     data: {
       ...params,
@@ -15,11 +15,12 @@ export default ({ actions, api, endpoints }) => ({
     },
   }),
 
-  upsert: () => ({
+  upsert: ({ params }) => ({
     url: api.create,
     data: ({ state }) => ({
       uuid: state.upsert.uuid,
       locale: state.upsert.locale.value,
+      ...params,
     }),
     200: ({ data, dispatch, state, history }) => {
       const route_to_index = ! state.upsert.uuid
@@ -33,7 +34,7 @@ export default ({ actions, api, endpoints }) => ({
 
       if (route_to_index) {
         dispatch(actions.resetUpsert())
-        history.push(endpoints.index)
+        history.push(endpoint.index)
       } else {
         dispatch(actions.fillUpsert(data.items[0]))
       }
