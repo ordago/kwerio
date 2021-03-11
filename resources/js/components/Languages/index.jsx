@@ -32,7 +32,10 @@ function Languages({ reducer = "languages", endpoint }) {
             <Button
               className={classes.setAsDefaultBtn}
               startIcon={<StarIcon />}
-              onClick={() => request.setAsDefault(items[0])}
+              onClick={() => request.setAsDefault({
+                uuid: items[0].uuid,
+                module: _.get(moduleState, "uid", null),
+              })}
             >
               {t("set as default language")}
             </Button>
@@ -56,7 +59,7 @@ function Languages({ reducer = "languages", endpoint }) {
       canSearch={user.can("language_index")}
       canCreate={user.can("language_create")}
       canDelete={user.can("language_delete")}
-      canDeleteFn={items => items.length > 1 || (items[0].default_at === null)}
+      canDeleteFn={items => items.length > 0}
       afterDeleteFn={action => {
         dispatch(actions.setLanguagesDisabledTo({
           items: action.payload.items,

@@ -11,6 +11,7 @@ use Closure;
 class Normalizer {
     private $message;
     private $message_variant = "success";
+    private $meta = [];
 
     /**
      * Set response message.
@@ -35,7 +36,19 @@ class Normalizer {
             "message" => $message,
             "error" => true,
             "variant" => "error",
+            "meta" => $this->meta,
         ], $status);
+    }
+
+    /**
+     * Append metadata to the response.
+     *
+     * @return self
+     */
+    function meta($meta) {
+        $this->meta = $meta;
+
+        return $this;
     }
 
     /**
@@ -66,6 +79,7 @@ class Normalizer {
             "next_page" => $this->_get_next_page($paginator),
             "last_page" => $this->_get_last_page($paginator),
             "total" => $paginator->total(),
+            "meta" => $this->meta,
         ];
 
         if ($this->message) {

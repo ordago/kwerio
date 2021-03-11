@@ -95,7 +95,7 @@ class LanguageController extends Controller {
             ]);
 
             $language = $language->fresh();
-            $language->log_user_action(empty($data["uuid"]) ? "create" : "update");
+            $language->log_user_action("upsert");
 
             // If there is no default language, then use current as default.
             if (Language::whereNotNull("default_at")->where("module", $data["module"])->count() === 0) {
@@ -172,30 +172,58 @@ class LanguageController extends Controller {
                 ->where("module", $data["module"])
                 ->get();
 
+            $items->each(function($item) {
+                $item->log_user_action("delete", $item->toArray());
+            });
+
             Language::whereIn("uuid", $data["uuids"])
                 ->where("module", $data["module"])
                 ->delete();
-
-            $default = Language::where("module", $data["module"])
-                ->whereNotNull("default_at")
-                ->first();
-
-            if (is_null($default)) {
-                $language = Language::where("module", $data["module"])
-                    ->orderBy("created_at", "desc")
-                    ->first();
-
-                if (!is_null($language)) {
-                    $language->default_at = now();
-                    $language->save();
-                }
-            }
 
             DB::commit();
 
             return $normalizer
                 ->message("Languages deleted successfully")
                 ->normalize($items, [$this, "_normalize_callback"]);
+        }
+
+        catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    /**
+     * Set language as defautl.
+     *
+     * @return array
+     */
+    function set_as_default(Request $request, Normalizer $normalizer) {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->validate([
+                "uuid" => "required",
+                "module" => "required",
+            ]);
+
+            $language = Language::where("uuid", $data["uuid"])
+                ->where("module", $data["module"])
+                ->first();
+
+            Language::where("module", $data["module"])
+                ->update(["default_at" => null]);
+
+            $language->default_at = now();
+            $language->save();
+
+            $language->log_user_action("set_as_default");
+
+            DB::commit();
+
+            return $normalizer
+                ->message("Language '{$language->name}' has being set as default")
+                ->normalize($language, [$this, "_normalize_callback"]);
         }
 
         catch (\Throwable $e) {

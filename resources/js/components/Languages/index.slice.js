@@ -49,6 +49,14 @@ const slice = createSlice({
     loaded: (state, action) => {
       state.loaded = true
     },
+    toggleDefaultAtExcept: (state, action) => {
+      for (let entity in state.entities) {
+        state.entities[entity].checked = false
+        state.entities[entity].default_at = null
+      }
+
+      state.entities[action.payload.uuid].default_at = action.payload.default_at
+    },
     setLanguagesDisabledTo: (state, action) => {
       state.languages.filter(language => {
         return action.payload.items.map(item => item.locale).indexOf(language.locale) !== -1

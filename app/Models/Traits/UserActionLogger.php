@@ -16,7 +16,7 @@ trait UserActionLogger {
      *
      * @param string $action
      */
-    function log_user_action($action) {
+    function log_user_action($action, $meta = null) {
         $user = Auth::user();
 
         Userable::create([
@@ -27,6 +27,7 @@ trait UserActionLogger {
             "userable_type" => get_class($this),
             "userable_id" => $this->id,
             "action" => $action,
+            "meta" => serialize($meta),
             "created_at" => now(),
         ]);
     }

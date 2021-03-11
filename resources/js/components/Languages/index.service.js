@@ -46,13 +46,10 @@ export default ({ actions, api, endpoint }) => ({
   setAsDefault: ({ params }) => ({
     url: api.set_as_default,
     data: {
-      uuid: params.uuid,
+      ...params,
     },
     200: ({ data, dispatch }) => {
-      dispatch(actions.upsertMany(data.items.map(item => {
-        item.checked = false
-        return item
-      })))
+      dispatch(actions.toggleDefaultAtExcept(data.items[0]))
 
       return data
     },

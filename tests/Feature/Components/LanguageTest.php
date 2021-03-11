@@ -158,6 +158,28 @@ class LanguageTest extends TestCase {
 
         $this->assertEmpty(array_diff($uuids, $results));
         $this->assertEquals(8, Language::where("module", "Test")->count());
-        $this->assertEquals(1, Language::whereNotNull("default_at")->where("module", "Test")->count());
+        $this->assertEquals(0, Language::whereNotNull("default_at")->where("module", "Test")->count());
+    }
+
+    /** @test */
+    function set_as_default() {
+        $user = $this->get_user_with_groups_and_abilities("Test", "Test/language_set_as_default");
+        $this->actingAs($user);
+
+        Language::factory(1)->create(["default_at" => now(), "module" => "Test"]);
+        Language::factory(5)->create(["module" => "Test"]);
+        Language::factory(10)->create();
+
+        $language = Language::whereNull("default_at")->where("module", "Test")->first();
+
+        $data = $this->post("{$this->api}/set-as-default", [
+            "uuid" => $language->uuid,
+            "module" => "Test",
+        ])
+            ->assertStatus(200)
+            ->json();
+
+        $this->assertNotNull($data["items"][0]["default_at"]);
+        $this->assertEquals(1, Language::where("module", "Test")->whereNotNull("default_at")->count());
     }
 }

@@ -81,7 +81,7 @@ export const init_services = (api, actions, primaryKey = "uuid") => ({
     },
     200: (args) => {
       const data = params.requests.delete.convertResponseBody ? params.requests.delete.convertResponseBody(args) : args.data,
-        items = data.items.map(item => {
+        items = _.get(data, "items", []).map(item => {
           if ((typeof item === "object") && (primaryKey in item)) {
             return item[primaryKey]
           }

@@ -21,6 +21,7 @@ class CreateUserablesTable extends Migration
             $table->string("user_model");
             $table->morphs("userable");
             $table->string("action")->index();
+            $table->text("meta")->nullable();
             $table->timestamp("created_at");
         });
     }
