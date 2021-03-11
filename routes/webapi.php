@@ -42,5 +42,6 @@ Route::middleware(["auth:web,api"])->group(function() {
         Route::post("/languages", [LanguageController::class, "index"]);
         Route::post("/languages/metadata", [LanguageController::class, "metadata"]);
         Route::post("/languages/create", [LanguageController::class, "create"]);
+        Route::delete("/languages", [LanguageController::class, "delete"]);
     });
 });

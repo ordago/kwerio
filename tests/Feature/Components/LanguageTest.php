@@ -99,4 +99,53 @@ class LanguageTest extends TestCase {
         $this->assertEquals($language["locale"], "ar_MA");
         $this->assertNull($language["default_at"]);
     }
+
+    /** @test */
+    function delete_non_default_language() {
+        $user = $this->get_user_with_groups_and_abilities("Test", "Test/language_delete");
+        $this->actingAs($user);
+
+        Language::factory(1)->create(["default_at" => now(), "module" => "Test"]);
+        Language::factory(5)->create(["module" => "Test"]);
+        Language::factory(10)->create();
+
+        $uuids = Language::whereNull("default_at")->take(2)->pluck("uuid")->toArray();
+
+        $languages = $this->delete($this->api, [
+            "uuids" => $uuids,
+            "module" => "Test",
+        ])
+            ->assertStatus(200)
+            ->json();
+
+        $this->assertEquals($uuids, $languages);
+        $this->assertEquals(4, Language::where("module", "Test")->count());
+        $this->assertEquals(1, Language::whereNotNull("default_at")->where("module", "Test")->count());
+    }
+
+    /** @test */
+    function deletes_include_default_language() {
+        $user = $this->get_user_with_groups_and_abilities("Test", "Test/language_delete");
+        $this->actingAs($user);
+
+        Language::factory(1)->create(["default_at" => now(), "module" => "Test"]);
+        Language::factory(10)->create(["module" => "Test"]);
+        Language::factory(10)->create();
+
+        $uuids = Language::where("module", "Test")->whereNull("default_at")->take(2)->pluck("uuid");
+        $uuid = Language::where("module", "Test")->whereNotNull("default_at")->first()->uuid;
+
+        $uuids = $uuids->add($uuid)->toArray();
+
+        $languages = $this->delete($this->api, [
+            "uuids" => $uuids,
+            "module" => "Test",
+        ])
+            ->assertStatus(200)
+            ->json();
+
+        $this->assertEquals($uuids, $languages);
+        $this->assertEquals(8, Language::where("module", "Test")->count());
+        $this->assertEquals(1, Language::whereNotNull("default_at")->where("module", "Test")->count());
+    }
 }

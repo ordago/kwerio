@@ -122,6 +122,8 @@ class LanguageController extends Controller {
      * @return arrya
      */
     function metadata(Request $request, Normalizer $normalizer) {
+        $this->authorize($this->prefix_abilities("language_create")[0]);
+
         $module = $request->get("module");
 
         if ($request->has("only_models") && $request->get("only_models") === true) {
@@ -148,6 +150,52 @@ class LanguageController extends Controller {
         return [
             "languages" => array_values($languages),
         ];
+    }
+
+    /**
+     * Delete the given languages by uuids.
+     *
+     * @return array
+     */
+    function delete(Request $request, Normalizer $normalizer) {
+        $this->authorize($this->prefix_abilities("language_delete")[0]);
+
+        try {
+            DB::beginTransaction();
+
+            $data = $request->validate([
+                "uuids" => "required",
+                "module" => "required",
+            ]);
+
+            Language::whereIn("uuid", $data["uuids"])
+                ->where("module", $data["module"])
+                ->delete();
+
+            $default = Language::where("module", $data["module"])
+                ->whereNotNull("default_at")
+                ->first();
+
+            if (is_null($default)) {
+                $language = Language::where("module", $data["module"])
+                    ->orderBy("created_at", "desc")
+                    ->first();
+
+                if (!is_null($language)) {
+                    $language->default_at = now();
+                    $language->save();
+                }
+            }
+
+            DB::commit();
+
+            return $data["uuids"];
+        }
+
+        catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
     }
 
     /**
