@@ -30,6 +30,16 @@ trait InteractsWithAbility {
     }
 
     /**
+     * Check if user has all the given abilities.
+     *
+     * @retun boolean
+     */
+    function is_able_to(...$abilities) {
+        return $this->isAbleTo($abilities);
+    }
+
+    /**
+     * @deprecated
      * Check if the user has all the given abilities.
      *
      * @param string|array $abilities

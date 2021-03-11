@@ -7,6 +7,7 @@ use App\Http\Controllers\{
     Account\Permissions\UserController,
     Account\Permissions\ApiUserController,
     Account\Permissions\GroupController,
+    Components\LanguageController,
 };
 
 Route::middleware(["auth:web,api", "root"])->group(function() {
@@ -32,5 +33,12 @@ Route::middleware(["auth:web,api", "root"])->group(function() {
             Route::post("/api-users/fetch-by-uuid", [ApiUserController::class, "fetch_by_uuid"]);
             Route::post("/api-users/metadata", [ApiUserController::class, "metadata"]);
         });
+    });
+});
+
+Route::middleware(["auth:web,api"])->group(function() {
+    // ------------------------------------------------------- COMPONENTS -- #
+    Route::prefix("components")->group(function() {
+        Route::post("/languages", [LanguageController::class, "index"]);
     });
 });

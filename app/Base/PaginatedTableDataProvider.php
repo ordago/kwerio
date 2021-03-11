@@ -48,7 +48,7 @@ class PaginatedTableDataProvider {
         $module_uid = config("module");
 
         foreach ($abilities as $ability) {
-            if (! str_starts_with($ability, $module_uid)) {
+            if (!is_null($module_uid) && strpos($ability, "/") === false) {
                 $ability = "{$module_uid}/{$ability}";
             }
 

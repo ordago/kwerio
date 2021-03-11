@@ -5,6 +5,7 @@ namespace Tests\Traits;
 use Illuminate\Support\{
     Str,
     Arr,
+    Facades\Gate,
 };
 
 use App\Models\{
@@ -31,6 +32,14 @@ trait User {
 
         foreach ($abilities as $ability) {
             $factory = $factory->has(Ability::factory(["name" => $ability]));
+
+            Gate::define($ability, function($user) use($ability) {
+                if ($user->is_owner()) {
+                    return true;
+                }
+
+                return $user->isAbleTo($ability);
+            });
         }
 
         return $factory->create();
