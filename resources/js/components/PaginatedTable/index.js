@@ -56,6 +56,7 @@ export const init_services = (api, actions, primaryKey = "uuid") => ({
         page: args.state.rsc.page + 1,
         q: args.state.q,
         sorts,
+        ...params.requests.index.extraParams,
       }
     },
     200: (args) => {

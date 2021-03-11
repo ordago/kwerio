@@ -73,18 +73,21 @@ function PaginatedTable({
       url: null,                  // Url to make the request to.
       method: "post",             // Type of request method.
       requestBody: null,          // Request body to be sent.
+      extraParams: {},            // Additional params to add to request body.
       convertResponseBody: null,  // Converts response body to an acceptable format by the table.
     },
     delete: {                     // Delete request.
       url: null,
       method: "delete",
       requestBody: null,
+      extraParams: {},
       convertResponseBody: null,
     },
     duplicate: {
       url: null,
       method: "post",
       requestBody: null,
+      extraParams: {},
       convertResponseBody: null,
     },
   }

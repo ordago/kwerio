@@ -31,7 +31,7 @@ class LanguageController extends Controller {
             ->basic_filter(["name", "locale"])
             ->normalize([
                 "uuid", "name", "locale",
-                "disabled_at", "created_at", "updated_at",
+                "default_at", "disabled_at", "created_at", "updated_at",
             ]);
     }
 }

@@ -16,6 +16,7 @@
         "@babel/preset-env": "^7.13.10",
         "@babel/preset-react": "^7.12.13",
         "@pmmmwh/react-refresh-webpack-plugin": "^0.5.0-beta.0",
+        "@testing-library/react": "^11.2.5",
         "axios": "^0.21.1",
         "babel-jest": "^26.6.1",
         "cross-env": "^7.0.3",
@@ -23,6 +24,7 @@
         "jest": "^26.6.1",
         "laravel-mix": "^6.0.13",
         "lodash": "^4.17.21",
+        "msw": "^0.27.1",
         "po2json": "^0.4.5",
         "react-refresh": "^0.9.0",
         "resolve-url-loader": "^3.1.2"
