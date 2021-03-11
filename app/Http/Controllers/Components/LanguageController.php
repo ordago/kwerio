@@ -7,9 +7,17 @@ use App\Http\Controllers\Controller;
 use Kwerio\PaginatedTableDataProvider;
 use App\Models\Components\Language;
 use App\Http\Controllers\Traits;
+use Illuminate\Support\Facades\DB;
+use Kwerio\Normalizer;
 
 class LanguageController extends Controller {
     use Traits\Abilities;
+
+    private $rules = [
+        "uuid" => "nullable",
+        "locale" => "required",
+        "module" => "required",
+    ];
 
     /**
      * Get paginated list of available languages.
@@ -33,5 +41,91 @@ class LanguageController extends Controller {
                 "uuid", "name", "locale",
                 "default_at", "disabled_at", "created_at", "updated_at",
             ]);
+    }
+
+    /**
+     * Add new language.
+     *
+     * @param Request $request
+     * @return array
+     */
+    function create(Request $request) {
+        $this->authorize($this->prefix_abilities("language_create")[0]);
+        $data = $request->validate($this->rules);
+
+        return $this->_upsert($data);
+    }
+
+    /**
+     * Upsert a language.
+     *
+     * @param array $data
+     * @return array
+     */
+    function _upsert(array $data) {
+        try {
+            DB::beginTransaction();
+
+            // Filter language based on available languages in the locales.
+            $language = array_filter(all_languages(true), function($language) use($data) {
+                if ($data["locale"] === $language["locale"]) {
+                    return true;
+                }
+
+                return false;
+            });
+
+            $normalizer = resolve(Normalizer::class);
+
+            if (!count($language)) {
+                return $normalizer->error("Locale {$data['locale']} does not exists", 404);
+            } else {
+                $language = array_values($language)[0];
+            }
+
+            // Create or Update the language.
+            $language = Language::updateOrCreate([
+                "locale" => $data["locale"],
+                "module" => $data["module"],
+            ], [
+                "locale" => $language["locale"],
+                "name" => $language["name"],
+                "native_name" => $language["native_name"],
+                "module" => $data["module"],
+            ]);
+
+            $language = $language->fresh();
+            $language->log_user_action(empty($data["uuid"]) ? "create" : "update");
+
+            // If there is no default language, then use current as default.
+            if (Language::whereNotNull("default_at")->where("module", $data["module"])->count() === 0) {
+                $language->default_at = now();
+                $language->save();
+            }
+
+            DB::commit();
+
+            return $normalizer
+                ->message("Language '{$data['locale']}' upserted successfully")
+                ->normalize($language, [$this, "_normalize_callback"]);
+        }
+
+        catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    /**
+     * Normalize language data.
+     *
+     * @param Language $language
+     * @return array
+     */
+    function _normalize_callback(Language $language) {
+        return $language->only([
+            "uuid", "locale", "name", "native_name", "default_at",
+            "disabled_at", "created_at", "updated_at",
+        ]);
     }
 }

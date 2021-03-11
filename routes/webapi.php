@@ -40,5 +40,6 @@ Route::middleware(["auth:web,api"])->group(function() {
     // ------------------------------------------------------- COMPONENTS -- #
     Route::prefix("components")->group(function() {
         Route::post("/languages", [LanguageController::class, "index"]);
+        Route::post("/languages/create", [LanguageController::class, "create"]);
     });
 });

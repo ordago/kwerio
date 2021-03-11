@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Traits;
 
 class Language extends Model {
-    use HasFactory, Traits\LocalizeDatetimeAttributes;
+    use HasFactory,
+        Traits\LocalizeDatetimeAttributes,
+        Traits\UserActionLogger;
 
     protected $guarded = [];
 
