@@ -15,7 +15,7 @@ import useRequest from "Kwerio/hooks/useRequest"
 import useT from "Kwerio/hooks/useT"
 import useUser from "Kwerio/hooks/useUser"
 
-import { requestTemplate } from "../utils.js"
+import { requestTemplate } from "../utils"
 import GenericButton from "./GenericButton"
 import services from "./index.service"
 import useStyles from "./index.styles"
