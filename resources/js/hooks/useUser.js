@@ -5,6 +5,10 @@ export default function() {
     module = useSelector(state => state.module)
 
   function _can(ability) {
+    if (user.owner_at !== null) {
+      return true
+    }
+
     if (typeof module !== "undefined") {
       ability = `${module.uid}/${ability}`
     }

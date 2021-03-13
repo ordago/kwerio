@@ -31,7 +31,7 @@ class ListingGroupsTest extends TestCase {
 
     /** @test */
     function list_api__deny_non_root_with_listing_ability() {
-        $user = $this->get_user_with_groups_and_abilities($this->faker->words(2, true), "root/group_list");
+        $user = $this->get_user_with_groups_and_abilities($this->faker->words(2, true), "root/group_index");
         $this->actingAs($user)->post($this->api, $this->post_data)->assertStatus(403);
         Auth::logout();
 
@@ -56,12 +56,12 @@ class ListingGroupsTest extends TestCase {
     /** @test */
     function list_api__allow_root_with_listing_ability() {
         // User
-        $user = $this->get_root_user_with_abilities("root/group_list");
+        $user = $this->get_root_user_with_abilities("root/group_index");
         $this->actingAs($user)->post($this->api, $this->post_data)->assertStatus(200);
         Auth::logout();
 
         // Api User
-        $apiUser = $this->get_root_api_user_with_abilities("root/group_list");
+        $apiUser = $this->get_root_api_user_with_abilities("root/group_index");
         $this->withHeaders(["Authorization" => "Bearer {$apiUser->token}"])
             ->post($this->api, $this->post_data)
             ->assertStatus(200);
@@ -80,13 +80,13 @@ class ListingGroupsTest extends TestCase {
 
     /** @test */
     function access_page__deny_non_root_with_listing_ability() {
-        $user = $this->get_user_with_groups_and_abilities($this->faker->words(2, true), "root/group_list");
+        $user = $this->get_user_with_groups_and_abilities($this->faker->words(2, true), "root/group_index");
         $this->actingAs($user)->get($this->endpoint)->assertStatus(403);
     }
 
     /** @test */
     function access_page__allow_root_with_listing_ability() {
-        $user = $this->get_root_user_with_abilities("group_list");
+        $user = $this->get_root_user_with_abilities("group_index");
         $this->actingAs($user)->get($this->endpoint)->assertStatus(200);
     }
 

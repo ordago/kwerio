@@ -1,9 +1,9 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit"
 import Form, { types } from "@euvoor/form"
 
+import PaginatedTable from "../../components/PaginatedTable/index.slice"
 import generate_extra_reducers from "../../utils/generate-extra-reducers"
 import groupable from "../../components/Groupable/index"
-import paginatedTable from "../../components/PaginatedTable/index"
 import services from "./index.service"
 
 export const adapter = createEntityAdapter({
@@ -72,7 +72,7 @@ const extraReducers = generate_extra_reducers("users", services, {
 })
 
 const initialState = adapter.getInitialState({
-  ...paginatedTable.initialState,
+  ...PaginatedTable.state,
   upsert: {
     ...form.state,
     uuid: null,
@@ -93,7 +93,7 @@ const slice = createSlice({
   name: "users",
   initialState,
   reducers: {
-    ...paginatedTable.init_reducers(adapter),
+    ...PaginatedTable.reducers(adapter),
     ...form.reducers,
     ...groupable.reducers,
     resetUpsert: (state, action) => {
@@ -123,7 +123,7 @@ const slice = createSlice({
   },
   extraReducers: {
     ...extraReducers,
-    ...paginatedTable.init_extraReducers("users"),
+    ...PaginatedTable.extraReducers("users"),
   },
 })
 

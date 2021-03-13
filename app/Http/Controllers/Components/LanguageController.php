@@ -199,13 +199,15 @@ class LanguageController extends Controller {
      * @return array
      */
     function set_as_default(Request $request, Normalizer $normalizer) {
+        $this->authorize($this->prefix_abilities("language_set_as_default")[0]);
+
+        $data = $request->validate([
+            "uuid" => "required",
+            "module" => "required",
+        ]);
+
         try {
             DB::beginTransaction();
-
-            $data = $request->validate([
-                "uuid" => "required",
-                "module" => "required",
-            ]);
 
             $language = Language::where("uuid", $data["uuid"])
                 ->where("module", $data["module"])
@@ -224,6 +226,88 @@ class LanguageController extends Controller {
             return $normalizer
                 ->message("Language '{$language->name}' has being set as default")
                 ->normalize($language, [$this, "_normalize_callback"]);
+        }
+
+        catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    /**
+     * Disable the given languages.
+     *
+     * @return array
+     */
+    function disable(Request $request, Normalizer $normalizer) {
+        $this->authorize($this->prefix_abilities("language_disable")[0]);
+
+        $data = $request->validate([
+            "uuids" => "required",
+            "module" => "nullable",
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            Language::where("module", $data["module"])
+                ->whereIn("uuid", $data["uuids"])
+                ->update(["disabled_at" => now()]);
+
+            $languages = Language::where("module", $data["module"])
+                ->whereIn("uuid", $data["uuids"])
+                ->get();
+
+            $languages->each(function($language) {
+                $language->log_user_action("disable");
+            });
+
+            DB::commit();
+
+            return $normalizer
+                ->message($languages->count() . " are disabled successfully")
+                ->normalize($languages, [$this, "_normalize_callback"]);
+        }
+
+        catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    /**
+     * Enable the given languages.
+     *
+     * @return array
+     */
+    function enable(Request $request, Normalizer $normalizer) {
+        $this->authorize($this->prefix_abilities("language_enable")[0]);
+
+        $data = $request->validate([
+            "uuids" => "required",
+            "module" => "nullable",
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            Language::where("module", $data["module"])
+                ->whereIn("uuid", $data["uuids"])
+                ->update(["disabled_at" => null]);
+
+            $languages = Language::where("module", $data["module"])
+                ->whereIn("uuid", $data["uuids"])
+                ->get();
+
+            $languages->each(function($language) {
+                $language->log_user_action("enable");
+            });
+
+            DB::commit();
+
+            return $normalizer
+                ->message($languages->count() . " languages are enabled")
+                ->normalize($languages, [$this, "_normalize_callback"]);
         }
 
         catch (\Throwable $e) {

@@ -1,6 +1,7 @@
 import {
   Box,
   Checkbox,
+  Divider,
   Table,
   TableBody,
   TableCell,
@@ -16,15 +17,17 @@ import { useHistory } from "react-router-dom"
 import React from "react"
 import clsx from "clsx"
 
-import { merge } from "lodash"
+import Suspense from "Kwerio/components/Suspense"
+import _ from "lodash"
+import useRequest from "Kwerio/hooks/useRequest"
+import useT from "Kwerio/hooks/useT"
+import useUser from "Kwerio/hooks/useUser"
 
-import { init_services } from "./index"
-import Suspense from "../Suspense"
-import useRequest from "../../hooks/useRequest"
+import { requestTemplate } from "./utils"
+import services from "./index.service"
 import useStyles from "./index.styles"
-import useT from "../../hooks/useT"
 
-const Toolbar = React.lazy(() => import("./Toolbar.jsx"))
+const Toolbar = React.lazy(() => import("./Toolbar/index.jsx"))
 
 function PaginatedTable({
   reducer,                      // Reducer name.
@@ -32,72 +35,88 @@ function PaginatedTable({
   actions,                      // Slice actions.
   api,                          // Api to use for making requests.
   endpoint,                     // Endpoints for the current entity.
+
   hover = true,                 // Enable hover on the table.
-  canCheck = true,              // Rows can be checked using checkbox.
-  renderCell = null,            // Custom cell renderer.
-  onRowClick = null,            // Click event for the row.
-  onSort = () => { },           // Callback to handle sorting.
   primaryKey = "uuid",          // Primary key used in the data as 'id'.
   slugKey = "slug",             // Name of the slug key.
   size = "small",               // Size of the table. (medium, small).
+
+  requests = {},
   disableRowClick = false,      // Disable row click.
-  canIndex = null,
-  afterIndexFn = data => data,
   highlightRowIf = [],          // Highligh row if the given condition is met.
 
-  // Components..
-  toolbar = false,              // Show table toolbar
-  addButtons = () => [],
-  canSearch = false,
-  canCreate = false,
-  canDelete = false,
-  canDeleteFn = () => true,
-  afterDeleteFn = data => data,
-  canDuplicate = false,
-  searchLabel = null,
-  createButtonLabel = null,
+  abilitiesPrefix = null,
+  abilities = {},
 
-  // Customize request
-  requests = { },
+  afterIndexFn = data => data,
+  renderCell = null,            // Custom cell renderer.
+
+  onRowClick = null,            // Click event for the row.
+  onSort = () => {},            // Callback to handle sorting.
+
+  toolbar = null,
 }) {
   const dispatch = useDispatch(),
     state = useSelector(state => state[reducer]),
     selector = adapter.getSelectors(),
     classes = useStyles(),
     t = useT(),
-    request = useRequest({ reducer, services: init_services(api, actions) }),
-    history = useHistory()
+    request = useRequest({ reducer, services: services({ api, actions, primaryKey }) }),
+    history = useHistory(),
+    user = useUser()
 
-  const defaultRequests = {
-    index: {                      // Index request.
-      url: null,                  // Url to make the request to.
-      method: "post",             // Type of request method.
-      requestBody: null,          // Request body to be sent.
-      extraParams: {},            // Additional params to add to request body.
-      convertResponseBody: null,  // Converts response body to an acceptable format by the table.
-    },
-    delete: {                     // Delete request.
-      url: null,
-      method: "delete",
-      requestBody: null,
-      extraParams: {},
-      convertResponseBody: null,
-    },
-    duplicate: {
-      url: null,
-      method: "post",
-      requestBody: null,
-      extraParams: {},
-      convertResponseBody: null,
-    },
+  // Set defaults
+  const defaultAbilities = {
+    index: false,
+    check: true,
   }
 
-  requests = merge(defaultRequests, requests)
+  const defaultRequests = {
+    index: requestTemplate,
+  }
 
+  // Build abilities from the prefix.
+  if (abilitiesPrefix) {
+    for (let ability in defaultAbilities) {
+      if (!(ability in abilities)) {
+        abilities[ability] = user.can(`${abilitiesPrefix}${ability}`)
+      }
+    }
+  }
+
+  // Prepare requests and abilities.
+  requests = _.merge(defaultRequests, requests)
+  abilities = _.merge(defaultAbilities, abilities)
+
+  // Get data to display on the table.
   let data = selector.selectAll(state),
-    offset = state.page * state.per_page
+    offset = state.page * state.per_page,
+    checkbox_all = {}
 
   data = data.slice(offset, offset + state.per_page)
+
+  // Set proper icon for global checkbox.
+  const checkedItems = selector.selectAll(state)
+    .filter(item => ("checked" in item) && item.checked === true)
+
+  if (checkedItems.length > 0 && checkedItems.length < data.length) {
+    checkbox_all = { indeterminate: true }
+  }
+
+  // Pass table index ability to toolbar.
+  if (toolbar) {
+    if (typeof toolbar !== "object") {
+      toolbar = {}
+    }
+
+    if (!("abilities" in toolbar)) {
+      toolbar.abilities = {}
+    }
+
+    if (!_.hasIn(toolbar, "abilities.index")) {
+      toolbar.abilities.index = abilities.index
+    }
+  }
 
   /**
    * Toggle checked attribute of all items in the cache.
@@ -111,70 +130,47 @@ function PaginatedTable({
     }))))
   }
 
-  const checkedItems = selector.selectAll(state).filter(item => ("checked" in item) && item.checked === true),
-    nb_checked = checkedItems.length
-
-  let checkbox_all = { }
-
   React.useEffect(() => {
-    if (!canIndex) {
-      return
-    }
-
-    if (nb_checked > 0) {
-      _toggle_check_all(false)
-    }
+    if (!abilities.index) return
+    if (checkedItems.length > 0) _toggle_check_all(false)
 
     request.index({ requests }).then(action => {
       dispatch(actions.moveTouchedToStart())
       afterIndexFn(action)
     })
-  }, [canIndex])
-
-  if (nb_checked > 0 && nb_checked < data.length) {
-    checkbox_all = { indeterminate: true }
-  }
-
-  canIndex = canIndex === null ? canSearch : canIndex
+  }, [abilities.index])
 
   return (
     <Box>
-      {toolbar && (
-        <Suspense component={<Toolbar
-            request={request}
-            requests={requests}
-            actions={actions}
-            api={api}
-            endpoint={endpoint}
-            reducer={reducer}
-            canIndex={canIndex}
-            canSearch={canSearch}
-            canCreate={canCreate}
-            canDelete={canDelete}
-            canDeleteFn={canDeleteFn}
-            afterDeleteFn={afterDeleteFn}
-            canDuplicate={canDuplicate}
-            searchLabel={searchLabel}
-            createButtonLabel={createButtonLabel}
-            nbChecked={nb_checked}
-            itemsToDelete={checkedItems}
-            itemsToDuplicate={checkedItems}
-            checkedItems={checkedItems}
-            addButtons={addButtons}
+      {toolbar !== null && (
+        <>
+          <Suspense component={
+            <Toolbar
+              actions={actions}
+              abilitiesPrefix={abilitiesPrefix}
+              api={api}
+              endpoint={endpoint}
+              reducer={reducer}
+              checkedItems={checkedItems}
+              onQuery={() => request.index({ requests })}
+              {...toolbar}
+            />}
           />
-        } />
+
+          <Divider />
+        </>
       )}
 
-      {canIndex && (
+      {abilities.index && (
         <TableContainer className={classes.root}>
           <Table size={size}>
             <TableHead>
               <TableRow>
-                {canCheck && (
+                {abilities.check && (
                   <TableCell>
                     <Checkbox
                       { ...checkbox_all }
-                      checked={nb_checked > 0}
+                      checked={checkedItems.length > 0}
                       color="primary"
                       onChange={e => {
                         const updates = data.map(item => ({
@@ -195,7 +191,7 @@ function PaginatedTable({
                         active={true}
                         direction={col.sortDirection}
                         onClick={() => {
-                          if (nb_checked > 0) {
+                          if (checkedItems.length > 0) {
                             _toggle_check_all(false)
                           }
 
@@ -238,7 +234,7 @@ function PaginatedTable({
                     return clsx(highlights)
                   })()}
                 >
-                  {canCheck && (
+                  {abilities.check && (
                     <TableCell key={row[primaryKey]}>
                       <Checkbox
                         checked={("checked" in row) && row.checked === true}
@@ -277,7 +273,7 @@ function PaginatedTable({
                   rowsPerPage={state.per_page}
                   page={state.page}
                   onChangePage={(_, page) => {
-                    if (nb_checked > 0) {
+                    if (checkedItems.length > 0) {
                       _toggle_check_all(false)
                     }
 
@@ -285,7 +281,7 @@ function PaginatedTable({
                     request.index({ requests })
                   }}
                   onChangeRowsPerPage={e => {
-                    if (nb_checked > 0) {
+                    if (checkedItems.length > 0) {
                       _toggle_check_all(false)
                     }
 

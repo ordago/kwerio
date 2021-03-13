@@ -3,7 +3,7 @@ import Form from "@euvoor/form"
 
 import generate_extra_reducers from "../../utils/generate-extra-reducers"
 import groupable from "../../components/Groupable/index"
-import paginatedTable from "../../components/PaginatedTable/index"
+import PaginatedTable from "../../components/PaginatedTable/index.slice"
 import services from "./index.service"
 
 export const adapter = createEntityAdapter({
@@ -45,7 +45,7 @@ const extraReducers = generate_extra_reducers("apiUsers", services, {
 })
 
 const initialState = adapter.getInitialState({
-  ...paginatedTable.initialState,
+  ...PaginatedTable.state,
   loading: false,
   upsert: {
     ...form.state,
@@ -65,7 +65,7 @@ const slice = createSlice({
   name: "apiUsers",
   initialState,
   reducers: {
-    ...paginatedTable.init_reducers(adapter),
+    ...PaginatedTable.reducers(adapter),
     ...groupable.reducers,
     ...form.reducers,
     fillUpsert: (state, action) => {
@@ -93,7 +93,7 @@ const slice = createSlice({
   },
   extraReducers: {
     ...extraReducers,
-    ...paginatedTable.init_extraReducers("apiUsers"),
+    ...PaginatedTable.extraReducers("apiUsers"),
   },
 })
 

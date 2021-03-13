@@ -61,7 +61,7 @@ class UserController extends Controller {
      */
     function show_index_page() {
         $abilities = [
-            "root/user_list",
+            "root/user_index",
             "root/user_create",
         ];
 
@@ -98,7 +98,7 @@ class UserController extends Controller {
      * @return array
      */
     function index(Request $request, Normalizer $normalizer) {
-        $this->authorize("root/user_list");
+        $this->authorize("root/user_index");
 
         $data = $request->validate([
             "page" => "required|numeric",
@@ -160,7 +160,7 @@ class UserController extends Controller {
      */
     function fetch_by_uuid(Request $request, Normalizer $normalizer) {
         $abilities = [
-            "root/user_list",
+            "root/user_index",
             "root/user_update",
         ];
 

@@ -89,7 +89,7 @@ trait InteractsWithMenu {
             $users = [];
             $api_users = [];
 
-            if ($user->canAny(["root/user_list", "root/user_create"])) {
+            if ($user->canAny(["root/user_index", "root/user_create"])) {
                 $users = [
                     "id" => Str::uuid(),
                     "text" => "Users",
@@ -98,7 +98,7 @@ trait InteractsWithMenu {
                 ];
             }
 
-            if ($user->canAny(["root/group_list", "root/group_create"])) {
+            if ($user->canAny(["root/group_index", "root/group_create"])) {
                 $groups = [
                     "id" => Str::uuid(),
                     "text" => "Groups",
@@ -107,7 +107,7 @@ trait InteractsWithMenu {
                 ];
             }
 
-            if ($user->canAny(["root/api_user_list", "root/api_user_create"])) {
+            if ($user->canAny(["root/api_user_index", "root/api_user_create"])) {
                 $api_users = [
                     "id" => Str::uuid(),
                     "text" => "Api Users",

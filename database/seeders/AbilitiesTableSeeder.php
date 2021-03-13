@@ -6,28 +6,12 @@ use Illuminate\Database\Seeder;
 use App\Models\Ability;
 use App\Models\Group;
 use App\Models\Module as ModuleModel;
+use Illuminate\Support\Str;
 
 class AbilitiesTableSeeder extends Seeder
 {
     public $abilities = [
-        // Users
-        "root/user_list" => "Users / List available users",
-        "root/user_create" => "Users / Create new user",
-        "root/user_update" => "Users / Update an existing user",
-        "root/user_delete" => "Users / Delete existing user",
-        "root/user_delete_root" => "Users / Delete root user",
-
-        // Api Users
-        "root/api_user_list" => "Api Users / List available api users",
-        "root/api_user_create" => "Api Users / Create new api user",
-        "root/api_user_update" => "Api Users / Update existing api user",
-        "root/api_user_delete" => "Api Users / Delete existing api user",
-
-        // Groups
-        "root/group_list" => "Groups / List available groups",
-        "root/group_create" => "Groups / Create new group",
-        "root/group_update" => "Groups / Update an existing group",
-        "root/group_delete" => "Groups / Delete existing group",
+        "root/user_delete_root" => "Users / Delete root users",
     ];
 
     /**
@@ -36,6 +20,27 @@ class AbilitiesTableSeeder extends Seeder
      * @return void
      */
     public function run() {
+        $actions = [
+            "create" => "Add new %s",
+            "delete" => "Remove %s",
+            "disable" => "Disable %s",
+            "duplicate" => "Duplicate %s",
+            "enable" => "Enable %s",
+            "filter" => "Filter %s",
+            "index" => "List available %s",
+            "update" => "Update existing %s",
+        ];
+
+        foreach ($actions as $action => $description) {
+            foreach (["user", "group", "api_user"] as $item) {
+                $itemstr = Str::plural(str_replace("_", " ", $item));
+
+                $this->abilities = array_merge($this->abilities, [
+                    "root/{$item}_{$action}" => ucwords($itemstr) . " / " . sprintf($description, $itemstr),
+                ]);
+            }
+        }
+
         $firstOrCreate = function($ability, $description, $module_id) {
             return Ability::firstOrCreate(["name" => $ability], [
                 "module_id" => $module_id,

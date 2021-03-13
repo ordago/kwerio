@@ -8,6 +8,7 @@ use Kwerio\TokenGuard;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use App\Models\User;
 use App\Extensions\ApiUserProvider;
+use App\Models\Ability;
 
 use Illuminate\Support\Facades\{
     Gate,
@@ -55,15 +56,15 @@ class AuthServiceProvider extends ServiceProvider
      * Register abilities.
      */
     private function _register_abilities() {
-        $abilitiesTableSeeder = resolve(AbilitiesTableSeeder::class);
+        $abilities = Ability::where("name", "like", "root/%")->get(["name", "description"]);
 
-        foreach ($abilitiesTableSeeder->abilities as $ability => $description) {
-            Gate::define($ability, function($user) use($ability) {
+        foreach ($abilities as $ability) {
+            Gate::define($ability["name"], function($user) use($ability) {
                 if ($user->is_owner()) {
                     return true;
                 }
 
-                return $user->isAbleTo($ability);
+                return $user->isAbleTo($ability["name"]);
             });
         }
     }

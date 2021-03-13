@@ -182,4 +182,46 @@ class LanguageTest extends TestCase {
         $this->assertNotNull($data["items"][0]["default_at"]);
         $this->assertEquals(1, Language::where("module", "Test")->whereNotNull("default_at")->count());
     }
+
+    /** @test */
+    function disable() {
+        $user = $this->get_user_with_groups_and_abilities("Test", "Test/language_disable");
+        $this->actingAs($user);
+
+        Language::factory(2)->create(["module" => "Test", "disabled_at" => now()]);
+        Language::factory(10)->create(["module" => "Test"]);
+
+        $languages = Language::whereNull("disabled_at")->take(3)->get();
+
+        $data = $this->post("{$this->api}/disable", [
+            "uuids" => $languages->pluck("uuid"),
+            "module" => "Test",
+        ])
+            ->assertStatus(200)
+            ->json();
+
+        $this->assertCount(3, $data["items"]);
+        $this->assertEquals(5, Language::where("module", "Test")->whereNotNull("disabled_at")->count());
+    }
+
+    /** @test */
+    function enable() {
+        $user = $this->get_user_with_groups_and_abilities("Test", "Test/language_enable");
+        $this->actingAs($user);
+
+        Language::factory(5)->create(["module" => "Test", "disabled_at" => now()]);
+        Language::Factory(5)->create(["module" => "Test"]);
+
+        $languages = Language::where("module", "Test")->whereNotNull("disabled_at")->take(2)->get();
+
+        $data = $this->post("{$this->api}/enable", [
+            "uuids" => $languages->pluck("uuid"),
+            "module" => "Test",
+        ])
+            ->assertStatus(200)
+            ->json();
+
+        $this->assertCount(2, $data["items"]);
+        $this->assertEquals(7, Language::where("module", "Test")->whereNull("disabled_at")->count());
+    }
 }

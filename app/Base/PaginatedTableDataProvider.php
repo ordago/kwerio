@@ -74,7 +74,7 @@ class PaginatedTableDataProvider {
                 $where = "where";
 
                 foreach ($filters as $filter) {
-                    $query->{$where}($filter, $like, "{$this->data['q']}%");
+                    $query->{$where}($filter, $like, "%{$this->data['q']}%");
                     $where = "orWhere";
                 }
             });

@@ -58,23 +58,6 @@ function PageMenu({ menu = null, actions }) {
   }, [("menu" in menuToOpen)])
 
   /**
-   * Check if menu is selected or not based on the url path.
-   */
-  function _is_menu_selected(item) {
-    if (("link" in item) && ("matches" in item)) {
-      const matches = item.matches.indexOf(match.path) !== -1
-
-      if (!("menu" in menuToOpen)) {
-        setMenuToOpen({ menu, item })
-      }
-
-      return matches
-    }
-
-    return ("link" in item) && item.link === match.path
-  }
-
-  /**
    * Handle menu item click.
    */
   function _handle_click(item) {
@@ -95,7 +78,7 @@ function PageMenu({ menu = null, actions }) {
       <React.Fragment key={list.id}>
         <ListItem
           button
-          selected={_is_menu_selected(list)}
+          selected={("link" in list) && list.link === match.path}
           onClick={() => _handle_click(list)}
         >
           {list.icon && (
@@ -116,7 +99,7 @@ function PageMenu({ menu = null, actions }) {
                 button
                 onClick={() => _handle_click(item)}
                 className={classes.nested}
-                selected={_is_menu_selected(item)}
+                selected={("link" in item) && item.link === match.path}
               >
                 {item.icon && (
                   <ListItemIcon><Icon>{item.icon}</Icon></ListItemIcon>

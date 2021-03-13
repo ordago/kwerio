@@ -32,7 +32,7 @@ class GroupController extends Controller {
      */
     function show_index_page() {
         $abilities = [
-            "root/group_list",
+            "root/group_index",
             "root/group_create",
         ];
 
@@ -69,7 +69,7 @@ class GroupController extends Controller {
      * @return array
      */
     function index(Request $request, Normalizer $normalizer) {
-        $this->authorize("root/group_list");
+        $this->authorize("root/group_index");
 
         $data = $request->validate([
             "page" => "required|numeric",
@@ -189,7 +189,7 @@ class GroupController extends Controller {
      */
     function fetch_by_uuid(Request $request, Normalizer $normalizer) {
         $abilities = [
-            "root/group_list",
+            "root/group_index",
             "root/group_update",
         ];
 

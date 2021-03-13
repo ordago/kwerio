@@ -2,7 +2,7 @@ import { createSlice, createEntityAdapter } from "@reduxjs/toolkit"
 import Form from "@euvoor/form"
 
 import generate_extra_reducers from "Kwerio/utils/generate-extra-reducers"
-import paginatedTable from "Kwerio/components/PaginatedTable"
+import PaginatedTable from "Kwerio/components/PaginatedTable/index.slice"
 
 import services from "./index.service"
 
@@ -25,7 +25,7 @@ const extraReducers = generate_extra_reducers("languages", services, {
 })
 
 const initialState = adapter.getInitialState({
-  ...paginatedTable.initialState,
+  ...PaginatedTable.state,
   loaded: false,
   upsert: {
     uuid: null,
@@ -44,7 +44,7 @@ const slice = createSlice({
   name: "languages",
   initialState,
   reducers: {
-    ...paginatedTable.init_reducers(adapter),
+    ...PaginatedTable.reducers(adapter),
     ...form.reducers,
     loaded: (state, action) => {
       state.loaded = true
@@ -85,7 +85,7 @@ const slice = createSlice({
     },
   },
   extraReducers: {
-    ...paginatedTable.init_extraReducers("languages"),
+    ...PaginatedTable.extraReducers("languages"),
     ...extraReducers,
   },
 })

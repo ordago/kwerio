@@ -29,8 +29,9 @@ function Groups({ match }) {
           {user.canAny(["root/group_list", "root/group_create", "root/group_update"]) && (
             <PaginatedTable
               toolbar
-              canSearch={user.can("root/group_list")}
-              canCreate={user.can("root/group_create")}
+              abilities={{
+                index: user.can("root/group_list")
+              }}
               reducer="groups"
               adapter={adapter}
               api={api.groups}

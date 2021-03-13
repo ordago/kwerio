@@ -25,52 +25,27 @@ function Languages({ reducer = "languages", endpoint }) {
 
   return (
     <PaginatedTable
-      toolbar
-      addButtons={items => (
-        <>
-          {user.can("language_set_as_default") && items.length === 1 && items[0].default_at === null && (
-            <Button
-              className={classes.setAsDefaultBtn}
-              startIcon={<StarIcon />}
-              onClick={() => request.setAsDefault({
-                uuid: items[0].uuid,
-                module: _.get(moduleState, "uid", null),
-              })}
-            >
-              {t("set as default language")}
-            </Button>
-          )}
-        </>
-      )}
-      requests={{
-        index: {
-          extraParams: {
-            module: _.get(moduleState, "uid", null),
-          },
+      toolbar={{
+        abilities: {
+          create: user.can("language_create"),
         },
-        delete: {
-          extraParams: {
-            module: _.get(moduleState, "uid", null),
-          },
-        },
-      }}
-      canIndex={user.can("language_index")}
-      afterIndexFn={() => dispatch(actions.loaded())}
-      canSearch={user.can("language_index")}
-      canCreate={user.can("language_create")}
-      canDelete={user.can("language_delete")}
-      canDeleteFn={items => items.length > 0}
-      afterDeleteFn={action => {
-        dispatch(actions.setLanguagesDisabledTo({
-          items: action.payload.items,
-          disabled: false,
-        }))
       }}
       reducer={reducer}
       adapter={adapter}
       actions={actions}
       api={api}
       endpoint={endpoint}
+      requests={{
+        index: {
+          extraParams: {
+            module: _.get(moduleState, "uid", null),
+          },
+        },
+      }}
+      abilities={{
+        index: user.can("language_index"),
+      }}
+      afterIndexFn={() => dispatch(actions.loaded())}
       disableRowClick={true}
       highlightRowIf={[{
         classes: classes.defaultLanguage,

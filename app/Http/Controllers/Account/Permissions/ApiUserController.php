@@ -40,7 +40,7 @@ class ApiUserController extends Controller {
      */
     function show_index_page() {
         $abilities = [
-            "root/api_user_list",
+            "root/api_user_index",
             "root/api_user_create",
         ];
 
@@ -75,7 +75,7 @@ class ApiUserController extends Controller {
      * @return array
      */
     function index(Request $request, Normalizer $normalizer) {
-        $this->authorize("root/api_user_list");
+        $this->authorize("root/api_user_index");
 
         $data = $request->validate([
             "page" => "required|numeric",
@@ -236,7 +236,7 @@ class ApiUserController extends Controller {
      * @return array
      */
     function fetch_by_uuid(Request $request, Normalizer $normalizer) {
-        $abilities = ["root/api_user_list", "root/api_user_update"];
+        $abilities = ["root/api_user_index", "root/api_user_update"];
 
         if (!Gate::any($abilities)) {
             abort(403);
