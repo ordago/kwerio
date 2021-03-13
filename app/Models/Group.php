@@ -42,7 +42,7 @@ class Group extends Model {
      */
     static function all_normalized() {
         $groups = Group::get()->map(function($group) {
-            $modules = $group->modules->pluck("uid")->toArray();
+            $modules = $group->modules->pluck("uuid")->toArray();
             $abilities = $group->abilities->pluck("uuid")->toArray();
 
             return array_merge(

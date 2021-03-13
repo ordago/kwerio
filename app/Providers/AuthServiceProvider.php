@@ -56,7 +56,14 @@ class AuthServiceProvider extends ServiceProvider
      * Register abilities.
      */
     private function _register_abilities() {
-        $abilities = Ability::where("name", "like", "root/%")->get(["name", "description"]);
+        try {
+            $abilities = Ability::where("name", "like", "root/%")->get(["name", "description"]);
+        }
+
+        catch (\PDOException $e) {
+            logger($e);
+            $abilities = [];
+        }
 
         foreach ($abilities as $ability) {
             Gate::define($ability["name"], function($user) use($ability) {

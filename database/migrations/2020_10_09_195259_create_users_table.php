@@ -16,24 +16,23 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->uuid("uuid")->index();
-            $table->timestamps();
-            $table->string("email")->unique();
+            $table->unsignedBigInteger("user_id")->nullable();
 
             $table->timestamp("owner_at")->nullable();
-            $table->string("password");
             $table->string("first_name")->nullable();
             $table->string("last_name")->nullable();
-
+            $table->string("email")->unique();
+            $table->string("password");
+            $table->rememberToken();
             $table->string("locale")->default("en");
             $table->boolean("is_rtl")->default(false);
             $table->string("timezone")->default("UTC");
             $table->timestamp("email_verified_at")->nullable();
+            $table->enum("locale_iso_format", ["LT", "LTS", "L", "LL", "LLL", "LLLL"])->default("L");
+            $table->timestamp("disabled_at")->nullable();
+            $table->timestamps();
 
-            // @see Carbon\Traits\Date@getIsoFormats()
-            $table->enum("locale_iso_format", ["LT", "LTS", "L", "LL", "LLL", "LLLL"])
-                ->default("L");
-
-            $table->rememberToken();
+            $table->foreign("user_id")->references("id")->on("users")->onDelete("cascade");
         });
     }
 

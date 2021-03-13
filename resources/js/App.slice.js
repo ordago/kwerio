@@ -34,7 +34,7 @@ const initialState = {
     palette: {
       primary: blue,
       secondary: pink,
-      type: "light",
+      type: "dark",
     },
     direction: "ltr",
     props: {

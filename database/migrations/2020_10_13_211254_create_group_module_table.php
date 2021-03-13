@@ -15,13 +15,12 @@ class CreateGroupModuleTable extends Migration
     {
         Schema::create('group_module', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-
             $table->unsignedBigInteger("group_id");
             $table->unsignedBigInteger("module_id");
+            $table->timestamps();
 
-            $table->foreign("group_id")->references("id")->on("groups");
-            $table->foreign("module_id")->references("id")->on("modules");
+            $table->foreign("group_id")->references("id")->on("groups")->onDelete("cascade");
+            $table->foreign("module_id")->references("id")->on("modules")->onDelete("cascade");
         });
     }
 

@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Account\Permissions;
 
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Kwerio\Normalizer;
+use Kwerio\PaginatedTableDataProvider;
 
 use App\Models\{
-    Group as GroupModel,
-    Module as ModuleModel,
-    Ability as AbilityModel,
+    Ability,
+    Group,
+    Module,
 };
 
 class GroupController extends Controller {
@@ -68,30 +69,15 @@ class GroupController extends Controller {
      *
      * @return array
      */
-    function index(Request $request, Normalizer $normalizer) {
-        $this->authorize("root/group_index");
-
-        $data = $request->validate([
-            "page" => "required|numeric",
-            "sorts" => "nullable|array",
-            "q" => "nullable",
-        ]);
-
-        $data["sorts"] = empty($data["sorts"]) ? [] : $data["sorts"];
-
-        $query = GroupModel::query();
-
-        if (!empty($data["q"])) {
-            $query->where("name", "like", "%{$data['q']}%");
-        }
-
-        foreach ($data["sorts"] as $sort) {
-            $query->orderBy($sort["name"], $sort["dir"]);
-        }
-
-        $items = $query->paginate(config("app.per_page"));
-
-        return $normalizer->normalize($items, [$this, "_normalize_callback"]);
+    function index(PaginatedTableDataProvider $paginatedTableDataProvider) {
+        return $paginatedTableDataProvider
+            ->authorize("root/group_index")
+            ->query(Group::query())
+            ->basic_filter("name")
+            ->normalize([
+                "uuid", "name",
+                "disabled_at", "created_at", "updated_at",
+            ]);
     }
 
     /**
@@ -149,12 +135,12 @@ class GroupController extends Controller {
             $data["modules"] = empty($data["modules"]) ? [] : $data["modules"];
             $data["abilities"] = empty($data["abilities"]) ? [] : $data["abilities"];
 
-            $group = GroupModel::updateOrCreate(["uuid" => @$data["uuid"]], [
+            $group = Group::updateOrCreate(["uuid" => @$data["uuid"]], [
                 "slug" => Str::slug($data["name"]),
                 "name" => $data["name"],
             ])->fresh();
 
-            $modules = ModuleModel::whereIn("uuid", $data["modules"])->get(["id"]);
+            $modules = Module::whereIn("uuid", $data["modules"])->get(["id"]);
             $group->modules()->sync($modules);
 
             $abilities = [];
@@ -201,7 +187,7 @@ class GroupController extends Controller {
             "uuid" => "required|exists:groups,uuid",
         ]);
 
-        $group = GroupModel::whereUuid($data["uuid"])->first();
+        $group = Group::whereUuid($data["uuid"])->first();
 
         return $normalizer->normalize($group, [$this, "_normalize_callback"]);
     }
@@ -220,9 +206,9 @@ class GroupController extends Controller {
 
         if (Auth::user()->canAny($abilities)) {
             $metadata += [
-                "groups" => GroupModel::all_normalized(),
-                "modules" => ModuleModel::all_normalized(),
-                "abilities" => AbilityModel::all_normalized(),
+                "groups" => Group::all_normalized(),
+                "modules" => Module::all_normalized(),
+                "abilities" => Ability::all_normalized(),
             ];
         }
 
@@ -235,7 +221,7 @@ class GroupController extends Controller {
      * @param Collection $groups
      * @return array
      */
-    function _normalize_callback(GroupModel $group) {
+    function _normalize_callback(Group $group) {
         $modules = $group->modules->pluck("uuid")->toArray();
         $abilities = $group->abilities()->pluck("uuid")->toArray();
 

@@ -26,6 +26,7 @@ class Modules extends Migration {
 
             Artisan::call("migrate", [
                 "--path" => ltrim($m[0], "/"),
+                "--force" => true,
             ]);
 
             echo Artisan::output();

@@ -15,12 +15,11 @@ class CreateGroupablesTable extends Migration
     {
         Schema::create('groupables', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-
             $table->unsignedBigInteger("group_id");
             $table->morphs("groupable");
+            $table->timestamps();
 
-            $table->foreign("group_id")->references("id")->on("groups");
+            $table->foreign("group_id")->references("id")->on("groups")->onDelete("cascade");
         });
     }
 

@@ -16,12 +16,13 @@ class CreateAbilitiesTable extends Migration
         Schema::create('abilities', function (Blueprint $table) {
             $table->id();
             $table->uuid("uuid")->index();
-            $table->timestamps();
             $table->unsignedBigInteger("module_id")->index()->nullable();
             $table->string("name");
             $table->string("description");
+            $table->timestamp("disabled_at")->nullable();
+            $table->timestamps();
 
-            $table->foreign("module_id")->references("id")->on("modules");
+            $table->foreign("module_id")->references("id")->on("modules")->onDelete("cascade");
         });
     }
 

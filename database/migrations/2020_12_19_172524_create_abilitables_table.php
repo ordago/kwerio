@@ -15,12 +15,12 @@ class CreateAbilitablesTable extends Migration
     {
         Schema::create('abilitables', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
 
             $table->unsignedBigInteger("ability_id");
             $table->morphs("abilitable");
+            $table->timestamps();
 
-            $table->foreign("ability_id")->references("id")->on("abilities");
+            $table->foreign("ability_id")->references("id")->on("abilities")->onDelete("cascade");
         });
     }
 

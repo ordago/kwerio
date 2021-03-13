@@ -22,6 +22,7 @@ trait UserActionLogger {
         Userable::create([
             "uuid" => Str::uuid(),
             "user_id" => $user->id,
+            "user_email" => @$user->email,
             "user_model" => get_class($user),
             "user_type" => ($user instanceof User) ? "web" : "api",
             "userable_type" => get_class($this),

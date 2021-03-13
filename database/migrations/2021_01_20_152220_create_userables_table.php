@@ -17,6 +17,7 @@ class CreateUserablesTable extends Migration
             $table->id();
             $table->uuid("uuid")->index();
             $table->unsignedBigInteger("user_id");
+            $table->string("user_email")->nullable();
             $table->enum("user_type", ["web", "api"]);
             $table->string("user_model");
             $table->morphs("userable");

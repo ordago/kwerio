@@ -18,4 +18,7 @@ trait LocalizeDatetimeAttributes {
 
     // deleted_at
     function getDeletedAtAttribute($deleted_at) { return localize_date($deleted_at); }
+
+    // disabled_at
+    function getDisabledAtAttribute($disabled_at) { return localize_date($disabled_at); }
 }

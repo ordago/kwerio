@@ -16,17 +16,16 @@ class CreateApiUsersTable extends Migration
         Schema::create('api_users', function (Blueprint $table) {
             $table->id();
             $table->uuid("uuid")->index();
-            $table->timestamps();
             $table->unsignedBigInteger("user_id");
             $table->string("name")->nullable();
             $table->boolean("is_hashed")->default(false);
             $table->string("token")->unique();
             $table->timestamp("expires_at")->nullable();
             $table->timestamp("last_used_at")->nullable();
+            $table->timestamp("disabled_at")->nullable();
+            $table->timestamps();
 
-            $table->foreign("user_id")
-                ->references("id")
-                ->on("users");
+            $table->foreign("user_id")->references("id")->on("users")->onDelete("cascade");
         });
     }
 

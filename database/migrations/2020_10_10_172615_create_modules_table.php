@@ -16,8 +16,9 @@ class CreateModulesTable extends Migration
         Schema::create('modules', function (Blueprint $table) {
             $table->id();
             $table->uuid("uuid")->index();
-            $table->timestamps();
             $table->string("uid")->unique();
+            $table->timestamp("disabled_at")->nullable();
+            $table->timestamps();
         });
     }
 
