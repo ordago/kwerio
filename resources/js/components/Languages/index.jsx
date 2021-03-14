@@ -25,11 +25,8 @@ function Languages({ reducer = "languages", endpoint }) {
 
   return (
     <PaginatedTable
-      toolbar={{
-        abilities: {
-          create: user.can("language_create"),
-        },
-      }}
+      abilitiesPrefix="language_"
+      toolbar
       reducer={reducer}
       adapter={adapter}
       actions={actions}
@@ -42,10 +39,6 @@ function Languages({ reducer = "languages", endpoint }) {
           },
         },
       }}
-      abilities={{
-        index: user.can("language_index"),
-      }}
-      afterIndexFn={() => dispatch(actions.loaded())}
       disableRowClick={true}
       highlightRowIf={[{
         classes: classes.defaultLanguage,

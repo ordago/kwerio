@@ -1,3 +1,4 @@
+import { createAsyncThunk } from "@reduxjs/toolkit"
 import generate_extra_reducers from "../../utils/generate-extra-reducers"
 
 /**
@@ -91,6 +92,10 @@ export const reducers = adapter => ({
       return col
     })
   }
+})
+
+export const markAsTouched = createAsyncThunk(`PaginatedTable/markAsTouched`, async (items, { dispatch }) => {
+  console.log(items)
 })
 
 /**

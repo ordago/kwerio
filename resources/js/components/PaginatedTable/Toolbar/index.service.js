@@ -1,5 +1,6 @@
 import _ from "lodash"
-import { request_url, request_body, response_body } from "../utils.js"
+
+import { request_url, request_body, response_body } from "../utils"
 
 /**
  * Generate a body that is aimed to do action on a list of specific items.
@@ -46,7 +47,7 @@ export default ({ actions, api, endpoint }) => ({
   }),
 
   /** ENABLE */
-  disable: ({ params }) => ({
+  enable: ({ params }) => ({
     url: args => request_url({ args, params, api, action: "enable" }),
     method: params.requests.disable.method,
     data: args => request_body({
@@ -58,7 +59,7 @@ export default ({ actions, api, endpoint }) => ({
     },
   }),
 
-  /** CREATE */
+  /** DUPLICATE */
   duplicate: ({ params }) => ({
     url: args => request_url({ args, api, params, action: "duplicate" }),
     method: params.requests.duplicate.method,
@@ -67,13 +68,13 @@ export default ({ actions, api, endpoint }) => ({
       fn: _primary_key_body({ params, primaryKey, action: "duplicate" }),
     }),
     200: args => {
-      const data = response_body({ args, action: "duplicate" }),
+      const data = response_body({ args, action: "duplicate" })
         items = data.items.map(item => {
           item.touched_at = Date.now()
           return item
         })
 
-      args.dispatch(actions.upsertMany(items))
+      args.dispatch(actions.upsertMany(data.items))
       args.dispatch(actions.moveTouchedToStart())
 
       return data

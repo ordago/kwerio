@@ -26,7 +26,6 @@ const extraReducers = generate_extra_reducers("languages", services, {
 
 const initialState = adapter.getInitialState({
   ...PaginatedTable.state,
-  loaded: false,
   upsert: {
     uuid: null,
     ...form.state,

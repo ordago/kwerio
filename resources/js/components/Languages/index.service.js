@@ -1,3 +1,5 @@
+import { markAsTouched } from "Kwerio/components/PaginatedTable"
+
 export default ({ actions, api, endpoint }) => ({
   metadata: ({ params }) => ({
     url: api.metadata,

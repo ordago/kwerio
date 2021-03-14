@@ -68,7 +68,6 @@ function PaginatedTable({
   // Set defaults
   const defaultAbilities = {
     index: false,
-    check: true,
   }
 
   const defaultRequests = {
@@ -166,24 +165,22 @@ function PaginatedTable({
           <Table size={size}>
             <TableHead>
               <TableRow>
-                {abilities.check && (
-                  <TableCell>
-                    <Checkbox
-                      { ...checkbox_all }
-                      checked={checkedItems.length > 0}
-                      color="primary"
-                      onChange={e => {
-                        const updates = data.map(item => ({
-                            id: item[primaryKey],
-                            changes: { checked: e.target.checked }
-                          }))
+                <TableCell>
+                  <Checkbox
+                    { ...checkbox_all }
+                    checked={checkedItems.length > 0}
+                    color="primary"
+                    onChange={e => {
+                      const updates = data.map(item => ({
+                          id: item[primaryKey],
+                          changes: { checked: e.target.checked }
+                        }))
 
-                        dispatch(actions.updateMany(updates))
-                      }}
-                      onClick={e => e.stopPropagation()}
-                    />
-                  </TableCell>
-                )}
+                      dispatch(actions.updateMany(updates))
+                    }}
+                    onClick={e => e.stopPropagation()}
+                  />
+                </TableCell>
                 {state.columns && state.columns.map(col => (
                   <TableCell key={col[slugKey]}>
                     {col.sort && (
@@ -234,20 +231,18 @@ function PaginatedTable({
                     return clsx(highlights)
                   })()}
                 >
-                  {abilities.check && (
-                    <TableCell key={row[primaryKey]}>
-                      <Checkbox
-                        checked={("checked" in row) && row.checked === true}
-                        onChange={e => dispatch(actions.updateOne({
-                          id: row[primaryKey],
-                          changes: { checked: e.target.checked }
-                        }))}
-                        onClick={e => e.stopPropagation()}
-                        color="primary"
-                        value={row[primaryKey]}
-                      />
-                    </TableCell>
-                  )}
+                  <TableCell key={row[primaryKey]}>
+                    <Checkbox
+                      checked={("checked" in row) && row.checked === true}
+                      onChange={e => dispatch(actions.updateOne({
+                        id: row[primaryKey],
+                        changes: { checked: e.target.checked }
+                      }))}
+                      onClick={e => e.stopPropagation()}
+                      color="primary"
+                      value={row[primaryKey]}
+                    />
+                  </TableCell>
                   {state.columns.map(col => {
                     if (typeof renderCell === "function") {
                       return renderCell(row, col)
