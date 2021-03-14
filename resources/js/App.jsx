@@ -15,6 +15,7 @@ import { fetch_metadata } from "./App.slice"
 import Main from "./components/Main"
 import useRoutes from "./hooks/useRoutes"
 import useStyles from "./App.styles"
+import { actions } from "./App.slice.js"
 
 function InnerApp({ moduleRoutes, module }) {
   const { theme, config, user } = useSelector(state => state.app),
@@ -33,6 +34,12 @@ function InnerApp({ moduleRoutes, module }) {
           document.body.setAttribute("dir", user.dir)
         }
       })
+
+      const theme_type = localStorage.getItem("theme.palette.type")
+
+      if (theme_type) {
+        dispatch(actions.setThemePaletteType(theme_type))
+      }
   }, [])
 
   return (

@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Box,
   ButtonBase,
   IconButton,
   Menu,
@@ -8,8 +9,10 @@ import {
   Toolbar,
   useTheme,
 } from "@material-ui/core"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useHistory } from "react-router-dom"
+import Brightness4Icon from "@material-ui/icons/Brightness4"
+import Brightness7Icon from "@material-ui/icons/Brightness7"
 import MenuIcon from "@material-ui/icons/Menu"
 import React, { useState } from "react"
 
@@ -22,7 +25,8 @@ function AppBar() {
     theme = useTheme(),
     dispatch = useDispatch(),
     [anchorEl, setAnchorEl] = useState(null),
-    history = useHistory()
+    history = useHistory(),
+    state = useSelector(state => state.app)
 
   return (
     <MuiAppBar position="fixed" className={classes.root}>
@@ -39,6 +43,19 @@ function AppBar() {
         </div>
 
         <div className={classes.toolbarRight}>
+          {/* TOGGLE BRIGHTNESS */}
+          <Box mr={2}>
+            <IconButton color="inherit" onClick={() => dispatch(actions.toggleBrightness())}>
+              {state.theme.palette.type === "light" && (
+                <Brightness4Icon />
+              )}
+              {state.theme.palette.type === "dark" && (
+                <Brightness7Icon />
+              )}
+            </IconButton>
+          </Box>
+
+          {/* USER AVATAR */}
           <ButtonBase onClick={e => setAnchorEl(e.currentTarget)}>
             <Avatar className={classes.avatar} />
           </ButtonBase>

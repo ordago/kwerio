@@ -34,7 +34,7 @@ const initialState = {
     palette: {
       primary: blue,
       secondary: pink,
-      type: "dark",
+      type: "light",
     },
     direction: "ltr",
     props: {
@@ -105,6 +105,18 @@ const slice = createSlice({
   initialState,
   reducers: {
     ...menu.reducers,
+    setThemePaletteType: (state, action) => {
+      state.theme.palette.type = action.payload
+    },
+    toggleBrightness: (state, action) => {
+      if (state.theme.palette.type === "dark") {
+        state.theme.palette.type = "light"
+        localStorage.setItem("theme.palette.type", "light")
+      } else {
+        state.theme.palette.type = "dark"
+        localStorage.setItem("theme.palette.type", "dark")
+      }
+    },
     toggleMainMenu: (state, action) => { state.menu.open = !state.menu.open },
     togglePaletteType: (state) => {
       if (_.isUndefined(state.palette)) return
