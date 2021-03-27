@@ -1,5 +1,5 @@
 FROM composer:2.0.11 as composer
-FROM node:15.11.0-buster AS node
+FROM node:15.12.0-buster AS node
 FROM php:8.0.3-apache-buster
 
 LABEL maintainer="Oussama Elgoumri <euvoor@gmail.com>"

@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Components;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Kwerio\PaginatedTableDataProvider;
-use App\Models\Components\Language;
+use App\Models\Components\Fieldset;
 use App\Http\Controllers\Traits;
 use Illuminate\Support\Facades\DB;
 use Kwerio\Normalizer;
 
-class LanguageController extends Controller {
+class FieldsetController extends Controller {
     use Traits\Abilities;
 
     private $rules = [
@@ -20,44 +20,45 @@ class LanguageController extends Controller {
     ];
 
     /**
-     * Get paginated list of available languages.
+     * Get paginated list of available fieldsets.
      *
      * @return array
      */
     function index(Request $request, PaginatedTableDataProvider $paginatedTableDataProvider) {
         $module = null;
-        $query = Language::query();
+        $query = Fieldset::query();
 
         if ($request->filled("module")) {
             $module = $request->input("module");
-            $query = Language::where("module", $module);
+            $query = Fieldset::where("module", $module);
         }
 
         return $paginatedTableDataProvider
-            ->authorize($this->prefix_abilities("language_index"))
+            ->authorize($this->prefix_abilities("fieldset_index"))
             ->query($query)
             ->basic_filter(["name", "locale"])
             ->normalize([
-                "uuid", "name", "locale",
-                "default_at", "disabled_at", "created_at", "updated_at",
+                "uuid", "name", "locale", "description",
+                "disabled_at", "created_at", "updated_at",
             ]);
+
     }
 
     /**
-     * Add new language.
+     * Add new fieldset.
      *
      * @param Request $request
      * @return array
      */
     function create(Request $request) {
-        $this->authorize($this->prefix_abilities("language_create")[0]);
+        $this->authorize($this->prefix_abilities("fieldset_create")[0]);
         $data = $request->validate($this->rules);
 
         return $this->_upsert($data);
     }
 
     /**
-     * Upsert a language.
+     * Upsert a fieldset.
      *
      * @param array $data
      * @return array
@@ -66,9 +67,9 @@ class LanguageController extends Controller {
         try {
             DB::beginTransaction();
 
-            // Filter language based on available languages in the locales.
-            $language = array_filter(all_languages(true), function($language) use($data) {
-                if ($data["locale"] === $language["locale"]) {
+            // Filter fieldset based on available fieldsets in the locales.
+            $fieldset = array_filter(all_fieldsets(true), function($fieldset) use($data) {
+                if ($data["locale"] === $fieldset["locale"]) {
                     return true;
                 }
 
@@ -77,37 +78,37 @@ class LanguageController extends Controller {
 
             $normalizer = resolve(Normalizer::class);
 
-            if (!count($language)) {
+            if (!count($fieldset)) {
                 return $normalizer->error("Locale {$data['locale']} does not exists", 404);
             } else {
-                $language = array_values($language)[0];
+                $fieldset = array_values($fieldset)[0];
             }
 
-            // Create or Update the language.
-            $language = Language::updateOrCreate([
+            // Create or Update the fieldset.
+            $fieldset = Fieldset::updateOrCreate([
                 "locale" => $data["locale"],
                 "module" => $data["module"],
             ], [
-                "locale" => $language["locale"],
-                "name" => $language["name"],
-                "native_name" => $language["native_name"],
+                "locale" => $fieldset["locale"],
+                "name" => $fieldset["name"],
+                "native_name" => $fieldset["native_name"],
                 "module" => $data["module"],
             ]);
 
-            $language = $language->fresh();
-            $language->log_user_action("upsert");
+            $fieldset = $fieldset->fresh();
+            $fieldset->log_user_action("upsert");
 
-            // If there is no default language, then use current as default.
-            if (Language::whereNotNull("default_at")->where("module", $data["module"])->count() === 0) {
-                $language->default_at = now();
-                $language->save();
+            // If there is no default fieldset, then use current as default.
+            if (Fieldset::whereNotNull("default_at")->where("module", $data["module"])->count() === 0) {
+                $fieldset->default_at = now();
+                $fieldset->save();
             }
 
             DB::commit();
 
             return $normalizer
-                ->message("Language '{$data['locale']}' upserted successfully")
-                ->normalize($language, [$this, "_normalize_callback"]);
+                ->message("Fieldset '{$data['locale']}' upserted successfully")
+                ->normalize($fieldset, [$this, "_normalize_callback"]);
         }
 
         catch (\Throwable $e) {
@@ -117,48 +118,48 @@ class LanguageController extends Controller {
     }
 
     /**
-     * Fetch languages metadata.
+     * Fetch fieldsets metadata.
      *
      * @return arrya
      */
     function metadata(Request $request, Normalizer $normalizer) {
-        $this->authorize($this->prefix_abilities("language_create")[0]);
+        $this->authorize($this->prefix_abilities("fieldset_create")[0]);
 
         $module = $request->get("module");
 
         if ($request->has("only_models") && $request->get("only_models") === true) {
-            $languages = Language::whereNull("disabled_at")
+            $fieldsets = Fieldset::whereNull("disabled_at")
                 ->where("module", $module)
                 ->orderByDesc("default_at")
                 ->get();
 
-            return $normalizer->normalize($languages, [$this, "_normalize_callback"]);
+            return $normalizer->normalize($fieldsets, [$this, "_normalize_callback"]);
         }
 
-        $locales = Language::whereNull("disabled_at")
+        $locales = Fieldset::whereNull("disabled_at")
             ->where("module", $module)
             ->orderByDesc("default_at")
             ->pluck("locale")
             ->toArray();
 
-        $languages = array_map(function($language) use($locales) {
-            return array_merge($language, [
-                "disabled" => in_array($language["locale"], $locales)
+        $fieldsets = array_map(function($fieldset) use($locales) {
+            return array_merge($fieldset, [
+                "disabled" => in_array($fieldset["locale"], $locales)
             ]);
-        }, all_languages(true));
+        }, all_fieldsets(true));
 
         return [
-            "languages" => array_values($languages),
+            "fieldsets" => array_values($fieldsets),
         ];
     }
 
     /**
-     * Delete the given languages by uuids.
+     * Delete the given fieldsets by uuids.
      *
      * @return array
      */
     function delete(Request $request, Normalizer $normalizer) {
-        $this->authorize($this->prefix_abilities("language_delete")[0]);
+        $this->authorize($this->prefix_abilities("fieldset_delete")[0]);
 
         try {
             DB::beginTransaction();
@@ -168,7 +169,7 @@ class LanguageController extends Controller {
                 "module" => "required",
             ]);
 
-            $items = Language::whereIn("uuid", $data["uuids"])
+            $items = Fieldset::whereIn("uuid", $data["uuids"])
                 ->where("module", $data["module"])
                 ->get();
 
@@ -176,14 +177,14 @@ class LanguageController extends Controller {
                 $item->log_user_action("delete", $item->toArray());
             });
 
-            Language::whereIn("uuid", $data["uuids"])
+            Fieldset::whereIn("uuid", $data["uuids"])
                 ->where("module", $data["module"])
                 ->delete();
 
             DB::commit();
 
             return $normalizer
-                ->message("Languages deleted successfully")
+                ->message("Fieldsets deleted successfully")
                 ->normalize($items, [$this, "_normalize_callback"]);
         }
 
@@ -194,12 +195,12 @@ class LanguageController extends Controller {
     }
 
     /**
-     * Set language as defautl.
+     * Set fieldset as defautl.
      *
      * @return array
      */
     function set_as_default(Request $request, Normalizer $normalizer) {
-        $this->authorize($this->prefix_abilities("language_set_as_default")[0]);
+        $this->authorize($this->prefix_abilities("fieldset_set_as_default")[0]);
 
         $data = $request->validate([
             "uuid" => "required",
@@ -209,23 +210,23 @@ class LanguageController extends Controller {
         try {
             DB::beginTransaction();
 
-            $language = Language::where("uuid", $data["uuid"])
+            $fieldset = Fieldset::where("uuid", $data["uuid"])
                 ->where("module", $data["module"])
                 ->first();
 
-            Language::where("module", $data["module"])
+            Fieldset::where("module", $data["module"])
                 ->update(["default_at" => null]);
 
-            $language->default_at = now();
-            $language->save();
+            $fieldset->default_at = now();
+            $fieldset->save();
 
-            $language->log_user_action("set_as_default");
+            $fieldset->log_user_action("set_as_default");
 
             DB::commit();
 
             return $normalizer
-                ->message("Language '{$language->name}' has being set as default")
-                ->normalize($language, [$this, "_normalize_callback"]);
+                ->message("Fieldset '{$fieldset->name}' has being set as default")
+                ->normalize($fieldset, [$this, "_normalize_callback"]);
         }
 
         catch (\Throwable $e) {
@@ -235,12 +236,12 @@ class LanguageController extends Controller {
     }
 
     /**
-     * Disable the given languages.
+     * Disable the given fieldsets.
      *
      * @return array
      */
     function disable(Request $request, Normalizer $normalizer) {
-        $this->authorize($this->prefix_abilities("language_disable")[0]);
+        $this->authorize($this->prefix_abilities("fieldset_disable")[0]);
 
         $data = $request->validate([
             "uuids" => "required",
@@ -250,23 +251,23 @@ class LanguageController extends Controller {
         try {
             DB::beginTransaction();
 
-            Language::where("module", $data["module"])
+            Fieldset::where("module", $data["module"])
                 ->whereIn("uuid", $data["uuids"])
                 ->update(["disabled_at" => now()]);
 
-            $languages = Language::where("module", $data["module"])
+            $fieldsets = Fieldset::where("module", $data["module"])
                 ->whereIn("uuid", $data["uuids"])
                 ->get();
 
-            $languages->each(function($language) {
-                $language->log_user_action("disable");
+            $fieldsets->each(function($fieldset) {
+                $fieldset->log_user_action("disable");
             });
 
             DB::commit();
 
             return $normalizer
-                ->message($languages->count() . " are disabled successfully")
-                ->normalize($languages, [$this, "_normalize_callback"]);
+                ->message($fieldsets->count() . " are disabled successfully")
+                ->normalize($fieldsets, [$this, "_normalize_callback"]);
         }
 
         catch (\Throwable $e) {
@@ -276,12 +277,12 @@ class LanguageController extends Controller {
     }
 
     /**
-     * Enable the given languages.
+     * Enable the given fieldsets.
      *
      * @return array
      */
     function enable(Request $request, Normalizer $normalizer) {
-        $this->authorize($this->prefix_abilities("language_enable")[0]);
+        $this->authorize($this->prefix_abilities("fieldset_enable")[0]);
 
         $data = $request->validate([
             "uuids" => "required",
@@ -291,23 +292,23 @@ class LanguageController extends Controller {
         try {
             DB::beginTransaction();
 
-            Language::where("module", $data["module"])
+            Fieldset::where("module", $data["module"])
                 ->whereIn("uuid", $data["uuids"])
                 ->update(["disabled_at" => null]);
 
-            $languages = Language::where("module", $data["module"])
+            $fieldsets = Fieldset::where("module", $data["module"])
                 ->whereIn("uuid", $data["uuids"])
                 ->get();
 
-            $languages->each(function($language) {
-                $language->log_user_action("enable");
+            $fieldsets->each(function($fieldset) {
+                $fieldset->log_user_action("enable");
             });
 
             DB::commit();
 
             return $normalizer
-                ->message($languages->count() . " languages are enabled")
-                ->normalize($languages, [$this, "_normalize_callback"]);
+                ->message($fieldsets->count() . " fieldsets are enabled")
+                ->normalize($fieldsets, [$this, "_normalize_callback"]);
         }
 
         catch (\Throwable $e) {
@@ -317,13 +318,13 @@ class LanguageController extends Controller {
     }
 
     /**
-     * Normalize language data.
+     * Normalize fieldset data.
      *
-     * @param Language $language
+     * @param Fieldset $fieldset
      * @return array
      */
-    function _normalize_callback(Language $language) {
-        return $language->only([
+    function _normalize_callback(Fieldset $fieldset) {
+        return $fieldset->only([
             "uuid", "locale", "name", "native_name", "default_at",
             "disabled_at", "created_at", "updated_at",
         ]);

@@ -8,6 +8,7 @@ use App\Http\Controllers\{
     Account\Permissions\ApiUserController,
     Account\Permissions\GroupController,
     Components\LanguageController,
+    Components\FieldsetController,
 };
 
 Route::middleware(["auth:web,api", "root"])->group(function() {
@@ -39,6 +40,7 @@ Route::middleware(["auth:web,api", "root"])->group(function() {
 Route::middleware(["auth:web,api"])->group(function() {
     // ------------------------------------------------------- COMPONENTS -- #
     Route::prefix("components")->group(function() {
+        // ---------------------------------------------------- Languages -- #
         Route::post("/languages", [LanguageController::class, "index"]);
         Route::post("/languages/metadata", [LanguageController::class, "metadata"]);
         Route::post("/languages/create", [LanguageController::class, "create"]);
@@ -46,5 +48,13 @@ Route::middleware(["auth:web,api"])->group(function() {
         Route::post("/languages/enable", [LanguageController::class, "enable"]);
         Route::post("/languages/set-as-default", [LanguageController::class, "set_as_default"]);
         Route::delete("/languages", [LanguageController::class, "delete"]);
+
+        // ---------------------------------------------------- Fieldsets -- #
+        Route::post("/fieldsets", [FieldsetController::class, "index"]);
+        Route::post("/fieldsets/metadata", [FieldsetController::class, "metadata"]);
+        Route::post("/fieldsets/create", [FieldsetController::class, "create"]);
+        Route::post("/fieldsets/disable", [FieldsetController::class, "disable"]);
+        Route::post("/fieldsets/enable", [FieldsetController::class, "enable"]);
+        Route::delete("/fieldsets", [FieldsetController::class, "delete"]);
     });
 });
