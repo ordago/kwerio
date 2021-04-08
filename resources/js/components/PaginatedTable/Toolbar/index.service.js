@@ -14,7 +14,7 @@ function _primary_key_body({ params, primaryKey, action }) {
   })
 }
 
-export default ({ actions, api, endpoint }) => ({
+export default ({ actions, api, endpoint, primaryKey }) => ({
   /** DELETE */
   delete: ({ params }) => ({
     url: (args) => request_url({ args, params, api, action: "delete" }),

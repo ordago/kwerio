@@ -30,6 +30,7 @@ function Toolbar({
   reducer,
   checkedItems,
   onQuery,
+  primaryKey,
 
   // User
   useIcons = true,
@@ -51,7 +52,7 @@ function Toolbar({
     [q, setQ] = useState(state.q),
     q_ref = useRef(),
     t = useT(),
-    request = useRequest({ reducer, services: services({ actions, api, endpoint }) }),
+    request = useRequest({ reducer, services: services({ actions, api, endpoint, primaryKey }) }),
     user = useUser()
 
   q_ref.current = q
@@ -76,6 +77,10 @@ function Toolbar({
     defaultAfterHooksFn[action] = () => {}
     defaultBeforeHooksFn[action] = () => {}
     defaultRequests[action] = requestTemplate
+
+    if (action === "delete") {
+      defaultRequests[action].method = "delete"
+    }
   }
 
   if (abilitiesPrefix) {

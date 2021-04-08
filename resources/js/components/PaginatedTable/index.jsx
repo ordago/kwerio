@@ -152,6 +152,7 @@ function PaginatedTable({
               reducer={reducer}
               checkedItems={checkedItems}
               onQuery={() => request.index({ requests })}
+              primaryKey={primaryKey}
               {...toolbar}
             />}
           />
