@@ -1,5 +1,5 @@
-FROM composer:2.0.11 as composer
-FROM node:15.12.0-buster AS node
+FROM composer:2.0.12 as composer
+FROM node:15.14.0-buster AS node
 FROM php:8.0.3-apache-buster
 
 LABEL maintainer="Oussama Elgoumri <euvoor@gmail.com>"
@@ -90,7 +90,7 @@ RUN set -eux \
 
 # Install xdebug
 RUN set -eux \
-    && git clone -b 3.0.3 --depth 1 https://github.com/xdebug/xdebug.git /usr/src/php/ext/xdebug \
+    && git clone -b 3.0.4 --depth 1 https://github.com/xdebug/xdebug.git /usr/src/php/ext/xdebug \
     && docker-php-ext-configure xdebug --enable-xdebug-dev \
     && docker-php-ext-install xdebug
 
