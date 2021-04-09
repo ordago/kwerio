@@ -34,8 +34,7 @@ function PageMenu({ menu = null, actions }) {
     match = useRouteMatch(),
     history = useHistory(),
     dispatch = useDispatch(),
-    t = useT(),
-    [menuToOpen, setMenuToOpen] = useState({})
+    t = useT()
 
   if (!menu) menu = "module.menu"
 
@@ -47,15 +46,6 @@ function PageMenu({ menu = null, actions }) {
   }
 
   const menu_items = get(state, menu)
-
-  useEffect(() => {
-    if (menuToOpen !== null) {
-      dispatch(actions.openParentOf({
-        menu: menuToOpen.menu,
-        item: menuToOpen.item,
-      }))
-    }
-  }, [("menu" in menuToOpen)])
 
   /**
    * Handle menu item click.

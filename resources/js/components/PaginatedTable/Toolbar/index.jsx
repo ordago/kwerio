@@ -76,12 +76,10 @@ function Toolbar({
     defaultAbilitiesFn[action] = checkedItems => true
     defaultAfterHooksFn[action] = () => {}
     defaultBeforeHooksFn[action] = () => {}
-    defaultRequests[action] = requestTemplate
-
-    if (action === "delete") {
-      defaultRequests[action].method = "delete"
-    }
+    defaultRequests[action] = { ...requestTemplate }
   }
+
+  defaultRequests.delete.method = "delete"
 
   if (abilitiesPrefix) {
     for (let ability in defaultAbilities) {

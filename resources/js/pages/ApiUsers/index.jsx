@@ -60,9 +60,7 @@ function ApiUsers({ match }) {
           {user.canAny(["root/api_user_list", "root/api_user_create", "root/api_user_update"]) && (
             <PaginatedTable
               toolbar
-              abilities={{
-                index: user.can("root/api_user_list"),
-              }}
+              abilitiesPrefix="root/api_user_"
               reducer="apiUsers"
               adapter={adapter}
               api={api.apiUsers}
