@@ -13,6 +13,8 @@ cd /var/www/html
 groupmod --non-unique --gid $GROUP_ID www-data
 usermod --non-unique --uid $USER_ID --shell /bin/bash www-data
 
+chown -R $USER_ID:$GROUP_ID /var/www/html
+
 if [ ! -d /var/www/.composer ]; then
     mkdir /var/www/.composer
     chown www-data:www-data /var/www/.composer
