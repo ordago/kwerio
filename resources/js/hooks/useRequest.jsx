@@ -66,6 +66,7 @@ function useRequest({
   services,
   prefix = null,
   reducer = "module",
+  primaryKey = "uuid",
 }) {
   const dispatch = useDispatch(),
     { enqueueSnackbar } = useSnackbar(),
@@ -108,6 +109,7 @@ function useRequest({
           reducer,                      // Name of the reducer.
           state: getState()[reducer],   // State of the current reducer.
           history,
+          primaryKey,
         },
           options = {
             ...defaultOptions,          // Seed default options

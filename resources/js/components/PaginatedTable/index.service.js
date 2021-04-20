@@ -1,4 +1,5 @@
 import { needs_more, request_url } from "./utils.js"
+import _ from "lodash"
 
 export default ({ actions, api, primaryKey  }) => ({
   index: ({ params }) => {
@@ -13,20 +14,24 @@ export default ({ actions, api, primaryKey  }) => ({
           return req.requestBody(args)
         }
 
-        let sorts = args.state.columns
-          .filter(col => ("sort" in col) && col.sort === true)
-          .sort((left, right) => {
-            if (left.sortOrder > right.sortOrder) return 1
-            else if (left.sortOrder < right.sortOrder) return -1
-            return 0
-          })
-          .map(col => ({
-            name: col.slug,
-            dir: col.sortDirection || "asc",
-          }))
+        let sorts = []
+
+        if ("columns" in args.state) {
+          sorts = args.state.columns
+            .filter(col => ("sort" in col) && col.sort === true)
+            .sort((left, right) => {
+              if (left.sortOrder > right.sortOrder) return 1
+              else if (left.sortOrder < right.sortOrder) return -1
+              return 0
+            })
+            .map(col => ({
+              name: col.slug,
+              dir: col.sortDirection || "asc",
+            }))
+        }
 
         return {
-          page: args.state.rsc.page + 1,
+          page: _.get(args.state.rsc, "page", 1),
           q: args.state.q,
           sorts,
           ...req.extraParams,

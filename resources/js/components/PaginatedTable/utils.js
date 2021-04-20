@@ -56,7 +56,7 @@ export function request_body({ args, params, api, action, fn = null }) {
  *
  * @return object
  */
-export function response_body({ args, action, fn = null }) {
+export function response_body({ args, action, fn = null, params }) {
   const req = params.requests[action]
 
   if (req.convertResponseBody) {

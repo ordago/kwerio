@@ -1,6 +1,10 @@
 import { Button, IconButton, Tooltip } from "@material-ui/core"
 import { useHistory } from "react-router-dom"
-import React from "react"
+import React, { useState } from "react"
+
+import Suspense from "Kwerio/components/Suspense"
+
+const DeleteConfirmDialog = React.lazy(() => import("./DeleteConfirmDialog.jsx"))
 
 function GenericButton({
   useIcons,
@@ -19,7 +23,8 @@ function GenericButton({
   api,
   endpoint,
 }) {
-  const history = useHistory()
+  const history = useHistory(),
+    [delete_confirm_dialog, setConfirmDeleteDialog] = useState(false)
 
   function _handle_click() {
     if (onBefore) {
@@ -28,13 +33,11 @@ function GenericButton({
 
     if (action === "create" && (action in endpoint)) {
       history.push(endpoint.create)
-    }
-
-    else if (action === "filter") {
-
-    }
-
-    else {
+    } else if (action === "filter") {
+      throw new Error("Filter is not implemented yet")
+    } else if (action === "delete") {
+      setConfirmDeleteDialog(true)
+    } else {
       request[action]({ requests, items: checkedItems })
     }
 
@@ -45,6 +48,15 @@ function GenericButton({
 
   return (
     <>
+      {delete_confirm_dialog && (
+        <Suspense component={
+          <DeleteConfirmDialog
+            open={delete_confirm_dialog}
+            onConfirm={() => request.delete({ requests, items: checkedItems })}
+            onClose={() => setConfirmDeleteDialog(false)}
+          />
+        } />
+      )}
       {useIcons && (
         <Tooltip title={title}>
           <IconButton

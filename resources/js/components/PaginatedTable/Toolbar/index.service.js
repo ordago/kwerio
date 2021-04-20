@@ -24,7 +24,7 @@ export default ({ actions, api, endpoint, primaryKey }) => ({
       fn: _primary_key_body({ params, primaryKey, action: "delete" })
     }),
     200: args => {
-      const data = response_body({ args, action: "delete" }),
+      const data = response_body( { args, action: "delete", params }),
         items = _.get(data, "items", []).map(item => _.get(item, primaryKey, item))
 
       args.dispatch(actions.removeMany(items))

@@ -284,7 +284,7 @@ function PaginatedTable({
                     dispatch(actions.setPerPage(e.target.value))
                     request.index({ requests })
                   }}
-                  count={state.rsc.total || 0}
+                  count={_.get(state.rsc, "total", 0)}
                 />
               </TableRow>
             </TableFooter>
