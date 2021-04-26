@@ -74,10 +74,9 @@ class GroupController extends Controller {
             ->authorize("root/group_index")
             ->query(Group::query())
             ->basic_filter("name")
-            ->normalize([
-                "uuid", "name",
-                "disabled_at", "created_at", "updated_at",
-            ]);
+            ->normalize(function($group) {
+                return $this->_normalize_callback($group);
+            });
     }
 
     /**
