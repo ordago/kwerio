@@ -34,7 +34,7 @@ export function url(api, { state, primaryKey }) {
  * Actions to dispatch before sending back fulfilled.
  */
 function before_fulfilled(actions, { dispatch, data }) {
-  dispatch(actions.upsertOne({ ...data.items[0], touched: Date.now() }))
+  dispatch(actions.upsertOne({ ...data.items[0], touched_at: Date.now() }))
   dispatch(actions.resetTableTrackers())
   dispatch(actions.fillUpsert(data.items[0]))
 

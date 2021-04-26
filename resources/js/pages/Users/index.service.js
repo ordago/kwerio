@@ -2,8 +2,16 @@ import { actions as abilitiesActions } from "../Abilities/index.slice"
 import { api, endpoints } from "../../routes/index.jsx"
 import { actions as groupsActions } from "../Groups/index.slice"
 import { actions as modulesActions } from "../Modules/index.slice"
+import * as upsert from "../../utils/request/upsert.js"
+import fetch_by_uuid from "../../utils/request/fetch_by_uuid.js"
 
 const services = ({ actions }) => ({
+  upsert: () => ({
+    url: ({ state, primaryKey }) => upsert.url(api.users, { state, primaryKey }),
+    data: ({ state }) => upsert.data(state),
+    200: ({ dispatch, data, history, state }) => upsert.to_index(actions, endpoints.users, { dispatch, data, history, state }),
+  }),
+
   metadata: () => ({
     url: api.users.metadata,
     200: ({ dispatch, data }) => {
@@ -26,50 +34,7 @@ const services = ({ actions }) => ({
     }
   }),
 
-  fetch_by_uuid: ({ params }) => ({
-    url: api.users.fetch_by_uuid,
-    data: {
-      uuid: params,
-    },
-    200: ({ dispatch, data }) => {
-      dispatch(actions.upsertOne({ ...data.items[0] }))
-      dispatch(actions.fillUpsert(data.items[0]))
-
-      return data
-    },
-  }),
-
-  upsert: () => ({
-    url: ({ state }) => state.upsert.uuid ? api.users.update : api.users.create,
-    data: ({ state }) => ({
-      uuid: state.upsert.uuid,
-      email: state.upsert.email.value,
-      first_name: state.upsert.first_name.value,
-      last_name: state.upsert.last_name.value,
-      locale: state.upsert.locale.value,
-      timezone: state.upsert.timezone.value,
-      locale_iso_format: state.upsert.locale_iso_format.value,
-      password: state.upsert.password.value,
-      password_confirmation: state.upsert.password_confirmation.value,
-      groups: state.upsert.groups.value,
-      abilities: state.upsert.abilities.value,
-    }),
-    200: ({ dispatch, data, history, state }) => {
-      const route_to_index = ! state.upsert.uuid
-
-      dispatch(actions.upsertOne({ ...data.items[0], touched_at: Date.now() }))
-      dispatch(actions.resetTableTrackers())
-
-      if (route_to_index) {
-        dispatch(actions.resetUpsert())
-        history.push(endpoints.users.index)
-      } else {
-        dispatch(actions.fillUpsert(data.items[0]))
-      }
-
-      return data
-    },
-  }),
+  fetch_by_uuid: ({ params }) => fetch_by_uuid(actions, api.users, params),
 })
 
 export default services
