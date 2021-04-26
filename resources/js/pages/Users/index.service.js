@@ -7,9 +7,9 @@ import fetch_by_uuid from "../../utils/request/fetch_by_uuid.js"
 
 const services = ({ actions }) => ({
   upsert: () => ({
-    url: ({ state, primaryKey }) => upsert.url(api.users, { state, primaryKey }),
+    url: args => upsert.url(api.users, args),
     data: ({ state }) => upsert.data(state),
-    200: ({ dispatch, data, history, state }) => upsert.to_index(actions, endpoints.users, { dispatch, data, history, state }),
+    200: args => upsert.to_index(actions, endpoints.users, args),
   }),
 
   metadata: () => ({

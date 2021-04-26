@@ -2,8 +2,18 @@ import { actions as abilitiesActions } from "../Abilities/index.slice"
 import { api, endpoints } from "../../routes/index.jsx"
 import { actions as groupsActions } from "../Groups/index.slice"
 import { actions as modulesActions } from "../Modules/index.slice"
+import fetch_by_uuid from "../../utils/request/fetch_by_uuid"
+import * as upsert from "../../utils/request/upsert"
 
 export default ({ actions }) => ({
+  upsert: ({ params }) => ({
+    url: args => upsert.url(api.apiUsers, args),
+    data: ({ state }) => upsert.data(state),
+    200: args => upsert.to_index(actions, endpoints.apiUsers, args),
+  }),
+
+  fetch_by_uuid: ({ params }) => fetch_by_uuid(actions, api.apiUsers, params),
+
   metadata: () => ({
     url: api.apiUsers.metadata,
     200: ({ dispatch, data }) => {
@@ -24,50 +34,5 @@ export default ({ actions }) => ({
 
       return data
     }
-  }),
-
-  fetch_by_uuid: ({ params }) => ({
-    url: api.apiUsers.fetch_by_uuid,
-    data: {
-      uuid: params,
-    },
-    200: ({ dispatch, data }) => {
-      dispatch(actions.upsertOne({ ...data.items[0] }))
-      dispatch(actions.fillUpsert(data.items[0]))
-
-      return data
-    }
-  }),
-
-  upsert: ({ params }) => ({
-    url: ({ state }) => state.upsert.uuid ? api.apiUsers.update : api.apiUsers.create,
-    data: ({ state }) => ({
-      uuid: state.upsert.uuid,
-      name: state.upsert.name.value,
-      is_hashed: state.upsert.is_hashed.value,
-      expires_at: state.upsert.expires_at.value,
-      token_unhashed: params,
-      groups: state.upsert.groups.value,
-      abilities: state.upsert.abilities.value,
-    }),
-    200: ({ dispatch, data, state, history }) => {
-      const route_to_index = ! state.upsert.uuid && ! state.upsert.is_hashed.value
-
-      dispatch(actions.upsertOne({ ...data.items[0], touched_at: Date.now() }))
-      dispatch(actions.resetTableTrackers())
-
-      if (route_to_index) {
-        dispatch(actions.resetUpsert())
-        history.push(endpoints.apiUsers.index)
-      } else {
-        if (state.upsert.is_hashed.value) {
-          history.push(endpoints.apiUsers.update.replace(/:uuid/, data.items[0].uuid))
-        }
-
-        dispatch(actions.fillUpsert(data.items[0]))
-      }
-
-      return data
-    },
   }),
 })

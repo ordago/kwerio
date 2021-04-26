@@ -13,15 +13,15 @@ import { useHistory } from "react-router-dom"
 import { useSnackbar } from "notistack"
 import React from "react"
 
-import { actions, adapter } from "../index.slice"
-import { actions as appActions } from "../../../App.slice"
-import Groupable from "../../../components/Groupable/index.jsx"
-import Page from "../../../components/Page"
-import services from "../index.service"
-import useRequest from "../../../hooks/useRequest"
+import { actions, adapter } from "./index.slice"
+import { actions as appActions } from "../../App.slice"
+import Groupable from "../../components/Groupable/index.jsx"
+import Page from "../../components/Page"
+import services from "./index.service"
+import useRequest from "../../hooks/useRequest"
 import useStyles from "./index.styles"
-import useT from "../../../hooks/useT"
-import useUuid from "../../../hooks/useUuid"
+import useT from "../../hooks/useT"
+import useUuid from "../../hooks/useUuid"
 
 function Upsert({ match }) {
   const state = useSelector(state => state.apiUsers),

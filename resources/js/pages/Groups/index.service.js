@@ -6,13 +6,9 @@ import * as upsert from "../../utils/request/upsert"
 
 export default ({ actions }) => ({
   upsert: () => ({
-    url: ({ state, primaryKey }) => upsert.url(api.groups, { state, primaryKey }),
+    url: args => upsert.url(api.groups, args),
     data: ({ state }) => upsert.data(state),
-    200: ({ dispatch, data, state, history }) => upsert.to_index(
-      actions,
-      endpoints.groups,
-      { dispatch, data, history, state }
-    ),
+    200: args => upsert.to_index(actions, endpoints.groups, args),
   }),
 
   metadata: () => ({
