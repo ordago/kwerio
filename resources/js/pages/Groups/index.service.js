@@ -6,9 +6,9 @@ import * as upsert from "../../utils/request/upsert"
 
 export default ({ actions }) => ({
   upsert: () => ({
-    url: args => upsert.url(api.groups, args),
-    data: ({ state }) => upsert.data(state),
-    200: args => upsert.to_index(actions, endpoints.groups, args),
+    url: args => upsert.url({ api: api.groups, ...args }),
+    data: args => upsert.data(args),
+    200: args => upsert.to_index({ actions, endpoint: endpoints.groups, ...args }),
   }),
 
   metadata: () => ({
@@ -33,5 +33,5 @@ export default ({ actions }) => ({
     }
   }),
 
-  fetch_by_uuid: ({ params }) => fetch_by_uuid(actions, api.groups, params),
+  fetch_by_uuid: args => fetch_by_uuid({ actions, api: api.groups, ...args }),
 })

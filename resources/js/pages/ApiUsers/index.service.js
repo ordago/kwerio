@@ -7,12 +7,12 @@ import * as upsert from "../../utils/request/upsert"
 
 export default ({ actions }) => ({
   upsert: ({ params }) => ({
-    url: args => upsert.url(api.apiUsers, args),
-    data: ({ state }) => upsert.data(state),
-    200: args => upsert.to_index(actions, endpoints.apiUsers, args),
+    url: args => upsert.url({ api: api.apiUsers, ...args }),
+    data: args => upsert.data(args),
+    200: args => upsert.to_index({ actions, endpoint: endpoints.apiUsers, ...args }),
   }),
 
-  fetch_by_uuid: ({ params }) => fetch_by_uuid(actions, api.apiUsers, params),
+  fetch_by_uuid: args => fetch_by_uuid({ actions, api: api.apiUsers, ...args }),
 
   metadata: () => ({
     url: api.apiUsers.metadata,

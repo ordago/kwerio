@@ -1,4 +1,4 @@
-export default function(actions, api, params) {
+export default function({ actions, api, params }) {
   return {
     url: api.fetch_by_uuid,
     data: {
