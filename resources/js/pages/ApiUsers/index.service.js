@@ -9,7 +9,7 @@ export default ({ actions }) => ({
   upsert: ({ params }) => ({
     url: args => upsert.url({ api: api.apiUsers, ...args }),
     data: args => upsert.data(args),
-    200: args => upsert.to_index({ actions, endpoint: endpoints.apiUsers, ...args }),
+    200: args => upsert.redirect_to_index({ actions, endpoint: endpoints.apiUsers, ...args }),
   }),
 
   fetch_by_uuid: args => fetch_by_uuid({ actions, api: api.apiUsers, ...args }),

@@ -8,7 +8,7 @@ export default ({ actions }) => ({
   upsert: () => ({
     url: args => upsert.url({ api: api.groups, ...args }),
     data: args => upsert.data(args),
-    200: args => upsert.to_index({ actions, endpoint: endpoints.groups, ...args }),
+    200: args => upsert.redirect_to_index({ actions, endpoint: endpoints.groups, ...args }),
   }),
 
   metadata: () => ({

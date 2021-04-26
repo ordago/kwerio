@@ -9,7 +9,7 @@ const services = ({ actions }) => ({
   upsert: () => ({
     url: args => upsert.url({ api: api.users, ...args }),
     data: args => upsert.data(args),
-    200: args => upsert.to_index({ actions, endpoint: endpoints.users, ...args }),
+    200: args => upsert.redirect_to_index({ actions, endpoint: endpoints.users, ...args }),
   }),
 
   metadata: () => ({
