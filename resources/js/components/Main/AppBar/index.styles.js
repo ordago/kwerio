@@ -1,8 +1,10 @@
 import { makeStyles, createStyles } from "@material-ui/core/styles"
+import { grey, blue } from "@material-ui/core/colors"
 
 export default makeStyles(theme => createStyles({
   root: {
     width: "100%",
+    backgroundColor: theme.palette.type === "dark" ? grey[900] : blue[500],
   },
 
   logo: {
