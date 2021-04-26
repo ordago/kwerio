@@ -16,7 +16,7 @@ trait InteractsWithMenu {
     function menu() {
         $this->_build_applications();
         $this->_build_permissions();
-        $this->_build_settings();
+        //$this->_build_settings();
 
         $data = [
             [

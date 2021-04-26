@@ -3,18 +3,18 @@ import {
   FormControlLabel,
   Switch,
   Table,
+  TableBody,
   TableCell,
   TableRow,
   Typography,
 } from "@material-ui/core"
+import { makeStyles, createStyles } from "@material-ui/core/styles"
 import { useDispatch, useSelector } from "react-redux"
 import React from "react"
-import { makeStyles, createStyles } from "@material-ui/core/styles"
+import _ from "lodash"
 
 import { adapter } from "../../pages/Abilities/index.slice"
 import useT from "../../hooks/useT"
-
-// @see js/pages/Groups/Upsert/index.jsx for example usage.
 
 const useStyles = makeStyles(theme => createStyles({
   abilitiesTable: {
@@ -107,29 +107,31 @@ function Abilities({
             }
           />
 
-          {abilities.map(item => (
+          {_.sortBy(abilities, "name").map(item => (
             <React.Fragment key={item.name}>
               <Typography variant="h6">{item.name}</Typography>
 
               <Table padding="none" hover="true" className={classes.abilitiesTable}>
-                {item.abilities.map(ability => (
-                  <TableRow key={ability.uuid} selected={_is_ability_checked(ability.uuid)}>
-                    <TableCell>
-                      <Switch
-                        onChange={() => dispatch(actions.toggleAbility(ability.uuid))}
-                        checked={_is_ability_checked(ability.uuid)}
-                      />
-                    </TableCell>
+                <TableBody>
+                  {_.sortBy(item.abilities, "name").map(ability => (
+                    <TableRow key={ability.uuid} selected={_is_ability_checked(ability.uuid)}>
+                      <TableCell>
+                        <Switch
+                          onChange={() => dispatch(actions.toggleAbility(ability.uuid))}
+                          checked={_is_ability_checked(ability.uuid)}
+                        />
+                      </TableCell>
 
-                    <TableCell>
-                      {_get_ability_name(ability.name)}
-                    </TableCell>
+                      <TableCell>
+                        {_get_ability_name(ability.name)}
+                      </TableCell>
 
-                    <TableCell>
-                      {t(ability.description)}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      <TableCell>
+                        {t(ability.description)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
               </Table>
             </React.Fragment>
           ))}
