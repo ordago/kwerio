@@ -40,7 +40,7 @@ export default {
         }
 
         if ("children" in items[i]) {
-          _toggle_items(items[i].children, item)
+          //_toggle_items(items[i].children, item)
         }
       }
     },

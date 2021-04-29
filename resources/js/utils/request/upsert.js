@@ -24,18 +24,26 @@ export function data({ state, appends = {}, args = null }) {
 /**
  * Build create/updata url.
  */
-export function url({ api, state, primaryKey, args = null }) {
+export function url({ api, state, primaryKey, substitute = {}, args = null }) {
   if (args) {
     let { state, primaryKey } = args
   }
 
-  if (state.upsert[primaryKey]) {
-    const re = new RegExp(`:${primaryKey}`)
+  let endpoint
 
-    return api.update
+  if (state.upsert[primaryKey]) {
+    let re = new RegExp(`:${primaryKey}`)
+
+    endpoint = api.update
+  } else {
+    endpoint = api.create
   }
 
-  return api.create
+  for (let key in substitute) {
+    endpoint = endpoint.replace(`:${key}`, substitute[key])
+  }
+
+  return endpoint
 }
 
 /**
@@ -56,7 +64,7 @@ function before_fulfilled({ actions, dispatch, data, args = null }) {
 /**
  * Route to index if create.
  */
-export function redirect_to_index({ actions, endpoint, dispatch, data, history, state, args = null }) {
+export function redirect_to_index({ actions, endpoint, dispatch, data, history, state, substitute = {}, args = null }) {
   if (args) {
     let { dispatch, data, history, state } = args
   }
@@ -64,7 +72,14 @@ export function redirect_to_index({ actions, endpoint, dispatch, data, history, 
   before_fulfilled({ actions, dispatch, data })
 
   dispatch(actions.resetUpsert())
-  history.push(endpoint.index)
+
+  let to = endpoint.index
+
+  for (let key in substitute) {
+    to = to.replace(`:${key}`, substitute[key])
+  }
+
+  history.push(to)
 
   return data
 }
@@ -72,7 +87,7 @@ export function redirect_to_index({ actions, endpoint, dispatch, data, history, 
 /**
  * Route to index if create.
  */
-export function redirect_to_index_if_create({ actions, endpoint, dispatch, data, history, state, primaryKey, args = null }) {
+export function redirect_to_index_if_create({ actions, endpoint, dispatch, data, history, state, primaryKey, substitute = {}, args = null }) {
   if (args) {
     let { dispatch, data, history, state, primaryKey } = args
   }
@@ -85,7 +100,7 @@ export function redirect_to_index_if_create({ actions, endpoint, dispatch, data,
   return data
 }
 
-export function redirect_to_index_if_update({ actions, endpoint, dispatch, data, history, state, primaryKey, args = null }) {
+export function redirect_to_index_if_update({ actions, endpoint, dispatch, data, history, state, primaryKey, substitute = {}, args = null }) {
   if (args) {
     let { dispatch, data, history, state, primaryKey } = args
   }

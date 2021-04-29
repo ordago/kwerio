@@ -71,7 +71,7 @@ function PaginatedTable({
   }
 
   const defaultRequests = {
-    index: requestTemplate,
+    index: { ...requestTemplate },
   }
 
   // Build abilities from the prefix.

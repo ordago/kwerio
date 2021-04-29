@@ -26,6 +26,7 @@ export default function({
 
     // Fill item upsert from store.
     else if (!_.isUndefined(item)) {
+      dispatch(actions.resetUpsert())
       dispatch(actions.fillUpsert(item))
     }
 

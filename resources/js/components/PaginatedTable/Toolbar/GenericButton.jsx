@@ -32,7 +32,11 @@ function GenericButton({
     }
 
     if (action === "create" && (action in endpoint)) {
-      history.push(endpoint.create)
+      if (requests.create.url) {
+        history.push(requests.create.url)
+      } else {
+        history.push(endpoint.create)
+      }
     } else if (action === "filter") {
       throw new Error("Filter is not implemented yet")
     } else if (action === "delete") {
