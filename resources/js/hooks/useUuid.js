@@ -10,6 +10,7 @@ export default function({
   request,
   actions,
   resetUpsert = true,
+  substitute = {},
 }) {
   const params = useParams(),
     uuid = _.get(params, "uuid"),
@@ -21,7 +22,7 @@ export default function({
   useEffect(() => {
     // Fetch item if not in store.
     if (!_.isUndefined(uuid) && _.isUndefined(item)) {
-      request.fetch_by_uuid(uuid)
+      request.fetch_by_uuid({ uuid, substitute })
     }
 
     // Fill item upsert from store.
