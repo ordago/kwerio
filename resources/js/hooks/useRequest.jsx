@@ -198,6 +198,7 @@ function useRequest({
           const args = {
             params,
             getState,
+            dispatch,
             state: getState()[reducer],
           }
 

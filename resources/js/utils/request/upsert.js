@@ -65,6 +65,7 @@ function before_fulfilled({ actions, dispatch, data, args = null }) {
  * Route to index if create.
  */
 export function redirect_to_index({ actions, endpoint, dispatch, data, history, state, substitute = {}, args = null }) {
+  console.log(endpoint)
   if (args) {
     let { dispatch, data, history, state } = args
   }
@@ -78,6 +79,8 @@ export function redirect_to_index({ actions, endpoint, dispatch, data, history, 
   for (let key in substitute) {
     to = to.replace(`:${key}`, substitute[key])
   }
+
+  console.log(substitute, to)
 
   history.push(to)
 
