@@ -29,10 +29,10 @@ trait InteractsWithModule {
         }
 
         $modules = is_array($modules) ? $modules : func_get_args();
-        $accessable = array_intersect(
+        $accessable = array_unique(array_intersect(
             $this->modules()->pluck("uid")->toArray(),
             $modules
-        );
+        ));
 
         return count($modules) === count($accessable);
     }
