@@ -72,7 +72,7 @@ class GroupController extends Controller {
     function index(PaginatedTableDataProvider $paginatedTableDataProvider) {
         return $paginatedTableDataProvider
             ->authorize("root/group_index")
-            ->query(Group::query())
+            ->query(Group::where("slug", "<>", "root"))
             ->basic_filter("name")
             ->normalize(function($group) {
                 return $this->_normalize_callback($group);
@@ -130,6 +130,11 @@ class GroupController extends Controller {
             DB::beginTransaction();
 
             $normalizer = resolve(Normalizer::class);
+
+            if ($data["name"] === "root") {
+                return $normalizer
+                    ->error("ROOT group upsert is not allowed", 403);
+            }
 
             $data["modules"] = empty($data["modules"]) ? [] : $data["modules"];
             $data["abilities"] = empty($data["abilities"]) ? [] : $data["abilities"];

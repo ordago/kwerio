@@ -68,7 +68,11 @@ class AbilitiesTableSeeder extends Seeder
         foreach (config("modules") as $module) {
             $config = require base_path("modules/{$module["uid"]}/config/module.php");
             $moduleModel = ModuleModel::whereUid($module["uid"])->firstOrFail();
-            $group = Group::whereSlug($module["uid"])->firstOrFail();
+            $group = Group::whereSlug($module["uid"])->first();
+
+            if (empty($group)) {
+                continue;
+            }
 
             if (!empty($config["abilities"])) {
                 $abilities = [];
