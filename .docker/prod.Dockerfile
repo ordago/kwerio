@@ -1,4 +1,4 @@
-FROM composer:2.0.13 as composer
+FROM composer:2.0.14 as composer
 FROM node:16.2.0-buster AS node
 FROM php:8.0.6-apache-buster
 
