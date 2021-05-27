@@ -108,7 +108,7 @@ export const extraReducers = prefix => generate_extra_reducers(
     index: {
       fulfilled: (state, action) => {
         state.rsc.total = action.payload.total
-        state.rsc.page = action.payload.next_page - 1
+        state.rsc.page = action.payload.next_page
       },
     },
   }
