@@ -38,6 +38,9 @@ const initialState = {
     },
     direction: "ltr",
     props: {
+      MuiTable: {
+        size: "small",
+      },
       MuiListItem: {
         dense: true,
       },
