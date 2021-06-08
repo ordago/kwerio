@@ -43,8 +43,6 @@ class ModulesServiceProvider extends ServiceProvider
                 "icon" => $inner->icon,
                 "hidden" => $inner->hidden,
             ];
-
-            //Config::set($inner->uid, $item);
         }
 
         Config::set("modules", $modules);

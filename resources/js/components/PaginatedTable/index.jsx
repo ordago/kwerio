@@ -129,6 +129,17 @@ function PaginatedTable({
     }))))
   }
 
+  /**
+   * Get the value associated with a column.
+   */
+  function _get_value(row, col) {
+    if ("path" in col) {
+      return _.get(row, col.path)
+    }
+
+    return row[col[slugKey]]
+  }
+
   React.useEffect(() => {
     if (!abilities.index) return
     if (checkedItems.length > 0) _toggle_check_all(false)
@@ -251,7 +262,7 @@ function PaginatedTable({
 
                     return (
                       <TableCell key={col[slugKey]}>
-                        {row[col[slugKey]]}
+                        {_get_value(row, col)}
                       </TableCell>
                     )
                   })}
