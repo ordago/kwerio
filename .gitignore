@@ -24,3 +24,5 @@ core
 /public/*.js.LICENSE.txt
 /public/images
 /docs
+/.idea
+/.vscode
