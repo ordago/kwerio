@@ -33,6 +33,7 @@ function Toolbar({
   primaryKey,
 
   // User
+  extraButtons = [],
   useIcons = true,
   iconSize = "medium",
 
@@ -158,6 +159,17 @@ function Toolbar({
             </Box>
 
             <Box>
+              {extraButtons.map(button => (
+                button.isAllowed(checkedItems) && <GenericButton
+                  key={button.title}
+                  useIcons={useIcons}
+                  icon={button.iconFn(generic_button_icon_props)}
+                  iconSize={iconSize}
+                  checkedItems={checkedItems}
+                  { ...button }
+                />
+              ))}
+
               {_is_allowed("duplicate") && <GenericButton
                 icon={<FileCopyIcon { ...generic_button_icon_props }/>}
                 title={t("Duplicate")}

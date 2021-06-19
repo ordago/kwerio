@@ -30,10 +30,28 @@ export const reducers = adapter => ({
   upsertMany: adapter.upsertMany,
   upsertOne: adapter.upsertOne,
 
+  /**
+   * Uncheck all selected items on the table.
+   */
+  uncheckAll: (state, action) => {
+    for (let id in state.entities) {
+      if ("checked" in state.entities[id]) {
+        state.entities[id].checked = false
+      }
+    }
+  },
+
+  /**
+   * Reset soft table trackers.
+   */
   resetTableTrackers: (state, action) => {
     state.q = ""
     state.page = 0
   },
+
+  /**
+   * Move edited items on the table to the top.
+   */
   moveTouchedToStart: (state, action) => {
     let entities = []
 
@@ -51,19 +69,35 @@ export const reducers = adapter => ({
       state.ids.unshift(state.ids.splice(entities[i].idx, 1)[0])
     }
   },
+
+  /**
+   * Set the query used for searching.
+   */
   setQ: (state, action) => {
     state.page = 0
     state.rsc.page = 0
     state.rsc.total = 0
     state.q = action.payload
   },
+
+  /**
+   * Set current table page.
+   */
   setPage: (state, action) => {
     state.page = action.payload
   },
+
+  /**
+   * Set the number of items to show on the table.
+   */
   setPerPage: (state, action) => {
     state.per_page = action.payload
     state.page = 0
   },
+
+  /**
+   * Handle table sorting.
+   */
   handleSort: (state, action) => {
     state.page = 0
     state.rsc.page = 0

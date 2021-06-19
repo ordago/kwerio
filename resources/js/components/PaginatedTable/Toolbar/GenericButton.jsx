@@ -22,11 +22,16 @@ function GenericButton({
   requests,
   api,
   endpoint,
+  onClick = null,
 }) {
   const history = useHistory(),
     [delete_confirm_dialog, setConfirmDeleteDialog] = useState(false)
 
-  function _handle_click() {
+  function _handle_click(evt) {
+    if (onClick) {
+      return onClick(checkedItems, evt)
+    }
+
     if (onBefore) {
       onBefore(checkedItems)
     }

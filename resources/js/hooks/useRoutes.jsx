@@ -2,7 +2,7 @@ import { Route } from "react-router-dom"
 import React, { useState, useEffect } from "react"
 
 import { components } from "../routes"
-import Suspense from "../components/Suspense"
+import PageNotFound from "../components/PageNotFound"
 
 function useRoutes(moduleRoutes) {
   const [routes, setRoutes] = useState([])
@@ -28,6 +28,8 @@ function useRoutes(moduleRoutes) {
     for (let endpoint in moduleRoutes) {
       _append_to_inner(endpoint, moduleRoutes)
     }
+
+    inner.push(<Route key="/404" component={PageNotFound} />)
 
     setRoutes(inner)
   }, [moduleRoutes])
