@@ -20,9 +20,10 @@ tags.temp
 /public/mix-manifest.json
 /public/fonts
 /public/hot
-core
 /public/*.js.LICENSE.txt
 /public/images
 /docs
 /.idea
 /.vscode
+core
+!core/

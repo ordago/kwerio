@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Kwerio\Modules\Modules;
 
 class Module extends Model {
     use HasFactory, Traits\LocalizeDatetimeAttributes;
@@ -37,9 +38,9 @@ class Module extends Model {
      * @return array
      */
     static function all_normalized() {
-        $modules = config("modules");
+        $modules = resolve(Modules::class);
 
-        $items = Module::get(["id", "uid", "uuid", "created_at", "updated_at"])
+        $items = Module::whereNull("disabled_at")->get()
             ->map(function($item) use($modules) {
                 $module = array_values(array_filter($modules, function($inner) use($item) {
                     return $inner["uid"] === $item->uid;
