@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
+use Kwerio\Module\Loader;
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\Finder\Finder;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Arr;
-use App\Base\Module\Loader;
 
 class ModulesServiceProvider extends ServiceProvider
 {

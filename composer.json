@@ -22,13 +22,13 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/",
-            "Kwerio\\": "app/Base/",
+            "Kwerio\\": "core/",
             "Modules\\": "modules/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Base/helpers.php"
+            "core/helpers.php"
         ]
     },
     "autoload-dev": {
