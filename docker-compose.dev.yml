@@ -27,9 +27,8 @@ services:
       TZ: UTC
       USER_ID: ${DOCKER_USER_ID}
     command: /root/setup.sh
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
+    cap_add:
+      - NET_ADMIN
 
 networks:
   kwerio:

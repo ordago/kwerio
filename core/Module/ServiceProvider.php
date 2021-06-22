@@ -20,9 +20,11 @@ class ServiceProvider extends BaseServiceProvider {
      * Boot module
      */
     function _boot($module) {
-        $this->_register_abilities($module);
-        $this->_register_routes($module);
-        $this->_register_resources($module);
+        Route::domain("{tenant}.{domain}")->group(function() use($module) {
+            $this->_register_abilities($module);
+            $this->_register_routes($module);
+            $this->_register_resources($module);
+        });
     }
 
     /**

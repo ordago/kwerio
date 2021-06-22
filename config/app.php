@@ -15,6 +15,8 @@ return [
         "locale_iso_format" => env("ROOT_USER_LOCALE_ISO_FORMAT", "L"),
     ],
 
+    'domain' => env('APP_DOMAIN', 'kwerio.test'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -26,7 +28,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Kwerio'),
 
     /*
     |--------------------------------------------------------------------------
@@ -65,7 +67,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://kwerio.test'),
 
     'asset_url' => env('ASSET_URL', null),
 

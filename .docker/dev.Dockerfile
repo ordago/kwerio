@@ -48,7 +48,9 @@ RUN set -eux \
         telnet \
         netcat-openbsd \
         strace \
-        tcpdump
+        tcpdump \
+        iputils-ping \
+        dnsmasq
 
 # ----------------------------------------------------------------------------
 #                                                           Install binaries -
@@ -113,6 +115,10 @@ RUN set -eux \
         proxy_http \
         proxy_wstunnel \
         substitute
+
+# ----------------------------------------------------------------------------
+#                                                                    DNSMASQ -
+COPY .docker/dev.dnsmasq.conf /etc/dnsmasq.conf
 
 # ----------------------------------------------------------------------------
 #                                                                    Cleanup -
