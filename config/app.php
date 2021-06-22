@@ -188,10 +188,10 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
-        //App\Providers\ModulesServiceProvider::class,
 
         Kwerio\Modules\ServiceProvider::class,
+
+        App\Providers\RouteServiceProvider::class,
     ],
 
     /*
