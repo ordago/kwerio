@@ -25,6 +25,25 @@ class Normalizer {
     }
 
     /**
+     * Return back a status that something failed to validate.
+     */
+    function failed($message) {
+        return $this->error($message, 422);
+    }
+
+    /**
+     * Return back a success status.
+     */
+    function success($message) {
+        return response()->json([
+            "message" => $message,
+            "error" => false,
+            "variant" => "success",
+            "meta" => $this->meta,
+        ], 200);
+    }
+
+    /**
      * Normalize error message.
      *
      * @param string  $message
