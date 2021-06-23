@@ -2,11 +2,11 @@
 
 namespace Kwerio\Modules;
 
+use Illuminate\Support\Fluent;
 use Illuminate\Http\Request;
 use App\Models\Module as ModuleModel;
 
-class Modules {
-    private $modules = [];
+class Modules extends Fluent {
     private $app;
 
     /**
@@ -16,7 +16,11 @@ class Modules {
         $this->app = $app;
 
         $loader = new Loader;
-        $this->modules = $loader->load_from_disk();
+        $modules = $loader->load_from_disk();
+
+        foreach ($modules as $module) {
+            $this->attributes[$module["uid"]] = $module;
+        }
     }
 
     /**
@@ -25,7 +29,7 @@ class Modules {
     function init() {
         $requested_module_slug = $this->_get_base_module_path_from_request();
 
-        foreach ($this->modules as $item) {
+        foreach ($this->attributes as $item) {
             if ($item["module"]->slug === $requested_module_slug) {
                 $this->app->register($item["service_provider"]);
                 $this->app->instance("module", $item["module"]);
