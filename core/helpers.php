@@ -31,13 +31,12 @@ if (!function_exists("get_token_for_request")) {
      * @return string|null
      */
     function get_token_for_request($request = null) {
-        if ($request) {
-            $request = request();
-        }
+        if (!$request) $request = request();
 
         $token = $request->query("token");
 
         if (empty($token)) $token = $request->input("token");
+        if (empty($token)) $token = $request->input("api_token");
         if (empty($token)) $token = $request->bearerToken();
         if (empty($token)) $token = $request->getPassword();
 

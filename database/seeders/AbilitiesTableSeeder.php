@@ -65,7 +65,7 @@ class AbilitiesTableSeeder extends Seeder
         $rootGroup->abilities()->syncWithoutDetaching($abilities);
 
         // Store modules abilities.
-        foreach (config("modules") as $module) {
+        foreach (resolve("modules")->toArray() as $module) {
             $config = require base_path("modules/{$module["uid"]}/config/module.php");
             $moduleModel = ModuleModel::whereUid($module["uid"])->firstOrFail();
             $group = Group::whereSlug($module["uid"])->first();
