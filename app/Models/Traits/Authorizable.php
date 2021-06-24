@@ -7,28 +7,6 @@ use Illuminate\Contracts\Auth\Access\Gate;
 
 trait Authorizable {
     /**
-     * Prefix abilities to properly map them to root or module.
-     *
-     * @param iterable|string $abilities
-     * @return bool
-     */
-    private function _prefix_abilities($abilities) {
-        $module = config("module");
-
-        return collect($abilities)->map(function($ability) use($module) {
-            if (
-                is_null($module)
-                || Str::startsWith($ability, "root/")
-                || Str::contains($ability, "/")
-            ) {
-                return $ability;
-            }
-
-            return "{$module}/{$ability}";
-        });
-    }
-
-    /**
      * Owner has access to all.
      *
      * @return bool
@@ -47,6 +25,7 @@ trait Authorizable {
     public function can($abilities, $arguments = [])
     {
         $abilities = $this->_prefix_abilities($abilities);
+
         return app(Gate::class)->forUser($this)->check($abilities, $arguments);
     }
 
@@ -60,6 +39,7 @@ trait Authorizable {
     public function canAny($abilities, $arguments = [])
     {
         $abilities = $this->_prefix_abilities($abilities);
+
         return app(Gate::class)->forUser($this)->any($abilities, $arguments);
     }
 
@@ -86,4 +66,23 @@ trait Authorizable {
     {
         return $this->cant($abilities, $arguments);
     }
+
+    /**
+     * Prefix abilities to properly map them to root or module.
+     *
+     * @param iterable|string $abilities
+     * @return bool
+     */
+    private function _prefix_abilities($abilities) {
+        $module = app()->has("module") ? resolve("module") : null;
+
+        return collect($abilities)->map(function($ability) use($module) {
+            if (! str_contains($ability, "/")) {
+                return $module ? "{$module->uid}/{$ability}" : "root/{$ability}";
+            }
+
+            return $ability;
+        });
+    }
+
 }

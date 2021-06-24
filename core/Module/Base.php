@@ -96,4 +96,8 @@ abstract class Base {
 
         return config("{$this->uid}.{$key}");
     }
+
+    function abilities() {
+        return new RawAbilities($this);
+    }
 }
