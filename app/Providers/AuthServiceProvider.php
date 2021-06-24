@@ -58,21 +58,21 @@ class AuthServiceProvider extends ServiceProvider
     private function _register_abilities() {
         try {
             $abilities = Ability::where("name", "like", "root/%")->get(["name", "description"]);
+
+            foreach ($abilities as $ability) {
+                Gate::define($ability["name"], function($user) use($ability) {
+                    if ($user->is_owner()) {
+                        return true;
+                    }
+
+                    return $user->isAbleTo($ability["name"]);
+                });
+            }
         }
 
         catch (\PDOException $e) {
             logger($e);
             $abilities = [];
-        }
-
-        foreach ($abilities as $ability) {
-            Gate::define($ability["name"], function($user) use($ability) {
-                if ($user->is_owner()) {
-                    return true;
-                }
-
-                return $user->isAbleTo($ability["name"]);
-            });
         }
     }
 }
