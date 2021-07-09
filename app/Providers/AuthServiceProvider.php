@@ -6,9 +6,12 @@ use Illuminate\Auth\EloquentUserProvider;
 use Database\Seeders\AbilitiesTableSeeder;
 use Kwerio\TokenGuard;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use App\Models\User;
 use App\Extensions\ApiUserProvider;
-use App\Models\Ability;
+
+use App\Models\{
+    Ability,
+    User,
+};
 
 use Illuminate\Support\Facades\{
     Gate,

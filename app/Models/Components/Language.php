@@ -5,7 +5,7 @@ namespace App\Models\Components;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Traits;
+use App\Models\Tenant\Traits;
 
 class Language extends Model {
     use HasFactory,

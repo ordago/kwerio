@@ -52,26 +52,25 @@ trait InteractsWithMenu {
         $user = request()->user();
         $modules = ModuleModel::get(["uid", "uuid"]);
 
-        $this->applications = collect(config("modules"))
+        $this->applications = collect(resolve("modules")->toArray())
             ->filter(function($module) use($modules) {
                 return (bool) $modules->where("uid", $module["uid"])->count();
             })
             ->filter(function($module) use($user, $modules) {
-                if ($module["hidden"]) return false;
-                $uid = $modules->where("uid", $module["uid"])->first()->uid;
-                if (is_null($uid)) return false;
-                return $user->can_access_modules($uid);
+                if ($module["module"]->hidden) return false;
+
+                return $user->can_access_modules($module["module"]);
             })
             ->map(function($module) use($modules) {
                 return [
                     "id" => Str::uuid(),
-                    "position" => $module["position"],
+                    "position" => $module["module"]->position,
                     "uid" => $module["uid"],
                     "uuid" => $modules->where("uid", $module["uid"])->first()->uuid,
-                    "text" => $module["name"],
-                    "link" => $module["slug"],
-                    "hidden" => $module["hidden"],
-                    "icon" => $module["icon"],
+                    "text" => $module["module"]->name,
+                    "link" => $module["module"]->slug,
+                    "hidden" => $module["module"]->hidden,
+                    "icon" => $module["module"]->icon,
                 ];
             })
             ->sortBy("position")

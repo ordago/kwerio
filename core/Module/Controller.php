@@ -17,17 +17,17 @@ class Controller extends BaseController {
      * @return string
      */
     private function _parse_ability($ability) {
-        $module = config("module");
+        $module = resolve("module");
 
         if (empty($module)) {
             throw new \Exception("Current module in use, is not set.");
         }
 
-        if (Str::startsWith($ability, "{$module}/")) {
+        if (Str::startsWith($ability, "{$module->uid}/")) {
             return $ability;
         }
 
-        return "{$module}/{$ability}";
+        return "{$module->uid}/{$ability}";
     }
 
     /**

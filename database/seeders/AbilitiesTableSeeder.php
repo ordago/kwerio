@@ -3,10 +3,13 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Ability;
-use App\Models\Group;
-use App\Models\Module as ModuleModel;
 use Illuminate\Support\Str;
+
+use App\Models\Tenant\{
+    Ability,
+    Group,
+    Module as ModuleModel,
+};
 
 class AbilitiesTableSeeder extends Seeder
 {
@@ -67,12 +70,13 @@ class AbilitiesTableSeeder extends Seeder
         // Store modules abilities.
         foreach (resolve("modules")->toArray() as $module) {
             $config = require base_path("modules/{$module["uid"]}/config/module.php");
-            $moduleModel = ModuleModel::whereUid($module["uid"])->firstOrFail();
+            $moduleModel = ModuleModel::whereUid($module["uid"])->first();
+
+            if (!$moduleModel) continue;
+
             $group = Group::whereSlug($module["uid"])->first();
 
-            if (empty($group)) {
-                continue;
-            }
+            if (!$group) continue;
 
             if (!empty($config["abilities"])) {
                 $abilities = [];

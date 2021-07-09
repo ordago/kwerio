@@ -23,8 +23,8 @@ class MenuBuilder extends Fluent {
 
             foreach ($content["children"] ?? [] as $sub_title => $sub_content) {
                 if ($this->_can($sub_content)) {
-                    $content['slug'] = $sub_content["slug"] ?? Str::slug($sub_title);
-                    $sub_content["link"] = $sub_content["link"] ?? $module->route("/{$content['slug']}/{$content['slug']}");
+                    $sub_content['slug'] = $sub_content["slug"] ?? Str::slug($sub_title);
+                    $sub_content["link"] = $sub_content["link"] ?? $module->route("/{$content['slug']}/{$sub_content['slug']}");
                     $children[] = $this->_compile($sub_title, $sub_content);
                 }
             }
