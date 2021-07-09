@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Tenant\{
+use App\Models\{
     Group as GroupModel,
     Module as ModuleModel,
 };
