@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
-use App\Models\Tenant\{
+use App\Models\{
     Ability,
     Group,
     Module as ModuleModel,
