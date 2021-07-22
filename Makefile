@@ -1,50 +1,18 @@
-.PHONY: up
+SHELL := /bin/bash
 
-# ----------------------------------------------------------- DEVELOPMENT -- #
-up:
-	if [ -f .env ]; then \
-		docker-compose --file docker-compose.dev.yml up \
-			--build \
-			--abort-on-container-exit \
-			--remove-orphans; \
-	else \
-		cp .env.example .env; \
-		echo "Please fill in .env file"; \
-	fi;
+ifeq (,$(wildcard .env))
+$(error Please create a .env, you can use .env.example as a base template)
+endif
 
-hot:
-	docker-compose --file docker-compose.dev.yml \
-		exec \
-		-u `id -u` \
-		-w /var/www/html \
-		app \
-		npm run hot
+include .env
+export
 
-exec:
-	docker-compose --file docker-compose.dev.yml \
-		exec \
-		-u `id -u` \
-		-w /var/www/html \
-		app \
-		bash
+compose_files := --file docker-compose.yml
 
-# ------------------------------------------------------------ PRODUCTION -- #
-prod:
-	if [ -f .env ]; then \
-		docker-compose --file docker-compose.prod.yml up \
-			--build \
-			--abort-on-container-exit \
-			--remove-orphans; \
-	else \
-		cp .env.example .env; \
-		echo "Please fill in .env file"; \
-	fi;
-
-prod_clear_all_cache:
-	docker exec -it kwerio php artisan clear-compiled
-	docker exec -it kwerio php artisan cache:clear
-	docker exec -it kwerio php artisan config:clear
-	docker exec -it kwerio php artisan event:clear
-	docker exec -it kwerio php artisan optimize:clear
-	docker exec -it kwerio php artisan route:clear
-	docker exec -it kwerio php artisan view:clear
+ifeq ($(APP_DEBUG), true)
+	compose_files := --file docker-compose.dev.yml ${compose_files}
+	include dev.Makefile
+else
+	compose_files := --file docker-compose.prod.yml ${compose_files}
+	include prod.Makefile
+endif

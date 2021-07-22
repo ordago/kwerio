@@ -1,0 +1,69 @@
+version: "3.9"
+
+services:
+
+  # -------------------------------------------------------------------- APP #
+  app:
+    build:
+      context: .
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - ${DOCKER_HTTP_PORT}:80
+      - ${DOCKER_HTTPS_PORT}:443
+    networks:
+      kwerio:
+        ipv4_address: ${DOCKER_APP_IPV4}
+    environment:
+      APP_URL: ${APP_URL}
+      DEBIAN_FRONTEND: noninteractive
+      GROUP_ID: ${DOCKER_GROUP_ID}
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+      TERM: xterm
+      TZ: UTC
+      USER_ID: ${DOCKER_USER_ID}
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    command: /root/setup.sh
+
+  # ---------------------------------------------------- DATABASE - POSTGRES #
+  db:
+    image: postgres:13.3-alpine
+    volumes:
+      - kweriodb:/var/lib/postgresql/data
+    networks:
+      kwerio:
+        ipv4_address: ${DB_SYSTEM_HOST}
+    environment:
+      POSTGRES_DB: ${DB_SYSTEM_DATABASE}
+      POSTGRES_USER: ${DB_SYSTEM_USERNAME}
+      POSTGRES_PASSWORD: ${DB_SYSTEM_PASSWORD}
+
+  # ---------------------------------------------------------- CACHE - REDIS #
+  redis:
+    image: redis:6.2.4-alpine
+    volumes:
+      - kwerioredis:/data
+    networks:
+      kwerio:
+        ipv4_address: ${REDIS_HOST}
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD} --port ${REDIS_PORT} --loglevel debug
+
+
+volumes:
+  kweriodb:
+  kwerioredis:
+
+networks:
+  kwerio:
+    name: ${DOCKER_NETWORK_NAME}
+    ipam:
+      driver: default
+      config:
+        - subnet: ${DOCKER_NETWORK_SUBNET}
+

@@ -8,6 +8,8 @@ hostname -I | awk -F "." '{ print $1"."$2"."$3".1 host.docker.internal" }' >> /e
 #                                                           Update & Upgrade -
 apt-get update
 apt-get upgrade -y
+apt-get autoremove -y
+apt-get autoclean -y
 rm -rf /var/lib/apt/lists/*
 
 # ----------------------------------------------------------------------------

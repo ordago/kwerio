@@ -50,7 +50,9 @@ RUN set -eux \
         strace \
         tcpdump \
         iputils-ping \
-        dnsmasq
+        dnsmasq \
+    && apt-get autoremove -y \
+    && apt-get autoclean -y
 
 # ----------------------------------------------------------------------------
 #                                                           Install binaries -

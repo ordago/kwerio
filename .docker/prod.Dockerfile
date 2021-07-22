@@ -44,7 +44,9 @@ RUN set -eux \
         pwgen \
         dos2unix \
         certbot \
-        python-certbot-apache
+        python-certbot-apache \
+    && apt-get autoremove -y \
+    && apt-get autoclean -y
 
 # ----------------------------------------------------------------------------
 #                                                           Install binaries -
