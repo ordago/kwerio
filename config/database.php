@@ -46,7 +46,7 @@ return [
         'system' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_SYSTEM_URL'),
-            'host' => env('DB_SYSTEM_HOST', '127.0.0.1'),
+            'host' => env('DB_SYSTEM_HOST', 'host.docker.internal'),
             'port' => env('DB_SYSTEM_PORT', '5432'),
             'database' => env('DB_SYSTEM_DATABASE', '_system'),
             'username' => env('DB_SYSTEM_USERNAME', 'postgres'),

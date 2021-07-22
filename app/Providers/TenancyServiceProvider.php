@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\SystemModels\Tenant;
+use Illuminate\Support\Facades\{
+    DB,
+    Schema,
+};
 
 class TenancyServiceProvider extends ServiceProvider {
     /**
@@ -18,9 +22,19 @@ class TenancyServiceProvider extends ServiceProvider {
      */
     public function boot() {
         if (!$this->app->runningInConsole()) {
-            Tenant::switch(
-                explode(".", resolve("request")->getHost())[0]
-            );
+            match (explode(".", resolve("request")->getHost())[0]) {
+                "_system" => $this->_use_system(),
+                default => Tenant::switch($name),
+            };
         }
+    }
+
+    /**
+     * Using system.
+     */
+    private function _use_system() {
+        DB::purge("tenant");
+        DB::reconnect("system");
+        Schema::connection("system")->getConnection()->reconnect();
     }
 }
