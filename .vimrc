@@ -1,8 +1,8 @@
-autocmd FileType php nmap <leader>r :!clear && docker exec -u `id -u` -t kwerio php artisan test --filter %:t:r\:\:<C-r>=cfi#format('%s', '')<cr><cr>
-autocmd FileType php nmap <leader>tc :!clear && docker exec -u `id -u` -t kwerio php artisan test --filter %:t:r<cr>
-autocmd FileType php nmap <leader>tt :!clear && docker exec -u `id -u` -t kwerio php artisan test
+autocmd FileType php nmap <leader>r :!clear && docker exec -u `id -u` -t kwerio_app_1 php artisan test --filter %:t:r\:\:<C-r>=cfi#format('%s', '')<cr><cr>
+autocmd FileType php nmap <leader>tc :!clear && docker exec -u `id -u` -t kwerio_app_1 php artisan test --filter %:t:r<cr>
+autocmd FileType php nmap <leader>tt :!clear && docker exec -u `id -u` -t kwerio_app_1 php artisan test
 
-nmap <leader>e :!clear && docker exec -it -u `id -u` -w /var/www/html kwerio bash<cr><cr>
+nmap <leader>e :!clear && docker exec -it -u `id -u` -w /var/www/html kwerio_app_1 bash<cr><cr>
 
 if !exists('g:vdebug_options')
     let g:vdebug_options = {}
