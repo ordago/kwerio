@@ -11,6 +11,11 @@ abstract class Base {
         Traits\Initialize;
 
     /**
+     * The tenant that this module should be loaded into. (empty: all)
+     */
+    public $tenant;
+
+    /**
      * REQUIRED
      *
      * Module name used to display to end user.
