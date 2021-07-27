@@ -24,24 +24,27 @@ class Loader {
 
         // Load modules by the default order:
         foreach ($finder as $dir) {
-            $class = "Modules\\" . $dir->getBasename() . "\\Module";
-            $moduleInstance = new $class;
+            $properties = $this->_try_resolve_tenant_modules($dir);
 
-            if (in_array($moduleInstance->uid, $uids)) {
-                throw new \Exception("A module already exists with uid: {$moduleInstance->uid}");
+            foreach ($properties as $prop) {
+                $moduleInstance = $prop->module_instance();
+
+                if (in_array($moduleInstance->uid, $uids)) {
+                    throw new \Exception("A module already exists with uid: {$moduleInstance->uid}");
+                }
+
+                $uids[] = $moduleInstance->uid;
+
+                $module = [
+                    "basename" => $prop->dir_basename(),
+                    "service_provider" => $prop->service_provider_class(),
+                    "module" => $moduleInstance,
+                    "uid" => $moduleInstance->uid,
+                    "config" => require $prop->config_path(),
+                ];
+
+                $shadow[$module["basename"]] = $module;
             }
-
-            $uids[] = $moduleInstance->uid;
-
-            $module = [
-                "basename" => $dir->getBasename(),
-                "service_provider" => "Modules\\" . $dir->getBasename() . "\\ServiceProvider",
-                "module" => $moduleInstance,
-                "uid" => $moduleInstance->uid,
-                "config" => require $dir->getPathname() . "/config/module.php",
-            ];
-
-            $shadow[$module["basename"]] = $module;
         }
 
         // Sort modules based on dependencies
@@ -83,5 +86,29 @@ class Loader {
             $modules[] = $module;
             $in[] = $module["basename"];
         }
+    }
+
+    /**
+     * Resolve module / tenant classes.
+     */
+    private function _try_resolve_tenant_modules($dir) {
+        $classes = [];
+        $dir = $dir->getBasename();
+        $path = base_path("modules/{$dir}");
+
+        if (file_exists("{$path}/Module.php")) {
+            return [new ModuleProperties($dir)];
+        }
+
+        $classes = [];
+
+        foreach (glob("{$path}/*") as $module) {
+            if (file_exists("{$module}/Module.php")) {
+                preg_match("/.+\/(.+)$/", $module, $m);
+                $classes[] = new ModuleProperties($dir, $m[1]);
+            }
+        }
+
+        return $classes;
     }
 }
