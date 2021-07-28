@@ -69,7 +69,6 @@ class AbilitiesTableSeeder extends Seeder
 
         // Store modules abilities.
         foreach (resolve("modules")->toArray() as $module) {
-            $config = require base_path("modules/{$module["uid"]}/config/module.php");
             $moduleModel = ModuleModel::whereUid($module["uid"])->first();
 
             if (!$moduleModel) continue;
@@ -78,10 +77,10 @@ class AbilitiesTableSeeder extends Seeder
 
             if (!$group) continue;
 
-            if (!empty($config["abilities"])) {
+            if (!empty($module["config"]["abilities"])) {
                 $abilities = [];
 
-                foreach ($config["abilities"] as $ability => $description) {
+                foreach ($module["config"]["abilities"] as $ability => $description) {
                     $abilities[] = $firstOrCreate("{$module['uid']}/{$ability}", $description, $moduleModel->id)->id;
                 }
 

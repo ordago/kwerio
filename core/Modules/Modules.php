@@ -5,6 +5,7 @@ namespace Kwerio\Modules;
 use Illuminate\Support\Fluent;
 use Illuminate\Http\Request;
 use App\Models\Module as ModuleModel;
+use App\SystemModels\Tenant;
 
 class Modules extends Fluent {
     private $app;
@@ -37,6 +38,21 @@ class Modules extends Fluent {
                 break;
             }
         }
+    }
+
+    /**
+     * Get the modules that belongs to the given tenant.
+     */
+    function belongs_to_tenant(Tenant $tenant) {
+        $modules = [];
+
+        foreach ($this->attributes as $module) {
+            if ($module["tenant_uid"] === $tenant->uid) {
+                $modules[] = $module;
+            }
+        }
+
+        return $modules;
     }
 
     /**

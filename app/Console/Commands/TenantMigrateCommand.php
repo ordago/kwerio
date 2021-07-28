@@ -4,6 +4,9 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\SystemModels\Tenant;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+
 use App\Models\{
     Module as ModuleModel,
     Group,
@@ -19,9 +22,14 @@ class TenantMigrateCommand extends Command {
     function handle() {
         $tenant = Tenant::switch($this->argument("tenant"));
 
+        DB::beginTransaction();
+
         $this->_migrate_tenant_core($tenant);
         $this->_migrate_tenant_modules($tenant);
+        $this->_migrate_tenant_custom_modules($tenant);
         $this->_seed($tenant);
+
+        DB::commit();
     }
 
     private function _migrate_tenant_core($tenant) {
@@ -45,6 +53,32 @@ class TenantMigrateCommand extends Command {
             ]);
 
             $this->__install_module($module);
+        }
+    }
+
+    private function _migrate_tenant_custom_modules($tenant) {
+        $parent = Str::studly($tenant->sub_domain);
+        $parent_path = base_path("modules/{$parent}");
+
+        if (file_exists("{$parent_path}/Module.php")) return;
+
+        $modules = resolve("modules")->belongs_to_tenant($tenant);
+
+        foreach ($modules as $module) {
+            if (!file_exists("{$module['path']}/database/migrations")) {
+                $this->line("");
+                $this->comment("[ {$parent}/{$module['uid']} ] Has no migrations");
+                continue;
+            }
+
+            $this->line("");
+            $this->comment("[ $tenant->db_name ] Migrating module {$parent}/{$module['uid']}");
+
+            $this->call("migrate", [
+                "--path" => "modules/{$parent}/{$module['uid']}/database/migrations",
+            ]);
+
+            $this->__install_module($module['uid']);
         }
     }
 

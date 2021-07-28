@@ -14,7 +14,8 @@ return new class extends Migration {
             $table->uuid("uuid");
             $table->timestamps();
             $table->softDeletes();
-            $table->string("sub_domain");
+            $table->string("uid")->unique();
+            $table->string("sub_domain")->unique();
             $table->string("db_host")->default("host.docker.internal");
             $table->string("db_name");
             $table->string("db_port")->default("5432");

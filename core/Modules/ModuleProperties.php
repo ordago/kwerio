@@ -23,6 +23,21 @@ class ModuleProperties {
     }
 
     /**
+     * Get the tenant name that this module belongs to.
+     */
+    function tenant_uid() {
+        if (is_null($this->subName)) return null;
+
+        if (!is_null($this->moduleInstance->tenant)) {
+            return $this->moduleInstance->tenant;
+        }
+
+        $tenant = preg_replace("/([A-Z])(.+?)/", "-$1$2", $this->name);
+
+        return trim(strtolower($tenant), "-");
+    }
+
+    /**
      * Get an instance of the module.
      */
     function module_instance() {
@@ -32,7 +47,7 @@ class ModuleProperties {
     /**
      * Get module base directory name.
      */
-    function dir_basename() {
+    function path() {
         return $this->subName
             ? base_path("modules/{$this->name}/{$this->subName}")
             : base_path("modules/{$this->name}");
@@ -51,6 +66,6 @@ class ModuleProperties {
      * Get config path.
      */
     function config_path() {
-        return $this->dir_basename() . "/config/module.php";
+        return $this->path() . "/config/module.php";
     }
 }

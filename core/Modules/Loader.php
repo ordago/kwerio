@@ -36,21 +36,22 @@ class Loader {
                 $uids[] = $moduleInstance->uid;
 
                 $module = [
-                    "basename" => $prop->dir_basename(),
+                    "path" => $prop->path(),
+                    "tenant_uid" => $prop->tenant_uid(),
                     "service_provider" => $prop->service_provider_class(),
                     "module" => $moduleInstance,
                     "uid" => $moduleInstance->uid,
                     "config" => require $prop->config_path(),
                 ];
 
-                $shadow[$module["basename"]] = $module;
+                $shadow[$module["uid"]] = $module;
             }
         }
 
         // Sort modules based on dependencies
         $in = [];
 
-        foreach ($shadow as $basename => $module) {
+        foreach ($shadow as $_ => $module) {
             $this->_walk($shadow, $modules, $module, $in);
         }
 
@@ -74,7 +75,7 @@ class Loader {
             }
 
             if (in_array($dep, $seen)) {
-                throw new \Exception("Module {$module['basename']} is cyclic");
+                throw new \Exception("Module {$module["uid"]} is cyclic");
             }
 
             $seen[] = $dep;
@@ -82,9 +83,9 @@ class Loader {
             $this->_walk($shadow, $modules, $shadow[$dep], $in, $seen);
         }
 
-        if (!in_array($module["basename"], $in)) {
+        if (!in_array($module["uid"], $in)) {
             $modules[] = $module;
-            $in[] = $module["basename"];
+            $in[] = $module["uid"];
         }
     }
 
