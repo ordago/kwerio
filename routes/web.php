@@ -12,7 +12,9 @@ use App\Http\Controllers\{
 
 $domain = config("app.domain");
 
-Route::get("/", [WelcomeController::class, "show_index_page"]);
+Route::domain($domain)->group(function() {
+    Route::get("/", [WelcomeController::class, "show_index_page"]);
+});
 
 Route::domain("{tenant}.{$domain}")->group(function() {
     Route::middleware(["auth"])->group(function() {
