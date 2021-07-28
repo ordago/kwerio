@@ -22,7 +22,13 @@ class TenancyServiceProvider extends ServiceProvider {
      */
     public function boot() {
         if (!$this->app->runningInConsole()) {
-            $name = explode(".", resolve("request")->getHost())[0];
+            $host = resolve("request")->getHost();
+
+            if ($host === config("app.domain")) {
+                return;
+            }
+
+            $name = explode(".", $host);
 
             match ($name) {
                 "_system" => $this->_use_system(),
