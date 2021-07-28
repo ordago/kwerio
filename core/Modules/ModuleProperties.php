@@ -28,8 +28,8 @@ class ModuleProperties {
     function tenant_uid() {
         if (is_null($this->subName)) return null;
 
-        if (!is_null($this->moduleInstance->tenant)) {
-            return $this->moduleInstance->tenant;
+        if (!is_null($this->moduleInstance->tenant_uid)) {
+            return $this->moduleInstance->tenant_uid;
         }
 
         $tenant = preg_replace("/([A-Z])(.+?)/", "-$1$2", $this->name);

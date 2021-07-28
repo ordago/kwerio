@@ -36,8 +36,6 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->_register_module_routes();
-
         $this->configureRateLimiting();
 
         $this->routes(function () {
@@ -81,76 +79,5 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
         });
-    }
-
-    /**
-     * Register modules routes.
-     */
-    private function _register_module_routes() {
-        try {
-            $module = resolve("module");
-            $domain = config("app.domain");
-
-            Route::domain("{tenant}.{$domain}")->group(function() use($module) {
-                $path = "modules/{$module->uid}/routes";
-                $middlewares = $module->config("router.middleware");
-
-                $this->__register_web_routes($module, $path, $middlewares);
-                $this->__register_api_routes($module, $path, $middlewares);
-                $this->__register_webapi_routes($module, $path, $middlewares);
-            });
-        }
-
-        catch (BindingResolutionException $e) {
-            //
-        }
-    }
-
-    /**
-     * Register web routes.
-     */
-    private function __register_web_routes($module, $path, $middlewares) {
-        $path = base_path("{$path}/web.php");
-        $extra = [];
-
-        if (!file_exists($path)) return;
-        if ($module->auth) $extra = ["auth", "access.module"];
-
-        Route::middleware(array_merge(["web"], $extra, $middlewares))
-            ->prefix($module->config("router.prefix"))
-            ->namespace($module->config("router.namespace"))
-            ->group($path);
-    }
-
-    /**
-     * Register api routes.
-     */
-    private function __register_api_routes($module, $path, $middlewares) {
-        $path = base_path("{$path}/api.php");
-        $extra = [];
-
-        if (!file_exists($path)) return;
-        if ($module->auth) $extra = ["auth:api", "access.module"];
-
-        Route::middleware(array_merge(["api"], $extra, $middlewares))
-            ->prefix($module->config("router.prefix") . "/api")
-            ->namespace($module->config("router.namespace"))
-            ->group($path);
-    }
-
-    /**
-     * Register web api routes.
-     */
-    private function __register_webapi_routes($module, $path, $middlewares) {
-        $path = base_path("{$path}/webapi.php");
-        $extra = [];
-
-        if (!file_exists($path)) return;
-        if ($module->auth) $extra = ["auth:web,api", "access.module"];
-
-        Route::middleware(array_merge(["webapi"], $extra, $middlewares))
-            ->prefix($module->config("router.prefix") . "/api")
-            ->namespace($module->config("router.namespace"))
-            ->group($path);
     }
 }

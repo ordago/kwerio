@@ -6,6 +6,7 @@ use Illuminate\Support\Fluent;
 use Illuminate\Http\Request;
 use App\Models\Module as ModuleModel;
 use App\SystemModels\Tenant;
+use Kwerio\Module\Base as BaseModule;
 
 class Modules extends Fluent {
     private $app;
@@ -20,7 +21,7 @@ class Modules extends Fluent {
         $modules = $loader->load_from_disk();
 
         foreach ($modules as $module) {
-            $this->attributes[$module["uid"]] = $module;
+            $this->attributes[$module->uid] = $module;
         }
     }
 
@@ -30,11 +31,9 @@ class Modules extends Fluent {
     function init() {
         $requested_module_slug = $this->_get_base_module_path_from_request();
 
-        foreach ($this->attributes as $item) {
-            if ($item["module"]->slug === $requested_module_slug) {
-                $this->app->register($item["service_provider"]);
-                $this->app->instance("module", $item["module"]);
-
+        foreach ($this->attributes as $module) {
+            if ($module->slug === $requested_module_slug) {
+                $this->_register_module($module);
                 break;
             }
         }
@@ -47,7 +46,7 @@ class Modules extends Fluent {
         $modules = [];
 
         foreach ($this->attributes as $module) {
-            if ($module["tenant_uid"] === $tenant->uid) {
+            if ($module->tenant_uid === $tenant->uid) {
                 $modules[] = $module;
             }
         }
@@ -62,5 +61,40 @@ class Modules extends Fluent {
         $request = resolve(Request::class);
 
         return "/" . ltrim(join("/", array_slice(explode("/", $request->path()), 0, 2)), "/");
+    }
+
+    /**
+     * Register module and its dependencies.
+     */
+    private function _register_module($module) {
+        $deps = [];
+        $this->_resolve_dependencies($module, $deps);
+        $deps = array_unique($deps);
+
+        // Attributes contains modules in order of dependencies, so we can
+        // simply loop it, and dependent modules will be registered in the
+        // right order.
+        foreach ($this->attributes as $candidate) {
+            if (in_array($candidate->uid, $deps)) {
+                $this->app->register($candidate->service_provider);
+                $this->app->instance($candidate->uid, $candidate);
+            }
+        }
+
+        // Register the current module.
+        $this->app->register($module->service_provider);
+        $this->app->instance($module->uid, $module);
+        $this->app->instance("module", $module);
+    }
+
+    /**
+     * Find all modules recursivly that this module depends on.
+     */
+    private function _resolve_dependencies($module, &$deps) {
+        foreach ($module->config["depends_on"] as $dep) {
+            $deps[] = $dep;
+            $dep_module = $this->get($dep);
+            $this->_resolve_dependencies($dep_module, $deps);
+        }
     }
 }

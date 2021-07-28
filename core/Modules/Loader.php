@@ -35,16 +35,12 @@ class Loader {
 
                 $uids[] = $moduleInstance->uid;
 
-                $module = [
-                    "path" => $prop->path(),
-                    "tenant_uid" => $prop->tenant_uid(),
-                    "service_provider" => $prop->service_provider_class(),
-                    "module" => $moduleInstance,
-                    "uid" => $moduleInstance->uid,
-                    "config" => require $prop->config_path(),
-                ];
+                $moduleInstance->path = $prop->path();
+                $moduleInstance->tenant_uid = $prop->tenant_uid();
+                $moduleInstance->service_provider = $prop->service_provider_class();
+                $moduleInstance->config = require $prop->config_path();
 
-                $shadow[$module["uid"]] = $module;
+                $shadow[$moduleInstance->uid] = $moduleInstance;
             }
         }
 
@@ -69,13 +65,13 @@ class Loader {
      * @throws Exception
      */
     private function _walk($shadow, &$modules, $module, &$in, $seen = []) {
-        foreach (Arr::wrap($module["config"]["depends_on"]) as $dep) {
+        foreach (Arr::wrap($module->config["depends_on"]) as $dep) {
             if (in_array($dep, $in)) {
                 continue;
             }
 
             if (in_array($dep, $seen)) {
-                throw new \Exception("Module {$module["uid"]} is cyclic");
+                throw new \Exception("Module {$module->uid} is cyclic");
             }
 
             $seen[] = $dep;
@@ -83,9 +79,9 @@ class Loader {
             $this->_walk($shadow, $modules, $shadow[$dep], $in, $seen);
         }
 
-        if (!in_array($module["uid"], $in)) {
+        if (!in_array($module->uid, $in)) {
             $modules[] = $module;
-            $in[] = $module["uid"];
+            $in[] = $module->uid;
         }
     }
 

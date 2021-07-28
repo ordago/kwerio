@@ -11,9 +11,24 @@ abstract class Base {
         Traits\Initialize;
 
     /**
-     * The tenant that this module should be loaded into. (empty: all)
+     * Module configuration.
      */
-    public $tenant;
+    public array $config;
+
+    /**
+     * ServiceProvider class of the module.
+     */
+    public string $service_provider;
+
+    /**
+     * Full path to the module.
+     */
+    public string $path;
+
+    /**
+     * The tenant_uid that this module should be loaded into. (empty: all)
+     */
+    public $tenant_uid;
 
     /**
      * REQUIRED
@@ -86,6 +101,8 @@ abstract class Base {
      * @return string
      */
     function table($name) {
+        if ($this->tenant_uid) return $name;
+
         return "{$this->uid}__{$name}";
     }
 
