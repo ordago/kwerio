@@ -62,7 +62,7 @@ class TenantMigrateCommand extends Command {
 
         if (file_exists("{$parent_path}/Module.php")) return;
 
-        $modules = resolve("modules")->belongs_to_tenant($tenant);
+        $modules = resolve("modules")->build_for_tenant($tenant);
 
         foreach ($modules as $module) {
             if (!file_exists("{$module['path']}/database/migrations")) {

@@ -40,9 +40,31 @@ class Modules extends Fluent {
     }
 
     /**
+     * Get modules that are installed.
+     */
+    function authorized() {
+        $modules = [];
+        $_modules = [];
+        $user = request()->user();
+        $activeModules = ModuleModel::get(["uid", "uuid"])
+            ->whereNull("disabled_at");
+
+        foreach ($activeModules as $active) {
+            $module = $this->get($active->uid);
+
+            if ($module && $user->can_access_modules($module)) {
+                $module->uuid = $active->uuid;
+                $modules[] = $module;
+            }
+        }
+
+        return $modules;
+    }
+
+    /**
      * Get the modules that belongs to the given tenant.
      */
-    function belongs_to_tenant(Tenant $tenant) {
+    function built_for_tenant(Tenant $tenant) {
         $modules = [];
 
         foreach ($this->attributes as $module) {

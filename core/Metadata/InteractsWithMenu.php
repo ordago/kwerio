@@ -6,33 +6,27 @@ use Illuminate\Support\Str;
 use App\Models\Module as ModuleModel;
 
 trait InteractsWithMenu {
-    private $applications = [];
-    private $permissions = [];
-    private $settings = [];
-
     /**
      * Set user accessable menu.
      */
     function menu() {
-        $this->_build_applications();
-        $this->_build_permissions();
-        //$this->_build_settings();
+        $apps = $this->_build_apps();
+        $perms = $this->_build_permissions();
 
         $data = [
             [
                 "id" => Str::uuid(),
                 "text" => "Applications",
-                "children" => $this->applications,
+                "children" => $apps,
             ],
         ];
 
-        if (count($this->permissions) || count($this->settings)) {
+        if (count($perms) || count($this->settings)) {
             $data[] = [
                 "id" => Str::uuid(),
                 "text" => "Account",
                 "children" => array_values(array_filter([
-                    $this->permissions,
-                    $this->settings,
+                    $perms,
                 ], function($menu) { return !empty($menu); })),
             ];
         }
@@ -48,31 +42,25 @@ trait InteractsWithMenu {
     /**
      * Build applications menu.
      */
-    private function _build_applications() {
-        $user = request()->user();
-        $modules = ModuleModel::get(["uid", "uuid"]);
+    private function _build_apps() {
+        $_modules = resolve("modules")->authorized();
+        $modules = collect();
 
-        $this->applications = collect(resolve("modules")->toArray())
-            ->filter(function($module) use($modules) {
-                return (bool) $modules->where("uid", $module["uid"])->count();
-            })
-            ->filter(function($module) use($user, $modules) {
-                if ($module["module"]->hidden) return false;
+        foreach ($_modules as $module) {
+            $modules[] = [
+                "id" => Str::uuid(),
+                "position" => $module->position,
+                "uid" => $module->uid,
+                "uuid" => $module->uuid,
+                "text" => $module->name,
+                "link" => $module->slug,
+                "hidden" => $module->hidden,
+                "icon" => $module->icon,
+            ];
+        }
 
-                return $user->can_access_modules($module["module"]);
-            })
-            ->map(function($module) use($modules) {
-                return [
-                    "id" => Str::uuid(),
-                    "position" => $module["module"]->position,
-                    "uid" => $module["uid"],
-                    "uuid" => $modules->where("uid", $module["uid"])->first()->uuid,
-                    "text" => $module["module"]->name,
-                    "link" => $module["module"]->slug,
-                    "hidden" => $module["module"]->hidden,
-                    "icon" => $module["module"]->icon,
-                ];
-            })
+        return $modules
+            ->where("hidden", false)
             ->sortBy("position")
             ->values();
     }
@@ -119,7 +107,7 @@ trait InteractsWithMenu {
                 return [];
             }
 
-            $this->permissions = [
+            return [
                 "id" => Str::uuid(),
                 "text" => "Permissions",
                 "icon" => "lock",
@@ -130,39 +118,6 @@ trait InteractsWithMenu {
                     $users,
                     $api_users,
                 ], function($item) { return !empty($item); })),
-            ];
-        }
-    }
-
-    /**
-     * Build settings menu.
-     */
-    private function _build_settings() {
-        if (request()->user()->is_root()) {
-            $this->settings = [
-                "id" => Str::uuid(),
-                "text" => "Settings",
-                "icon" => "settings",
-                "link" => "#",
-                "open" => false,
-                "children" => [
-                    [
-                        "id" => Str::uuid(),
-                        "text" => "Services",
-                        "link" => "/account/settings/services",
-                    ],
-                    [
-                        "id" => Str::uuid(),
-                        "text" => "Styling",
-                        "link" => "/account/settings/styling",
-                    ],
-                    [
-                        "id" => Str::uuid(),
-                        "text" => "Account",
-                        "link" => "/account/settings/account",
-                    ]
-                ],
-
             ];
         }
     }
