@@ -126,7 +126,7 @@ function Toolbar({
   })
 
   const generic_button_icon_props = {
-    fontSize: iconSize === "medium" ? "default" : iconSize
+    fontSize: iconSize === "medium" ? "medium" : iconSize
   }
 
   function _is_allowed(action, require_checked_items_length = true) {

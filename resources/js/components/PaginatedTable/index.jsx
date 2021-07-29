@@ -279,7 +279,7 @@ function PaginatedTable({
                   )}
                   rowsPerPage={state.per_page}
                   page={state.page}
-                  onChangePage={(_, page) => {
+                  onPageChange={(_, page) => {
                     if (checkedItems.length > 0) {
                       _toggle_check_all(false)
                     }
@@ -287,7 +287,7 @@ function PaginatedTable({
                     dispatch(actions.setPage(page))
                     request.index({ requests })
                   }}
-                  onChangeRowsPerPage={e => {
+                  onRowsPerPageChange={e => {
                     if (checkedItems.length > 0) {
                       _toggle_check_all(false)
                     }

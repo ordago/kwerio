@@ -59,7 +59,7 @@ fi
 # ----------------------------------------------------------------------------
 #                                                               Kwerio Files -
 if [ ! `awk -F= '/APP_KEY/ { print $2  }' .env` ]; then
-    su - www-data -c "cd /var/www/html; php artisan key:generate"
+    su - www-data -c "cd /var/www/html; php artisan key:generate --ansi"
 fi
 
 if [ ! -L public/storage ]; then

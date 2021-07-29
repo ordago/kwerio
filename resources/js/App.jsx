@@ -6,22 +6,26 @@ import { MuiPickersUtilsProvider  } from "@material-ui/pickers"
 import { Provider, useSelector, useDispatch } from "react-redux"
 import { SnackbarProvider } from "notistack"
 import { create } from "jss"
-import { jssPreset, StylesProvider, createMuiTheme, ThemeProvider } from "@material-ui/core/styles"
+import {
+  jssPreset,
+  StylesProvider,
+  ThemeProvider,
+  createTheme,
+} from "@material-ui/core/styles"
 import DayjsUtils from "@date-io/dayjs"
 import React from "react"
 import rtl from "jss-rtl"
 
-import { fetch_metadata } from "./App.slice"
+import { actions, fetch_metadata } from "./App.slice"
 import Main from "./components/Main"
 import useRoutes from "./hooks/useRoutes"
 import useStyles from "./App.styles"
-import { actions } from "./App.slice.js"
 
 function InnerApp({ moduleRoutes, module }) {
   const { theme, config, user } = useSelector(state => state.app),
     dispatch = useDispatch(),
     classes = useStyles(),
-    muiTheme = React.useMemo(() => createMuiTheme(theme), [theme]),
+    muiTheme = React.useMemo(() => createTheme(theme), [theme]),
     jss = create({ plugins: [...jssPreset().plugins, rtl()] }),
     routes = useRoutes(moduleRoutes)
 
