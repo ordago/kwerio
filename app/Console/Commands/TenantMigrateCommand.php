@@ -40,7 +40,6 @@ class TenantMigrateCommand extends Command {
 
     private function _migrate_tenant_modules($tenant) {
         $modules = explode(",", $this->option("modules") ?? "");
-        $modules[] = "Home";
 
         foreach ($modules as $module) {
             $this->line("");
@@ -62,7 +61,7 @@ class TenantMigrateCommand extends Command {
 
         if (file_exists("{$parent_path}/Module.php")) return;
 
-        $modules = resolve("modules")->build_for_tenant($tenant);
+        $modules = resolve("modules")->built_for_tenant($tenant);
 
         foreach ($modules as $module) {
             if (!file_exists("{$module['path']}/database/migrations")) {
