@@ -75,13 +75,13 @@ function PageMenu({ menu = null, actions }) {
             <ListItemIcon><Icon>{list.icon}</Icon></ListItemIcon>
           )}
           <ListItemText primary={t(list.text)} />
-          {("children" in list) && (
+          {("children" in list) && list.children.length > 0 && (
             <>
               {list.open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </>
           )}
         </ListItem>
-        {("children" in list) && (
+        {("children" in list) && list.children.length > 0 && (
           <Collapse in={list.open} timeout="auto" unmountOnExit>
             {list.children.map(item => (
               <ListItem
@@ -109,7 +109,7 @@ function PageMenu({ menu = null, actions }) {
         <React.Fragment key={list.id}>
           {("is_header" in list) && (
             <List subheader={("is_header" in list) && <ListSubheader>{t(list.text)}</ListSubheader>}>
-              {("children" in list) && list.children.map(item => _render_list(item))}
+              {("children" in list) && list.children.length > 0 && list.children.map(item => _render_list(item))}
             </List>
           )}
           {!("is_header" in list) && _render_list(list)}
