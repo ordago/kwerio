@@ -41,17 +41,20 @@ class MenuBuilder extends Fluent {
      * Build menu link.
      */
     private function _link($content, $prefix = "") {
-        $prefix = fn($link) => "/" . trim("{$prefix}/{$link}", "/");
+        $prefixFn = fn($link) => "/" . trim("{$prefix}/{$link}", "/");
+        $link = $prefix;
 
         if (isset($content["link"])) {
-            return  $prefix($content["link"]);
+            $link = $prefixFn($content["link"]);
         }
 
-        if (isset($content["slug"])) {
-            return $prefix($content["slug"]);
+        else if (isset($content["slug"])) {
+            $link = $prefixFn($content["slug"]);
         }
 
-        return $prefix;
+        if (Str::startsWith($link, "/_/")) return $link;
+
+        return resolve("module")->route($link);
     }
 
     /**
