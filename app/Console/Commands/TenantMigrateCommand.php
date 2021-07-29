@@ -64,20 +64,20 @@ class TenantMigrateCommand extends Command {
         $modules = resolve("modules")->built_for_tenant($tenant);
 
         foreach ($modules as $module) {
-            if (!file_exists("{$module['path']}/database/migrations")) {
+            if (!file_exists("{$module->path}/database/migrations")) {
                 $this->line("");
-                $this->comment("[ {$parent}/{$module['uid']} ] Has no migrations");
+                $this->comment("[ {$parent}/{$module->uid} ] Has no migrations");
                 continue;
             }
 
             $this->line("");
-            $this->comment("[ $tenant->db_name ] Migrating module {$parent}/{$module['uid']}");
+            $this->comment("[ $tenant->db_name ] Migrating module {$parent}/{$module->uid}");
 
             $this->call("migrate", [
-                "--path" => "modules/{$parent}/{$module['uid']}/database/migrations",
+                "--path" => "modules/{$parent}/{$module->uid}/database/migrations",
             ]);
 
-            $this->__install_module($module['uid']);
+            $this->__install_module($module->uid);
         }
     }
 
