@@ -294,7 +294,7 @@ class ApiUserController extends Controller {
             "token_unhashed" => $this->token,
             "expires_at" => $apiUser->expires_at,
             "created_at" => $apiUser->created_at,
-            "updated_at" => $apiUser->udpated_at,
+            "updated_at" => $apiUser->updated_at,
         ];
     }
 }
