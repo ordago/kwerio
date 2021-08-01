@@ -7,13 +7,13 @@ import fetch_by_uuid from "../../utils/request/fetch_by_uuid.js"
 
 const services = ({ actions }) => ({
   upsert: () => ({
-    url: args => upsert.url({ api: api.users, ...args }),
+    url: args => upsert.url({ api: api.lordland.admission.users, ...args }),
     data: args => upsert.data(args),
-    200: args => upsert.redirect_to_index({ actions, endpoint: endpoints.users, ...args }),
+    200: args => upsert.redirect_to_index({ actions, endpoint: endpoints.lordland.admission.users, ...args }),
   }),
 
   metadata: () => ({
-    url: api.users.metadata,
+    url: api.lordland.admission.users.metadata,
     200: ({ dispatch, data }) => {
       if ("groups" in data) {
         dispatch(groupsActions.upsertMany(data.groups.items))
@@ -34,7 +34,7 @@ const services = ({ actions }) => ({
     }
   }),
 
-  fetch_by_uuid: args => fetch_by_uuid({ actions, api: api.users, ...args }),
+  fetch_by_uuid: args => fetch_by_uuid({ actions, api: api.lordland.admission.users, ...args }),
 })
 
 export default services

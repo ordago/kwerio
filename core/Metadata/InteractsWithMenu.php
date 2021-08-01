@@ -11,7 +11,7 @@ trait InteractsWithMenu {
      */
     function menu() {
         $apps = $this->_build_apps();
-        $perms = $this->_build_permissions();
+        $perms = $this->_build_admission();
 
         $data = [
             [
@@ -24,7 +24,7 @@ trait InteractsWithMenu {
         if (count($perms) || count($this->settings)) {
             $data[] = [
                 "id" => Str::uuid(),
-                "text" => "Account",
+                "text" => "LordLand",
                 "children" => array_values(array_filter([
                     $perms,
                 ], function($menu) { return !empty($menu); })),
@@ -66,9 +66,9 @@ trait InteractsWithMenu {
     }
 
     /**
-     * Build permissions menu.
+     * Build admission menu.
      */
-    private function _build_permissions() {
+    private function _build_admission() {
         $user = request()->user();
 
         if ($user->is_root()) {
@@ -80,7 +80,8 @@ trait InteractsWithMenu {
                 $users = [
                     "id" => Str::uuid(),
                     "text" => "Users",
-                    "link" => $link = "/account/permissions/users",
+                    "icon" => "people",
+                    "link" => $link = "/lordland/admission/users",
                     "matches" => [ $link, "{$link}/create", "{$link}/:uuid" ],
                 ];
             }
@@ -89,7 +90,8 @@ trait InteractsWithMenu {
                 $groups = [
                     "id" => Str::uuid(),
                     "text" => "Groups",
-                    "link" => $link = "/account/permissions/groups",
+                    "icon" => "groups",
+                    "link" => $link = "/lordland/admission/groups",
                     "matches" => [ $link, "{$link}/create", "{$link}/:uuid" ],
                 ];
             }
@@ -98,7 +100,8 @@ trait InteractsWithMenu {
                 $api_users = [
                     "id" => Str::uuid(),
                     "text" => "Api Users",
-                    "link" => $link = "/account/permissions/api-users",
+                    "icon" => "api",
+                    "link" => $link = "/lordland/admission/api-users",
                     "matches" => [ $link, "{$link}/create", "{$link}/:uuid" ],
                 ];
             }
@@ -109,8 +112,8 @@ trait InteractsWithMenu {
 
             return [
                 "id" => Str::uuid(),
-                "text" => "Permissions",
-                "icon" => "lock",
+                "text" => "Admission",
+                "icon" => "admin_panel_settings",
                 "link" => "#",
                 "open" => false,
                 "children" => array_values(array_filter([

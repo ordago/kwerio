@@ -30,10 +30,10 @@ function Users({ match }) {
             toolbar
             reducer="users"
             adapter={adapter}
-            api={api.users}
-            endpoint={endpoints.users}
+            api={api.lordland.admission.users}
+            endpoint={endpoints.lordland.admission.users}
             actions={actions}
-            onRowClick={item => history.push(endpoints.users.update.replace(/:uuid/, item.uuid))}
+            onRowClick={item => history.push(endpoints.lordland.admission.users.update.replace(/:uuid/, item.uuid))}
           />
         </Paper>
       )}

@@ -7,15 +7,15 @@ import * as upsert from "../../utils/request/upsert"
 
 export default ({ actions }) => ({
   upsert: ({ params }) => ({
-    url: args => upsert.url({ api: api.apiUsers, ...args }),
+    url: args => upsert.url({ api: api.lordland.admission.apiUsers, ...args }),
     data: args => upsert.data(args),
-    200: args => upsert.redirect_to_index({ actions, endpoint: endpoints.apiUsers, ...args }),
+    200: args => upsert.redirect_to_index({ actions, endpoint: endpoints.lordland.admission.apiUsers, ...args }),
   }),
 
-  fetch_by_uuid: args => fetch_by_uuid({ actions, api: api.apiUsers, ...args }),
+  fetch_by_uuid: args => fetch_by_uuid({ actions, api: api.lordland.admission.apiUsers, ...args }),
 
   metadata: () => ({
-    url: api.apiUsers.metadata,
+    url: api.lordland.admission.apiUsers.metadata,
     200: ({ dispatch, data }) => {
       if ("groups" in data) {
         dispatch(groupsActions.upsertMany(data.groups.items))

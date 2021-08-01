@@ -4,9 +4,9 @@ use App\Http\Controllers\{
     MetadataController,
     LogoutController,
     ProfileController,
-    Account\Permissions\UserController,
-    Account\Permissions\ApiUserController,
-    Account\Permissions\GroupController,
+    LordLand\Admission\UserController,
+    LordLand\Admission\ApiUserController,
+    LordLand\Admission\GroupController,
     Components\LanguageController,
     Components\FieldsetController,
 };
@@ -15,10 +15,10 @@ $domain = config("app.domain");
 
 Route::domain("{tenant}.{$domain}")->group(function() {
     Route::middleware(["auth:web,api", "root"])->group(function() {
-        // ---------------------------------------------------------- ACCOUNT -- #
-        Route::prefix("account")->group(function() {
-            // ---------------------------------------- ACCOUNT / PERMISSIONS -- #
-            Route::prefix("permissions")->group(function() {
+        // ----------------------------------------------------- LORDLAND -- #
+        Route::prefix("lordland")->group(function() {
+            // ------------------------------------- LORDLAND / ADMISSION -- #
+            Route::prefix("admission")->group(function() {
                 Route::post("/groups", [GroupController::class, "index"]);
                 Route::post("/groups/create", [GroupController::class, "create"]);
                 Route::post("/groups/update", [GroupController::class, "update"]);

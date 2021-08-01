@@ -4,65 +4,7 @@ import _ from "lodash"
 
 const initialState = {
   open: false,
-  data: [
-    {
-      id: 1,
-      text: "applications",
-      children: [{
-        id: 2,
-        text: "CMS",
-        icon: "web",
-        link: "#",
-      }, {
-        id: 3,
-        text: "PIM",
-        icon: "art_track",
-        link: "/module/pim",
-      }],
-    },
-    {
-      id: 4,
-      text: "account",
-      children: [{
-        id: 5,
-        text: "Permissions",
-        icon: "lock",
-        link: "#",
-        children: [{
-          id: 6,
-          text: "Groups",
-          link: "#",
-        }, {
-          id: 7,
-          text: "Users",
-          link: "#",
-        }]
-      }, {
-        id: 20,
-        text: "Settings",
-        icon: "settings",
-        link: "#",
-        children: [{
-          id: 21,
-          text: "Services",
-          link: "#",
-        }, {
-          id: 22,
-          text: "Styling",
-          link: "#",
-        }, {
-          id: 23,
-          text: "Account",
-          link: "#",
-        }]
-      }, {
-        id: 30,
-        text: "Billing",
-        icon: "money",
-        link: "#",
-      }]
-    }
-  ]
+  data: []
 }
 
 const mainMenu = createSlice({

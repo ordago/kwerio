@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Account\Permissions;
+namespace App\Http\Controllers\LordLand\Admission;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;

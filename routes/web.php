@@ -5,9 +5,9 @@ use App\Http\Controllers\{
     MetadataController,
     LogoutController,
     ProfileController,
-    Account\Permissions\UserController,
-    Account\Permissions\ApiUserController,
-    Account\Permissions\GroupController,
+    LordLand\Admission\UserController,
+    LordLand\Admission\ApiUserController,
+    LordLand\Admission\GroupController,
 };
 
 $domain = config("app.domain");
@@ -27,10 +27,10 @@ Route::domain("{tenant}.{$domain}")->group(function() {
     });
 
     Route::middleware(["auth", "root"])->group(function() {
-        // ---------------------------------------------------------- ACCOUNT -- #
-        Route::prefix("account")->group(function() {
-            // ---------------------------------------- ACCOUNT / PERMISSIONS -- #
-            Route::prefix("permissions")->group(function() {
+        // ----------------------------------------------------- LORDLAND -- #
+        Route::prefix("lordland")->group(function() {
+            // ------------------------------------- LORDLAND / ADMISSION -- #
+            Route::prefix("admission")->group(function() {
                 Route::get("/groups", [GroupController::class, "show_index_page"]);
                 Route::get("/groups/create", [GroupController::class, "show_create_page"]);
                 Route::get("/groups/{uuid}", [GroupController::class, "show_update_page"]);

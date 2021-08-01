@@ -6,13 +6,13 @@ import * as upsert from "../../utils/request/upsert"
 
 export default ({ actions }) => ({
   upsert: () => ({
-    url: args => upsert.url({ api: api.groups, ...args }),
+    url: args => upsert.url({ api: api.lordland.admission.groups, ...args }),
     data: args => upsert.data(args),
-    200: args => upsert.redirect_to_index({ actions, endpoint: endpoints.groups, ...args }),
+    200: args => upsert.redirect_to_index({ actions, endpoint: endpoints.lordland.admission.groups, ...args }),
   }),
 
   metadata: () => ({
-    url: api.groups.metadata,
+    url: api.lordland.admission.groups.metadata,
     200: ({ dispatch, data }) => {
       if ("groups" in data) {
         dispatch(actions.upsertMany(data.groups.items))
@@ -33,5 +33,5 @@ export default ({ actions }) => ({
     }
   }),
 
-  fetch_by_uuid: args => fetch_by_uuid({ actions, api: api.groups, ...args }),
+  fetch_by_uuid: args => fetch_by_uuid({ actions, api: api.lordland.admission.groups, ...args }),
 })

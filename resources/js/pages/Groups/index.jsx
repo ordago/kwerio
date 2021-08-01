@@ -28,10 +28,10 @@ function Groups({ match }) {
             toolbar
             reducer="groups"
             adapter={adapter}
-            api={api.groups}
-            endpoint={endpoints.groups}
+            api={api.lordland.admission.groups}
+            endpoint={endpoints.lordland.admission.groups}
             actions={actions}
-            onRowClick={item => history.push(endpoints.groups.update.replace(/:uuid/, item.uuid))}
+            onRowClick={item => history.push(endpoints.lordland.admission.groups.update.replace(/:uuid/, item.uuid))}
           />
         </Paper>
       )}

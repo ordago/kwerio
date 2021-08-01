@@ -42,7 +42,7 @@ class Module extends Model {
 
         $items = Module::whereNull("disabled_at")->get()->map(function($item) use($modules) {
             $module = array_values(array_filter($modules, function($inner) use($item) {
-                return $inner["uid"] === $item->uid;
+                return $inner->uid === $item->uid;
             }));
 
             if (empty($module)) return [];
@@ -51,7 +51,7 @@ class Module extends Model {
             return [
                 "uid" => $item->uid,
                 "uuid" => $item->uuid,
-                "name" => $module["module"]->name,
+                "name" => $module->name,
                 "abilities" => $item->abilities()->pluck("uuid"),
                 "created_at" => $item->created_at,
                 "updated_at" => $item->updated_at,
