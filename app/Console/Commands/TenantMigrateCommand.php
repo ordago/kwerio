@@ -32,30 +32,39 @@ class TenantMigrateCommand extends Command {
         DB::commit();
     }
 
-    private function _migrate_tenant_core($tenant) {
+    /**
+     * Migrate tenant base tables.
+     */
+    private function _migrate_tenant_core(Tenant $tenant) {
         $this->line("");
         $this->comment("[ {$tenant->db_name} ]  Migrating tenant core");
         $this->call("migrate");
     }
 
-    private function _migrate_tenant_modules($tenant) {
-        $modules = explode(",", $this->option("modules") ?? "");
+    /**
+     * Migrate modules.
+     */
+    private function _migrate_tenant_modules(Tenant $tenant) {
+        $uids = explode(",", $this->option("modules") ?? "");
 
-        foreach ($modules as $module) {
+        foreach ($uids as $uid) {
             $this->line("");
-            $this->comment("[ {$tenant->db_name} ]  Migrating module {$module}");
+            $this->comment("[ {$tenant->db_name} ]  Migrating module {$uid}");
 
-            $path = "modules/{$module}/database/migrations";
+            $path = "modules/{$uid}/database/migrations";
 
             $this->call("migrate", [
                 "--path" => $path,
             ]);
 
-            $this->__install_module($module);
+            $this->__install_module($uid);
         }
     }
 
-    private function _migrate_tenant_custom_modules($tenant) {
+    /**
+     * Migrate modules that are custom built for this tenant.
+     */
+    private function _migrate_tenant_custom_modules(Tenant $tenant) {
         $parent = Str::studly($tenant->sub_domain);
         $parent_path = base_path("modules/{$parent}");
 
@@ -81,20 +90,22 @@ class TenantMigrateCommand extends Command {
         }
     }
 
-    private function _seed($tenant) {
+    private function _seed() {
         if (!$this->option("seed")) return;
 
         $this->call("db:seed");
     }
 
-    private function __install_module($module) {
-        ModuleModel::updateOrCreate(["uid" => $module], [
-            "uid" => $module,
+    private function __install_module(string $module_uid) {
+        $module = ModuleModel::updateOrCreate(["uid" => $module_uid], [
+            "uid" => $module_uid,
         ]);
 
-        Group::updateOrCreate(["slug" => $module], [
-            "slug" => $module,
-            "name" => $module,
+        $group = Group::updateOrCreate(["slug" => $module], [
+            "slug" => $module->uid,
+            "name" => $module->name ?? $module->uid,
         ]);
+
+        $group->modules()->sync($module);
     }
 }
