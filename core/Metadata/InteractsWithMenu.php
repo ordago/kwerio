@@ -11,7 +11,7 @@ trait InteractsWithMenu {
      */
     function menu() {
         $apps = $this->_build_apps();
-        $perms = $this->_build_admission();
+        $admission = $this->_build_admission();
 
         $data = [
             [
@@ -21,12 +21,12 @@ trait InteractsWithMenu {
             ],
         ];
 
-        if (count($perms) || count($this->settings)) {
+        if ($admission && count($admission)) {
             $data[] = [
                 "id" => Str::uuid(),
                 "text" => "LordLand",
                 "children" => array_values(array_filter([
-                    $perms,
+                    $admission,
                 ], function($menu) { return !empty($menu); })),
             ];
         }

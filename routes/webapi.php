@@ -22,6 +22,7 @@ Route::domain("{tenant}.{$domain}")->group(function() {
                 Route::post("/groups", [GroupController::class, "index"]);
                 Route::post("/groups/create", [GroupController::class, "create"]);
                 Route::post("/groups/update", [GroupController::class, "update"]);
+                Route::delete("/groups", [GroupController::class, "delete"]);
                 Route::post("/groups/fetch-by-uuid", [GroupController::class, "fetch_by_uuid"]);
                 Route::post("/groups/metadata", [GroupController::class, "metadata"]);
 

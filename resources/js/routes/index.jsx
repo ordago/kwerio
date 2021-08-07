@@ -54,6 +54,7 @@ export const api = {
         create: `${API_ADMISSION_ENDPOINT}/groups/create`,
         update: `${API_ADMISSION_ENDPOINT}/groups/update`,
         fetch_by_uuid: `${API_ADMISSION_ENDPOINT}/groups/fetch-by-uuid`,
+        delete: `${API_ADMISSION_ENDPOINT}/groups`,
         metadata: `${API_ADMISSION_ENDPOINT}/groups/metadata`,
       },
       users: {

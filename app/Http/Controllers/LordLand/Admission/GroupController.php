@@ -220,6 +220,28 @@ class GroupController extends Controller {
     }
 
     /**
+     * Delete the given groups and its related data.
+     */
+    function delete(Request $request, Normalizer $normalizer) {
+        $this->authorize("root/group_delete");
+
+        $data = $request->validate([
+            "uuids" => "required",
+        ]);
+
+        $groups = Group::whereIn("uuid", $data["uuids"])->get();
+
+        foreach ($groups as $group) {
+            $group->modules()->detach();
+            $group->delete();
+        }
+
+        return $normalizer
+            ->message("Groups deleted successfully")
+            ->normalize($groups, [$this, "_normalize_callback"]);
+    }
+
+    /**
      * Normalize the groups.
      *
      * @param Collection $groups

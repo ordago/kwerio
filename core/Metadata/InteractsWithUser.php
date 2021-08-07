@@ -23,6 +23,9 @@ trait InteractsWithUser {
             "is_rtl" => (bool) $user->is_rtl,
             "dir" => $user->is_rtl ? "rtl" : "ltr",
             "groups" => $user->get_groups_uuids(),
+            "is_root" => $user->is_root(),
+            "groups_meta" => $user->groups()->get(["uuid", "name", "slug"]),
+            "modules_meta" => $user->modules()->map(fn($item) => [ "uid" => $item->uid, "uuid" => $item->uuid ]),
             "modules" => $user->get_modules_uuids(),
             "abilities" => $user->get_abilities_names(),
         ];

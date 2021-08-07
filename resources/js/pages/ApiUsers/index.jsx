@@ -57,19 +57,17 @@ function ApiUsers({ match }) {
       menuActions={appActions}
       content={() => (
         <Paper>
-          {user.canAny(["root/api_user_list", "root/api_user_create", "root/api_user_update"]) && (
-            <PaginatedTable
-              toolbar
-              abilitiesPrefix="root/api_user_"
-              reducer="apiUsers"
-              adapter={adapter}
-              api={api.lordland.admission.apiUsers}
-              endpoint={endpoints.lordland.admission.apiUsers}
-              actions={actions}
-              onRowClick={item => history.push(endpoints.lordland.admission.apiUsers.update.replace(/:uuid/, item.uuid))}
-              renderCell={_render_cell}
-            />
-          )}
+          <PaginatedTable
+            toolbar
+            abilitiesPrefix="root/api_user_"
+            reducer="apiUsers"
+            adapter={adapter}
+            api={api.lordland.admission.apiUsers}
+            endpoint={endpoints.lordland.admission.apiUsers}
+            actions={actions}
+            onRowClick={item => history.push(endpoints.lordland.admission.apiUsers.update.replace(/:uuid/, item.uuid))}
+            renderCell={_render_cell}
+          />
         </Paper>
       )}
     />
