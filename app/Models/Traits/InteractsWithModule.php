@@ -24,7 +24,7 @@ trait InteractsWithModule {
      * @return bool
      */
     function can_access_modules($modules) {
-        if ($this->is_root() || $this->is_owner()) {
+        if ($this->is_owner()) {
             return true;
         }
 
