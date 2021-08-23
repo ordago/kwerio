@@ -1,6 +1,6 @@
-FROM composer:2.1.3 as composer
-FROM node:16.5.0-buster AS node
-FROM php:8.0.8-apache-buster
+FROM composer:2.1.5 as composer
+FROM node:16.7.0-buster AS node
+FROM php:8.0.9-apache-buster
 
 LABEL maintainer="Oussama Elgoumri <euvoor@gmail.com>"
 
@@ -89,7 +89,7 @@ COPY .docker/dev.xdebug.ini PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 
 # Install pickle
 RUN set -eux \
-    && curl -L -o /usr/local/bin/pickle https://github.com/FriendsOfPHP/pickle/releases/download/v0.7.2/pickle.phar \
+    && curl -L -o /usr/local/bin/pickle https://github.com/FriendsOfPHP/pickle/releases/download/v0.7.7/pickle.phar \
     && chmod +x /usr/local/bin/pickle
 
 # Install xdebug
