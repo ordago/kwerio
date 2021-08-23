@@ -170,9 +170,11 @@ function useRequest({
             if (typeof err === "string") {
               console.error(err)
             } else if ("response" in err) {
-              const message = ("message" in err.response.data)
-                ? err.response.data.message
-                : `${err.response.statusText} [${err.response.status}]`
+              let message = ("message" in err.response.data) && err.response.data.message
+
+              if (message.trim().length === 0) {
+                message = `${err.response.status} ${err.response.statusText}`
+              }
 
               const variant = ("variant" in err.response.data) ? err.response.data.variant : "error"
 
