@@ -15,6 +15,8 @@ export default function() {
    * Check if user belongs to a group.
    */
   function belongs_to_group(group) {
+    if (! ("groups_meta" in user)) return false
+
     for (let i = 0; i < user.groups_meta.length; i ++) {
       if (user.groups_meta[i].slug === group) {
         return true

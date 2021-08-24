@@ -64,17 +64,16 @@ class PaginatedTableDataProvider {
      * @param string|array $filters
      * @return self
      */
-    function basic_filter($filters) {
+    function basic_filter($filters, $wildcard = true) {
         $filters = is_array($filters) ? $filters : func_get_args();
+        $q = $wildcard ? "%{$this->data['q']}%" : $this->data['q'];
 
         if (!empty($this->data["q"])) {
-            $like = config("database.default") === "pgsql" ? "ilike" : "like";
-
-            $this->query->where(function($query) use($filters, $like) {
+            $this->query->where(function($query) use($filters, $q) {
                 $where = "where";
 
                 foreach ($filters as $filter) {
-                    $query->{$where}($filter, $like, "%{$this->data['q']}%");
+                    $query->{$where}($filter, "ilike", $q);
                     $where = "orWhere";
                 }
             });
