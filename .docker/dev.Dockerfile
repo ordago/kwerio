@@ -51,6 +51,8 @@ RUN set -eux \
         tcpdump \
         iputils-ping \
         dnsmasq \
+        dnsutils \
+        iproute2 \
     && apt-get autoremove -y \
     && apt-get autoclean -y
 
