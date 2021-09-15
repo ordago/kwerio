@@ -8,7 +8,7 @@ trait InteractsWithView {
      *
      * @return View
      */
-    function view(string $view) {
-        return view($this->uid . "::{$view}");
+    function view(string $view, ...$params) {
+        return view($this->uid . "::{$view}", ...$params);
     }
 }
