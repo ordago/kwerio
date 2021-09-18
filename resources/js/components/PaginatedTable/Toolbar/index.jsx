@@ -85,7 +85,13 @@ function Toolbar({
   if (abilitiesPrefix) {
     for (let ability in defaultAbilities) {
       if (!(ability in abilities)) {
-        abilities[ability] = user.can(`${abilitiesPrefix}${ability}`)
+        let is_able = user.can(`${abilitiesPrefix}${ability}`)
+
+        if (is_able && ! (ability in api)) {
+          is_able = false
+        }
+
+        abilities[ability] = is_able
       }
     }
   }
