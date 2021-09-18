@@ -265,6 +265,25 @@ class UserController extends Controller {
     }
 
     /**
+     * Delete users.
+     */
+    function delete(Request $request, Normalizer $normalizer) {
+        $this->authorize("root/user_delete");
+
+        $data = $request->validate([
+            "uuids" => "required",
+        ]);
+
+        $users = UserModel::whereIn("uuid", $data["uuids"])->get();
+
+        UserModel::whereIn("uuid", $data["uuids"])->delete();
+
+        return $normalizer
+            ->message("Users deleted successfully")
+            ->normalize($users, [$this, "_normalize_callback"]);
+    }
+
+    /**
      * Normalizer callback.
      *
      * @param Collection $users

@@ -52,7 +52,7 @@ services:
     networks:
       kwerio:
         ipv4_address: ${REDIS_HOST}
-    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD} --port ${REDIS_PORT} --loglevel debug
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD} --port ${REDIS_PORT} --loglevel notice
 
 
 volumes:

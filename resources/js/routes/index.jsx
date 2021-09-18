@@ -62,6 +62,7 @@ export const api = {
         create: `${API_ADMISSION_ENDPOINT}/users/create`,
         update: `${API_ADMISSION_ENDPOINT}/users/update`,
         fetch_by_uuid: `${API_ADMISSION_ENDPOINT}/users/fetch-by-uuid`,
+        delete: `${API_ADMISSION_ENDPOINT}/users`,
         metadata: `${API_ADMISSION_ENDPOINT}/users/metadata`,
       },
       apiUsers: {
@@ -70,6 +71,7 @@ export const api = {
         update: `${API_ADMISSION_ENDPOINT}/api-users/update`,
         fetch_by_uuid: `${API_ADMISSION_ENDPOINT}/api-users/fetch-by-uuid`,
         metadata: `${API_ADMISSION_ENDPOINT}/api-users/metadata`,
+        delete: `${API_ADMISSION_ENDPOINT}/api-users`,
       },
     },
   },

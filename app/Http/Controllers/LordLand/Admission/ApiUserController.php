@@ -277,6 +277,25 @@ class ApiUserController extends Controller {
     }
 
     /**
+     * Delete api users.
+     */
+    function delete(Request $request, Normalizer $normalizer) {
+        $this->authorize("root/api_user_delete");
+
+        $data = $request->validate([
+            "uuids" => "required",
+        ]);
+
+        $apiUsers = ApiUserModel::whereIn("uuid", $data["uuids"])->get();
+
+        ApiUserModel::whereIn("uuid", $data["uuids"])->delete();
+
+        return $normalizer
+            ->message("Api Users deleted successfully")
+            ->normalize($apiUsers, [$this, "_normalize_callback"]);
+    }
+
+    /**
      * Normalize api user data.
      *
      * @param LengthAwarePaginator|Collect $apiUsers

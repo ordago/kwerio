@@ -31,12 +31,14 @@ Route::domain("{tenant}.{$domain}")->group(function() {
                 Route::post("/users/update", [UserController::class, "update"]);
                 Route::post("/users/fetch-by-uuid", [UserController::class, "fetch_by_uuid"]);
                 Route::post("/users/metadata", [UserController::class, "metadata"]);
+                Route::delete("/users", [UserController::class, "delete"]);
 
                 Route::post("/api-users", [ApiUserController::class, "index"]);
                 Route::post("/api-users/create", [ApiUserController::class, "create"]);
                 Route::post("/api-users/update", [ApiUserController::class, "update"]);
                 Route::post("/api-users/fetch-by-uuid", [ApiUserController::class, "fetch_by_uuid"]);
                 Route::post("/api-users/metadata", [ApiUserController::class, "metadata"]);
+                Route::delete("/api-users", [ApiUserController::class, "delete"]);
             });
         });
     });
