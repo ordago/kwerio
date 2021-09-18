@@ -110,7 +110,7 @@ function Toolbar({
       dispatch(actions.removeAll())
       dispatch(actions.setQ(q_ref.current))
       onQuery()
-    }, 1000)
+    }, 200)
   }
 
   const generic_button_props = action => ({

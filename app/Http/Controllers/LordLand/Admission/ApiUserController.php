@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Kwerio\Normalizer;
+use Kwerio\PaginatedTableDataProvider;
 
 use App\Models\{
     ApiUser as ApiUserModel,
@@ -74,37 +75,12 @@ class ApiUserController extends Controller {
      *
      * @return array
      */
-    function index(Request $request, Normalizer $normalizer) {
-        $this->authorize("root/api_user_index");
-
-        $data = $request->validate([
-            "page" => "required|numeric",
-            "sorts" => "nullable|array",
-            "q" => "nullable",
-        ]);
-
-        $data["sorts"] = empty($data["sorts"]) ? [] : $data["sorts"];
-
-        $query = ApiUserModel::query();
-
-        if (!empty($data["q"])) {
-            $query->where("name", "like", "%{$data['q']}%")
-                ->orWhere("token", "like", "%{$data['q']}%");
-        }
-
-        foreach ($data["sorts"] as $sort) {
-            if (in_array($sort["name"], ["email"])) {
-                $query->with(["user" => function($query) use($sort) {
-                    $query->orderBy($sort["name"], $sort["dir"]);
-                }]);
-            } else {
-                $query->orderBy($sort["name"], $sort["dir"]);
-            }
-        }
-
-        $items = $query->paginate(config("app.per_page"));
-
-        return $normalizer->normalize($items, [$this, "_normalize_callback"]);
+    function index(PaginatedTableDataProvider $ptdp) {
+        return $ptdp
+            ->authorize("root/api_user_index")
+            ->query(ApiUserModel::query())
+            ->basic_filter(["name", "token"])
+            ->normalize(fn($item) => $this->_normalize_callback($item));
     }
 
     /**

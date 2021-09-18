@@ -69,14 +69,12 @@ class GroupController extends Controller {
      *
      * @return array
      */
-    function index(PaginatedTableDataProvider $paginatedTableDataProvider) {
-        return $paginatedTableDataProvider
+    function index(PaginatedTableDataProvider $ptdp) {
+        return $ptdp
             ->authorize("root/group_index")
             ->query(Group::where("slug", "<>", "root"))
             ->basic_filter("name")
-            ->normalize(function($group) {
-                return $this->_normalize_callback($group);
-            });
+            ->normalize(fn($group) => $this->_normalize_callback($group));
     }
 
     /**

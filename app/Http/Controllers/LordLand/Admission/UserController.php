@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Kwerio\Normalizer;
+use Kwerio\PaginatedTableDataProvider;
 
 use Illuminate\Support\Facades\{
     DB,
@@ -97,32 +98,12 @@ class UserController extends Controller {
      *
      * @return array
      */
-    function index(Request $request, Normalizer $normalizer) {
-        $this->authorize("root/user_index");
-
-        $data = $request->validate([
-            "page" => "required|numeric",
-            "sorts" => "nullable|array",
-            "q" => "nullable",
-        ]);
-
-        $data["sorts"] = empty($data["sorts"]) ? [] : $data["sorts"];
-
-        $query = UserModel::query();
-
-        if (!empty($data["q"])) {
-            $query->where("email", "like", "%{$data['q']}%")
-                ->orWhere("first_name", "like", "%{$data['q']}%")
-                ->orWhere("last_name", "like", "%{$data['q']}%");
-        }
-
-        foreach ($data["sorts"] as $sort) {
-            $query->orderBy($sort["name"], $sort["dir"] ?? "asc");
-        }
-
-        $items = $query->paginate(config("app.per_page"));
-
-        return $normalizer->normalize($items, [$this, "_normalize_callback"]);
+    function index(PaginatedTableDataProvider $ptdp) {
+        return $ptdp
+            ->authorize("root/user_index")
+            ->query(UserModel::query())
+            ->basic_filter(["email", "first_name", "last_name"])
+            ->normalize(fn($item) => $this->_normalize_callback($item));
     }
 
     /**
