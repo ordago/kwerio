@@ -24,3 +24,11 @@ $ php artisan tenant:migrate euvoor -m Home,Login -s
 After the migration finished, visit `https://euvoor.kwerio.test`. use the
 login credentials defined in `.env` file `ROOT_USER_EMAIL` and `ROOT_USER_PASSWORD`
 to login as an owner.
+
+### Seeding Tenant Database
+
+if `--c|class=` option is empty, all seeders will run.
+
+```
+$ php artisan tenant:seed euvoor --class AbilitiesTableSeeder
+```

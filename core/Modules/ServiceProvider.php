@@ -11,8 +11,8 @@ class ServiceProvider extends BaseServiceProvider {
     function register() {
         $this->app->alias(Modules::class, "modules");
 
-        $this->app->scoped(Modules::class, function($app) {
-            return new Modules($app);
+        $this->app->scoped(Modules::class, function() {
+            return new Modules();
         });
     }
 

@@ -9,14 +9,10 @@ use App\SystemModels\Tenant;
 use Kwerio\Module\Base as BaseModule;
 
 class Modules extends Fluent {
-    private $app;
-
     /**
      * Initialize modules.
      */
-    function __construct($app) {
-        $this->app = $app;
-
+    function __construct() {
         $loader = new Loader;
         $modules = $loader->load_from_disk();
 
@@ -98,15 +94,14 @@ class Modules extends Fluent {
         // right order.
         foreach ($this->attributes as $candidate) {
             if (in_array($candidate->uid, $deps)) {
-                $this->app->register($candidate->service_provider);
-                $this->app->instance($candidate->uid, $candidate);
+                app()->register($candidate->service_provider);
+                app()->instance($candidate->uid, $candidate);
             }
         }
 
         // Register the current module.
-        $this->app->register($module->service_provider);
-        $this->app->instance($module->uid, $module);
-        $this->app->instance("module", $module);
+        app()->register($module->service_provider);
+        app()->instance("module", $module);
     }
 
     /**

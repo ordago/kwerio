@@ -25,15 +25,8 @@ class CreateFieldsetsTable extends Migration {
 
             $table->unique(["module", "name"]);
 
-            $table->foreign("fieldset_id")
-                ->references("id")
-                ->on("fieldsets")
-                ->onDelete("cascade");
-
-            $table->foreign(["module", "locale"])
-                ->references(["module", "locale"])
-                ->on("languages")
-                ->onDelete("cascade");
+            $table->foreign("fieldset_id")->references("id")->on("fieldsets")->onDelete("cascade");
+            $table->foreign(["module", "locale"])->references(["module", "locale"])->on("languages")->onDelete("cascade");
         });
     }
 

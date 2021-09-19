@@ -45,19 +45,19 @@ class TenantMigrateCommand extends Command {
      * Migrate modules.
      */
     private function _migrate_tenant_modules(Tenant $tenant) {
-        $uids = explode(",", $this->option("modules") ?? "");
+        $modules = $this->_get_modules_names_to_install();
 
-        foreach ($uids as $uid) {
+        foreach ($modules as $module) {
             $this->line("");
-            $this->comment("[ {$tenant->db_name} ]  Migrating module {$uid}");
+            $this->comment("[ {$tenant->db_name} ]  Migrating module {$module}");
 
-            $path = "modules/{$uid}/database/migrations";
+            $path = "modules/{$module}/database/migrations";
 
             $this->call("migrate", [
                 "--path" => $path,
             ]);
 
-            $this->__install_module($uid);
+            $this->__install_module($module);
         }
     }
 
@@ -73,29 +73,45 @@ class TenantMigrateCommand extends Command {
         $modules = resolve("modules")->built_for_tenant($tenant);
 
         foreach ($modules as $module) {
-            if (!file_exists("{$module->path}/database/migrations")) {
+            if (file_exists("{$module->path}/database/migrations")) {
+                $this->line("");
+                $this->comment("[ $tenant->db_name ] Migrating module {$parent}/{$module->uid}");
+
+                $this->call("migrate", [
+                    "--path" => "modules/{$parent}/{$module->uid}/database/migrations",
+                ]);
+            } else {
                 $this->line("");
                 $this->comment("[ {$parent}/{$module->uid} ] Has no migrations");
-                continue;
             }
-
-            $this->line("");
-            $this->comment("[ $tenant->db_name ] Migrating module {$parent}/{$module->uid}");
-
-            $this->call("migrate", [
-                "--path" => "modules/{$parent}/{$module->uid}/database/migrations",
-            ]);
 
             $this->__install_module($module->uid);
         }
     }
 
+    /**
+     * Seed tenant database.
+     */
     private function _seed() {
         if (!$this->option("seed")) return;
 
         $this->call("db:seed");
     }
 
+    /**
+     * Get the list of modules to install for the new tenant.
+     */
+    private function _get_modules_names_to_install() {
+        $uids = array_filter(explode(",", $this->option("modules") ?? ""));
+
+        if (! in_array("Home", $uids)) $uids[] = "Home";
+
+        return $uids;
+    }
+
+    /**
+     * Install the module.
+     */
     private function __install_module(string $module_uid) {
         $module = ModuleModel::updateOrCreate(["uid" => $module_uid], [
             "uid" => $module_uid,

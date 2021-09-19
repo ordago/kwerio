@@ -16,7 +16,7 @@ trait InteractsWithAbility {
      * @return MorphToMany
      */
     function abilities() {
-        return $this->morphToMany(Ability::class, "abilitable")
+        return $this->belongsToMany(Ability::class)
             ->withTimestamps();
     }
 

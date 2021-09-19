@@ -32,7 +32,6 @@ class UsersTableSeeder extends Seeder
             "email_verified_at" => now(),
         ]);
 
-        $rootUser->abilities()->sync(Ability::get(["id"]));
         $rootUser->groups()->sync(Group::whereName("root")->first()->id);
     }
 }
