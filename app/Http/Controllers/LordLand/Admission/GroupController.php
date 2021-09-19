@@ -229,10 +229,7 @@ class GroupController extends Controller {
 
         $groups = Group::whereIn("uuid", $data["uuids"])->get();
 
-        foreach ($groups as $group) {
-            $group->modules()->detach();
-            $group->delete();
-        }
+        Group::whereIn("uuid", $data["uuids"])->delete();
 
         return $normalizer
             ->message("Groups deleted successfully")

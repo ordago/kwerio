@@ -18,6 +18,8 @@ class CreateAbilityGroupTable extends Migration {
             $table->unsignedBigInteger("ability_id");
             $table->timestamps();
 
+            $table->unique(["group_id", "ability_id"]);
+
             $table->foreign("ability_id")->references("id")->on("abilities")->onDelete("cascade");
             $table->foreign("group_id")->references("id")->on("groups")->onDelete("cascade");
         });

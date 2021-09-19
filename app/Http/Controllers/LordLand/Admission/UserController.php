@@ -222,14 +222,16 @@ class UserController extends Controller {
             $abilities = [];
 
             foreach ($groups as $group) {
-                foreach ($group->abilities as $ability) {
+                foreach ($group->abilities()->withPivot("id")->get() as $ability) {
                     if (in_array($ability->uuid, $data["abilities"])) {
-                        $abilities[] = $ability->uuid;
+                        $abilities[$ability->id] = [
+                            "ability_group_id" => $ability->getOriginal("pivot_id"),
+                            "group_id" => $group->id,
+                        ];
                     }
                 }
             }
 
-            $abilities = AbilityModel::whereIn("uuid", $abilities)->get(["id"]);
             $user->abilities()->sync($abilities);
 
             DB::commit();
