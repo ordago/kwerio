@@ -1,6 +1,6 @@
-import { Box, Button, CircularProgress } from "@material-ui/core"
-import { green } from "@material-ui/core/colors"
-import { makeStyles, createStyles } from "@material-ui/core/styles"
+import { Box, Button, CircularProgress } from "@mui/material"
+import { green } from "@mui/material/colors"
+import { makeStyles, createStyles } from "@mui/styles"
 import React from "react"
 
 const useStyles = makeStyles(theme => createStyles({

@@ -1,7 +1,7 @@
-import { Card, CardActions, CardContent, TextField } from "@material-ui/core"
+import { Card, CardActions, CardContent, TextField } from "@mui/material"
 import { is_disabled } from "@euvoor/form"
 import { useDispatch, useSelector } from "react-redux"
-import Autocomplete, { createFilterOptions } from "@material-ui/lab/Autocomplete"
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete"
 import React from "react"
 
 import InteractiveButton from "Kwerio/components/InteractiveButton"

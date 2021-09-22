@@ -1,18 +1,17 @@
 import "fontsource-roboto"
 
 import { BrowserRouter, Switch } from "react-router-dom"
-import { CssBaseline } from "@material-ui/core"
-import { MuiPickersUtilsProvider  } from "@material-ui/pickers"
+import { CssBaseline } from "@mui/material"
 import { Provider, useSelector, useDispatch } from "react-redux"
 import { SnackbarProvider } from "notistack"
 import { create } from "jss"
+import { jssPreset, StylesProvider } from "@mui/styles"
 import {
-  jssPreset,
-  StylesProvider,
   ThemeProvider,
   createTheme,
-} from "@material-ui/core/styles"
-import DayjsUtils from "@date-io/dayjs"
+} from "@mui/material/styles"
+import LocalizationProvider from "@mui/lab/LocalizationProvider"
+import DateAdapter from '@mui/lab/AdapterDayjs';
 import React from "react"
 import rtl from "jss-rtl"
 
@@ -48,7 +47,7 @@ function InnerApp({ moduleRoutes, module }) {
 
   return (
     <StylesProvider jss={jss}>
-      <MuiPickersUtilsProvider utils={DayjsUtils}>
+      <LocalizationProvider dateAdapter={DateAdapter}>
         <ThemeProvider theme={muiTheme}>
           <SnackbarProvider
             maxSnack={3}
@@ -69,7 +68,7 @@ function InnerApp({ moduleRoutes, module }) {
             </div>
           </SnackbarProvider>
         </ThemeProvider>
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
     </StylesProvider>
   )
 }

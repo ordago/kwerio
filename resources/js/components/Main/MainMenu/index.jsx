@@ -1,4 +1,4 @@
-import { Collapse, SwipeableDrawer } from "@material-ui/core"
+import { Collapse, SwipeableDrawer } from "@mui/material"
 import { useSelector, useDispatch } from "react-redux"
 import React from "react"
 

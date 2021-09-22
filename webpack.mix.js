@@ -27,12 +27,7 @@ mix.webpackConfig({
   },
 })
 
-mix.extract([
-  "react", "react-dom", "react-redux", "react-router-dom",
-  "reduxjs/toolkit",
-  "@material-ui/core",
-  "notistack",
-], "js/vendor.js")
+mix.extract({ to: "js/vendor.js" })
 
 if (mix.inProduction()) {
   mix.version()
@@ -42,6 +37,7 @@ if (mix.inProduction()) {
 
 // -------------------------------------------------------------- Options -- #
 mix.options({
+  runtimeChunkPath: "js",
   hmrOptions: {
     host: "127.0.0.1",
     port: 8080,

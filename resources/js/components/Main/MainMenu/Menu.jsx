@@ -1,4 +1,4 @@
-import { Collapse, List, ListSubheader } from "@material-ui/core"
+import { Collapse, List, ListSubheader } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
 import React from "react"
 

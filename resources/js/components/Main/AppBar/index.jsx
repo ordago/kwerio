@@ -8,12 +8,12 @@ import {
   AppBar as MuiAppBar,
   Toolbar,
   useTheme,
-} from "@material-ui/core"
+} from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
 import { useHistory } from "react-router-dom"
-import Brightness4Icon from "@material-ui/icons/Brightness4"
-import Brightness7Icon from "@material-ui/icons/Brightness7"
-import MenuIcon from "@material-ui/icons/Menu"
+import Brightness4Icon from "@mui/icons-material/Brightness4"
+import Brightness7Icon from "@mui/icons-material/Brightness7"
+import MenuIcon from "@mui/icons-material/Menu"
 import React, { useState } from "react"
 
 import { actions } from "../../../App.slice"

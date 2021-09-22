@@ -1,6 +1,6 @@
-import { Grid, TextField, Typography } from "@material-ui/core"
+import { Grid, TextField, Typography } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
-import Autocomplete, { createFilterOptions } from "@material-ui/lab/Autocomplete"
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete"
 import React from "react"
 
 import { actions } from "../index.slice"

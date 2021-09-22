@@ -7,12 +7,12 @@ import {
   ListItemIcon,
   ListItemText,
   ListSubheader
-} from "@material-ui/core"
-import { makeStyles, createStyles } from "@material-ui/core/styles"
+} from "@mui/material"
+import { makeStyles, createStyles } from "@mui/styles"
 import { useHistory } from "react-router-dom"
 import { useSelector } from "react-redux"
-import ExpandLessIcon from "@material-ui/icons/ExpandLess"
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+import ExpandLessIcon from "@mui/icons-material/ExpandLess"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import React, { useState } from "react"
 
 function AccountMenu({ match }) {

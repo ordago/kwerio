@@ -1,5 +1,5 @@
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-import { red, blue } from "@material-ui/core/colors"
+import { makeStyles, createStyles } from "@mui/styles"
+import { red, blue } from "@mui/material/colors"
 
 export default makeStyles(theme => createStyles({
   genericBtn: {

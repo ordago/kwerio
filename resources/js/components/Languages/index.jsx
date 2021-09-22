@@ -1,7 +1,7 @@
-import { Button } from "@material-ui/core"
+import { Button } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
 import React from "react"
-import StarIcon from "@material-ui/icons/Star"
+import StarIcon from "@mui/icons-material/Star"
 import _ from "lodash"
 
 import PaginatedTable from "Kwerio/components/PaginatedTable/index.jsx"

@@ -4,7 +4,7 @@ import {
   CardActions,
   CardContent,
   Divider
-} from "@material-ui/core"
+} from "@mui/material"
 import { is_disabled } from "@euvoor/form"
 import { useSelector } from "react-redux"
 import { useHistory } from "react-router-dom"

@@ -1,4 +1,4 @@
-import { Button, IconButton, Tooltip } from "@material-ui/core"
+import { Button, IconButton, Tooltip } from "@mui/material"
 import { useHistory } from "react-router-dom"
 import React, { useState } from "react"
 

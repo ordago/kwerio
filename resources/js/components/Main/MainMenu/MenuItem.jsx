@@ -1,7 +1,7 @@
-import { Icon, ListItem, ListItemIcon, ListItemText } from "@material-ui/core"
+import { Icon, ListItem, ListItemIcon, ListItemText } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
-import ExpandLessIcon from "@material-ui/icons/ExpandLess"
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+import ExpandLessIcon from "@mui/icons-material/ExpandLess"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import React from "react"
 import clsx from "clsx"
 

@@ -7,8 +7,8 @@ import {
   TableCell,
   TableRow,
   Typography,
-} from "@material-ui/core"
-import { makeStyles, createStyles } from "@material-ui/core/styles"
+} from "@mui/material"
+import { makeStyles, createStyles } from "@mui/styles"
 import { useDispatch, useSelector } from "react-redux"
 import React from "react"
 import _ from "lodash"

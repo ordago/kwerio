@@ -6,12 +6,12 @@ import {
   ListItemIcon,
   ListItemText,
   ListSubheader
-} from "@material-ui/core"
-import { makeStyles, createStyles } from "@material-ui/core/styles"
+} from "@mui/material"
+import { makeStyles, createStyles } from "@mui/styles"
 import { useDispatch, useSelector } from "react-redux"
 import { useRouteMatch, useHistory } from "react-router-dom"
-import ExpandLessIcon from "@material-ui/icons/ExpandLess"
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+import ExpandLessIcon from "@mui/icons-material/ExpandLess"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import React, { useEffect, useState } from "react"
 
 import { get } from "lodash"

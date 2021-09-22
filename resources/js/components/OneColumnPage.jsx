@@ -1,9 +1,9 @@
-import { Box, Grid, IconButton, Paper } from "@material-ui/core"
-import { makeStyles, createStyles } from "@material-ui/core/styles"
+import { Box, Grid, IconButton, Paper } from "@mui/material"
+import { makeStyles, createStyles } from "@mui/styles"
 import { useHistory } from "react-router-dom"
 import { useSelector } from "react-redux"
-import ArrowBackIcon from "@material-ui/icons/ArrowBack"
-import ArrowForwardIcon from "@material-ui/icons/ArrowForward"
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
 import React from "react"
 
 function OneColumnPage({ children, className = null, back_to = null }) {

@@ -57,7 +57,6 @@ const initialState = {
       MuiTextField: {
         margin: "dense",
         size: "small",
-        variant: "outlined",
         autoComplete: "new-password",
       },
       MuiFormControl: {

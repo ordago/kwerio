@@ -1,8 +1,8 @@
 import { SnackbarProvider  } from "notistack"
-import { createTheme, ThemeProvider } from "@material-ui/core/styles"
+import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { render } from "react-dom"
 import React from "react"
-import { blue, pink } from '@material-ui/core/colors'
+import { blue, pink } from "@mui/material/colors"
 
 import App from "./App"
 

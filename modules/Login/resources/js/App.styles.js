@@ -1,7 +1,7 @@
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-import { green, blue } from '@material-ui/core/colors'
+import { makeStyles, createStyles } from "@mui/styles"
+import { green, blue } from "@mui/material/colors"
 
-export default makeStyles(theme => createStyles({
+export default makeStyles(theme => ({
   root: {
     height: "100vh",
   },

@@ -6,8 +6,8 @@ import {
   DialogContentText,
   DialogTitle,
   useMediaQuery
-} from "@material-ui/core"
-import { useTheme } from "@material-ui/core/styles"
+} from "@mui/material"
+import { useTheme } from "@mui/styles"
 import React from "react"
 
 import useT from "Kwerio/hooks/useT"

@@ -1,4 +1,4 @@
-import { Alert } from "@material-ui/lab"
+import { Alert } from "@mui/lab"
 import {
   Button,
   Card,
@@ -7,7 +7,7 @@ import {
   FormControlLabel,
   Switch,
   TextField
-} from "@material-ui/core"
+} from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
 import { useHistory } from "react-router-dom"
 import { useSnackbar } from "notistack"

@@ -19,7 +19,7 @@
     <body>
         <div id="root"></div>
 
-        <script src="{{ rsc('/js/modules/manifest.js') }}"></script>
+        <script src="{{ rsc('/js/manifest.js') }}"></script>
         <script src="{{ rsc('/js/vendor.js') }}"></script>
         @stack('scripts')
     </body>

@@ -1,4 +1,4 @@
-import { Paper } from "@material-ui/core"
+import { Paper } from "@mui/material"
 import { useHistory } from "react-router-dom"
 import { useSelector } from "react-redux"
 import React from "react"

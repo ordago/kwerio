@@ -1,7 +1,7 @@
-import { Alert } from "@material-ui/lab"
-import { CircularProgress, Paper } from "@material-ui/core"
+import { Alert } from "@mui/lab"
+import { CircularProgress, Paper } from "@mui/material"
 import { Link } from "react-router-dom"
-import { makeStyles, createStyles } from "@material-ui/core/styles"
+import { makeStyles, createStyles } from "@mui/styles"
 import { useSelector } from "react-redux"
 import React from "react"
 
