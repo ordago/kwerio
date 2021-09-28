@@ -8,7 +8,7 @@ use Carbon\Carbon;
 
 trait LocalizeDatetimeAttributes {
     // owner_at
-    function getOwnerAt($owner_at) { return localize_date($created_at); }
+    function getOwnerAtAttribute($owner_at) { return localize_date($owner_at); }
 
     // created_at
     function getCreatedAtAttribute($created_at) { return localize_date($created_at); }

@@ -261,7 +261,7 @@ function PaginatedTable({
                     }
 
                     return (
-                      <TableCell key={col[slugKey]}>
+                      <TableCell key={col[slugKey]} align={col.align || "inherit"}>
                         {_get_value(row, col)}
                       </TableCell>
                     )
