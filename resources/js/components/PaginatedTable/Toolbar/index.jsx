@@ -87,7 +87,7 @@ function Toolbar({
       if (!(ability in abilities)) {
         let is_able = user.can(`${abilitiesPrefix}${ability}`)
 
-        if (is_able && ! (ability in api)) {
+        if (is_able && ! ((ability in api) || (ability in endpoint))) {
           is_able = false
         }
 
