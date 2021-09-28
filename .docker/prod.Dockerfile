@@ -42,7 +42,7 @@ RUN set -eux \
         libpng-dev \
         tzdata \
         pwgen \
-        dos2unix
+        dos2unix \
     && apt-get autoremove -y \
     && apt-get autoclean -y
 
