@@ -42,9 +42,7 @@ RUN set -eux \
         libpng-dev \
         tzdata \
         pwgen \
-        dos2unix \
-        certbot \
-        python-certbot-apache \
+        dos2unix
     && apt-get autoremove -y \
     && apt-get autoclean -y
 
