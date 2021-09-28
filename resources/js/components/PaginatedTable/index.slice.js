@@ -42,6 +42,15 @@ export const reducers = adapter => ({
   },
 
   /**
+   * Reset table state.
+   */
+  resetTableState: (stateProxy, action) => {
+    stateProxy = {
+      ...state,
+    }
+  },
+
+  /**
    * Reset soft table trackers.
    */
   resetTableTrackers: (state, action) => {

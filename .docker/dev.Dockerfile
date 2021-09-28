@@ -1,6 +1,6 @@
-FROM composer:2.1.5 as composer
-FROM node:16.7.0-buster AS node
-FROM php:8.0.9-apache-buster
+FROM composer:2.1.8 as composer
+FROM node:16.10.0-bullseye AS node
+FROM php:8.0.11-apache-bullseye
 
 LABEL maintainer="Oussama Elgoumri <euvoor@gmail.com>"
 
@@ -50,7 +50,6 @@ RUN set -eux \
         strace \
         tcpdump \
         iputils-ping \
-        dnsmasq \
         dnsutils \
         iproute2 \
     && apt-get autoremove -y \
@@ -119,10 +118,6 @@ RUN set -eux \
         proxy_http \
         proxy_wstunnel \
         substitute
-
-# ----------------------------------------------------------------------------
-#                                                                    DNSMASQ -
-COPY .docker/dev.dnsmasq.conf /etc/dnsmasq.conf
 
 # ----------------------------------------------------------------------------
 #                                                                    Cleanup -
