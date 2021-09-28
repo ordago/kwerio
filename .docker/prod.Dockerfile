@@ -43,8 +43,6 @@ RUN set -eux \
         tzdata \
         pwgen \
         dos2unix \
-        certbot \
-        python-certbot-apache \
     && apt-get autoremove -y \
     && apt-get autoclean -y
 
