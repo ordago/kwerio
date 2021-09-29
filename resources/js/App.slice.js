@@ -1,6 +1,6 @@
-import { blue, pink } from "@material-ui/core/colors"
+import { blue, pink } from "@mui/material/colors"
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
-import { useMediaQuery } from "@material-ui/core"
+import { useMediaQuery } from "@mui/material"
 
 import _ from "lodash"
 import axios from "axios"

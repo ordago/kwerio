@@ -1,4 +1,4 @@
-import { Paper, TableCell, Typography } from "@material-ui/core"
+import { Paper, TableCell, Typography } from "@mui/material"
 import { useHistory } from "react-router-dom"
 import { useSelector } from "react-redux"
 import React from "react"
