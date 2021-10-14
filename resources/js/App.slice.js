@@ -1,6 +1,5 @@
 import { blue, pink } from "@mui/material/colors"
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
-import { useMediaQuery } from "@mui/material"
 
 import _ from "lodash"
 import axios from "axios"
@@ -37,54 +36,76 @@ const initialState = {
       type: "light",
     },
     direction: "ltr",
-    props: {
+    components: {
       MuiTable: {
-        size: "small",
+        defaultProps: {
+          size: "small",
+        },
       },
       MuiListItem: {
-        dense: true,
+        defaultProps: {
+          dense: true,
+        },
       },
       MuiList: {
-        dense: true,
+        defaultProps: {
+          dense: true,
+        },
       },
       MuiChip: {
-        size: "small",
+        defaultProps: {
+          size: "small",
+        },
       },
       MuiCheckbox: {
-        color: "primary",
-        size: "small",
+        defaultProps: {
+          color: "primary",
+          size: "small",
+        },
       },
       MuiTextField: {
-        margin: "dense",
-        size: "small",
-        autoComplete: "new-password",
+        defaultProps: {
+          margin: "dense",
+          size: "small",
+          autoComplete: "new-password",
+        },
       },
       MuiFormControl: {
-        margin: "dense",
-        size: "small",
-        variant: "outlined",
-        fullWidth: true,
+        defaultProps: {
+          margin: "dense",
+          size: "small",
+          variant: "outlined",
+          fullWidth: true,
+        },
       },
       MuiFab: {
-        size: "small",
+        defaultProps: {
+          size: "small",
+        },
       },
       MuiButton: {
-        size: "small",
-        variant: "contained",
-        color: "primary",
+        defaultProps: {
+          size: "small",
+          variant: "contained",
+          color: "primary",
+        },
       },
       MuiIconButton: {
-        size: "small",
+        defaultProps: {
+          size: "small",
+        },
       },
       MuiSwitch: {
-        color: "primary",
+        defaultProps: {
+          color: "primary",
+        },
       },
-    },
-    overrides: {
       MuiDivider: {
-        root: {
-          marginTop: 16,
-          marginBottom: 16,
+        styleOverrides: {
+          root: {
+            marginTop: 16,
+            marginBottom: 16,
+          },
         },
       },
     },

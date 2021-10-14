@@ -4,7 +4,6 @@ import { grey, blue } from "@mui/material/colors"
 export default makeStyles(theme => createStyles({
   root: {
     width: "100%",
-    backgroundColor: theme.palette.type === "dark" ? grey[900] : blue[500],
   },
 
   logo: {

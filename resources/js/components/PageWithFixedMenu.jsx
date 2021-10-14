@@ -1,5 +1,5 @@
 import { Box, Divider, Paper, Typography } from "@mui/material"
-import { makeStyles, createStyles } from "@mui/styles"
+import { makeStyles } from "@mui/styles"
 import { useSelector } from "react-redux"
 import React from "react"
 import clsx from "clsx"
@@ -22,12 +22,24 @@ function PageWithFixedMenu({
       <Paper
         variant="outlined"
         square={true}
-        className={classes.paper}
+        sx={{
+          height: `calc(100vh - ${config.appbar_height}px)`,
+          width: config.menu_width + 1,
+          position: "fixed",
+          borderLeft: "none",
+        }}
       >
         {title && (
           <>
-            <Typography className={classes.typography} variant="h6">{title}</Typography>
-            <Divider className={classes.divider} />
+            <Typography
+              variant="h6"
+              sx={{
+                textAlign: "center",
+                height: config.appbar_height - 2,
+                lineHeight: `${config.appbar_height - 2}px`,
+              }}
+            >{title}</Typography>
+            <Divider sx={{ margin: 0 }} />
           </>
         )}
         <PageMenu menu={menu} actions={menuActions} />
@@ -56,34 +68,7 @@ function PageWithFixedMenu({
   )
 }
 
-const useStyles = makeStyles(theme => createStyles({
-  root: {
-
-  },
-
-  paper: {
-    height: config => `calc(100vh - ${config.appbar_height}px)`,
-    width: config => config.menu_width + 1,
-    position: "fixed",
-    borderLeft: "none",
-  },
-
-  typography: {
-    textAlign: "center",
-    margin: 0,
-    padding: 0,
-    height: config => config.appbar_height - 2,
-    lineHeight: config => `${config.appbar_height - 2}px`,
-  },
-
-  divider: {
-    margin: 0,
-  },
-
-  menu: {
-    width: config => config.menu_width,
-  },
-
+const useStyles = makeStyles(theme => ({
   content: {
     width: config => `calc(100% - ${config.menu_width}px)`,
     minHeight: config => window.innerHeight - config.appbar_height,

@@ -29,7 +29,7 @@ function AppBar() {
     state = useSelector(state => state.app)
 
   return (
-    <MuiAppBar position="fixed" className={classes.root}>
+    <MuiAppBar position="fixed" className={classes.root} enableColorOnDark>
       <Toolbar variant="dense" className={classes.toolbar}>
         <div className={classes.toolbarLeft}>
           <IconButton

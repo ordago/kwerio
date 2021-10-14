@@ -14,6 +14,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider"
 import DateAdapter from '@mui/lab/AdapterDayjs';
 import React from "react"
 import rtl from "jss-rtl"
+import { StyledEngineProvider  } from '@mui/material/styles'
 
 import { actions, fetch_metadata } from "./App.slice"
 import Main from "./components/Main"
@@ -48,26 +49,28 @@ function InnerApp({ moduleRoutes, module }) {
   return (
     <StylesProvider jss={jss}>
       <LocalizationProvider dateAdapter={DateAdapter}>
-        <ThemeProvider theme={muiTheme}>
-          <SnackbarProvider
-            maxSnack={3}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "center",
-            }}
-            autoHideDuration={3000}
-          >
-            <div className={classes.root}>
-              <CssBaseline />
-              <BrowserRouter>
-                <Main>
-                  {module()}
-                  <Switch>{routes}</Switch>
-                </Main>
-              </BrowserRouter>
-            </div>
-          </SnackbarProvider>
-        </ThemeProvider>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={muiTheme}>
+            <SnackbarProvider
+              maxSnack={3}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
+              autoHideDuration={3000}
+            >
+              <div className={classes.root}>
+                <CssBaseline />
+                <BrowserRouter>
+                  <Main>
+                    {module()}
+                    <Switch>{routes}</Switch>
+                  </Main>
+                </BrowserRouter>
+              </div>
+            </SnackbarProvider>
+          </ThemeProvider>
+        </StyledEngineProvider>
       </LocalizationProvider>
     </StylesProvider>
   )
