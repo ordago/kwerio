@@ -6,24 +6,22 @@ import {
   CssBaseline,
   Fab,
   FormControlLabel,
-  Hidden,
+  Grid,
   Link,
+  Paper,
   TextField,
   Typography,
-  Paper,
 } from "@mui/material"
 import { useSnackbar  } from "notistack"
 import LockIcon from "@mui/icons-material/Lock"
 import React, { useState } from "react"
-import clsx from "clsx"
 
 import axios from "axios"
 
-import useStyles from "./App.styles"
+import { textFieldStyles } from "./App.styles.js"
 
 function App() {
-  const classes = useStyles(),
-    [email, setEmail] = useState(""),
+  const [email, setEmail] = useState(""),
     [password, setPassword] = useState(""),
     [remember_me, setRememberMe] = useState(false),
     [loading, setLoading] = useState(false),
@@ -70,75 +68,73 @@ function App() {
           }}
         >
           <Paper>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                p: 2,
-                width: "400px",
-              }}
+            <Grid
+              container
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+              spacing={1}
+              p={2}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: 1,
-                  mt: 5,
-                  mb: 5,
-                }}
-              >
-                <Fab className={classes.fab} size="medium" disableFocusRipple disableRipple color="primary">
+              <Grid item>
+                <Fab size="medium" disableFocusRipple disableRipple color="primary">
                   <LockIcon />
                 </Fab>
+              </Grid>
+
+              <Grid item mb={5}>
                 <Typography variant="h6">Sign in</Typography>
-              </Box>
+              </Grid>
 
-              <TextField
-                label="Email address *"
-                name="email"
-                variant="outlined"
-                onChange={e => setEmail(e.target.value)}
-                className={classes.email}
-              />
+              <Grid item mb={2}>
+                <TextField
+                  sx={{ ...textFieldStyles }}
+                  label="Email address *"
+                  name="email"
+                  variant="outlined"
+                  onChange={e => setEmail(e.target.value)}
+                />
+              </Grid>
 
-              <TextField
-                label="Password *"
-                name="password"
-                type="password"
-                variant="outlined"
-                onChange={e => setPassword(e.target.value)}
-                className={classes.password}
-              />
+              <Grid item>
+                <TextField
+                  sx={{ ...textFieldStyles }}
+                  label="Password *"
+                  name="password"
+                  type="password"
+                  variant="outlined"
+                  onChange={e => setPassword(e.target.value)}
+                />
+              </Grid>
 
-              <FormControlLabel
-                label="Remember me"
-                className={classes.rememberMe}
-                control={<Checkbox color="primary" checked={remember_me} onChange={e => setRememberMe(e.target.checked)} />}
-              />
+              <Grid item width="100%">
+                <FormControlLabel
+                  label="Remember me"
+                  control={<Checkbox color="primary" checked={remember_me} onChange={e => setRememberMe(e.target.checked)} />}
+                />
+              </Grid>
 
-              <Box className={classes.loginBtnWrapper}>
+              <Grid item width="100%">
                 <Button
                   color="primary"
-                  className={clsx(classes.loginBtn, {
-                    [classes.loginBtnSuccess]: success,
-                  })}
                   size="large"
                   variant="contained"
                   disabled={loading}
                   onClick={submit}
+                  sx={{ width: "100%" }}
                 >
                   Sign In
                 </Button>
 
-                {loading && <CircularProgress className={classes.loginBtnProgress} size={24} />}
-              </Box>
+                {loading && <CircularProgress size={24} />}
+              </Grid>
 
-              <Link href="#" color="primary">
-                Forget Password
-              </Link>
-            </Box>
+              <Grid item width="100%">
+                <Link href="#" color="primary">
+                  Forget Password
+                </Link>
+              </Grid>
+            </Grid>
           </Paper>
         </Box>
       </Box>
