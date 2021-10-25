@@ -12,13 +12,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material"
+import { green, red } from "@mui/material/colors"
 import { useSnackbar  } from "notistack"
 import LockIcon from "@mui/icons-material/Lock"
 import React, { useState } from "react"
 
 import axios from "axios"
 
-import { textFieldStyles } from "./App.styles.js"
+import { textFieldStyles } from "./App.styles"
 
 function App() {
   const [email, setEmail] = useState(""),
@@ -29,15 +30,17 @@ function App() {
     { enqueueSnackbar } = useSnackbar()
 
   function submit() {
+    if (success) return
+
     setLoading(true)
 
     axios.post("/_/login", { email, password, remember_me })
       .then(response => {
         if (response.status === 200) {
           enqueueSnackbar("Redirecting..")
-          setSuccess(true)
           setLoading(false)
-          setTimeout(() => window.location.href = response.data, 500)
+          setSuccess(true)
+          setTimeout(() => window.location.href = response.data, 300)
         }
       })
       .catch(err => {
@@ -93,6 +96,7 @@ function App() {
                   name="email"
                   variant="outlined"
                   onChange={e => setEmail(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" ? submit() : () => {}}
                 />
               </Grid>
 
@@ -104,6 +108,7 @@ function App() {
                   type="password"
                   variant="outlined"
                   onChange={e => setPassword(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" ? submit() : () => {}}
                 />
               </Grid>
 
@@ -115,18 +120,36 @@ function App() {
               </Grid>
 
               <Grid item width="100%">
-                <Button
-                  color="primary"
-                  size="large"
-                  variant="contained"
-                  disabled={loading}
-                  onClick={submit}
-                  sx={{ width: "100%" }}
-                >
-                  Sign In
-                </Button>
+                <Box sx={{
+                  width: "100%",
+                  position: "relative",
+                }}>
+                  <Button
+                    color="primary"
+                    size="large"
+                    variant="contained"
+                    disabled={loading}
+                    onClick={submit}
+                    sx={{
+                      width: "100%",
+                      backgroundColor: success ? green[500] : undefined,
+                      "&:hover": {
+                        backgroundColor: success ? green[700] : undefined,
+                      },
+                    }}
+                  >
+                    Sign In
+                  </Button>
 
-                {loading && <CircularProgress size={24} />}
+                  {loading && <CircularProgress
+                    size={24}
+                    sx={{
+                      position: "absolute",
+                      top: `calc(50% - 12px)`,
+                      left: `calc(50% - 12px)`,
+                    }}
+                  />}
+                </Box>
               </Grid>
 
               <Grid item width="100%">

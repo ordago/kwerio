@@ -1,5 +1,6 @@
 export const textFieldStyles = {
   width: {
-    md: 300,
+    xs: 250,
+    sm: 300,
   }
 }
