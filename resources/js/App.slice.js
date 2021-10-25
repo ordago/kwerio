@@ -33,7 +33,6 @@ const initialState = {
     palette: {
       primary: blue,
       secondary: pink,
-      type: "light",
     },
     direction: "ltr",
     components: {
@@ -131,22 +130,7 @@ const slice = createSlice({
     setThemePaletteType: (state, action) => {
       state.theme.palette.type = action.payload
     },
-    toggleBrightness: (state, action) => {
-      if (state.theme.palette.type === "dark") {
-        state.theme.palette.type = "light"
-        localStorage.setItem("theme.palette.type", "light")
-      } else {
-        state.theme.palette.type = "dark"
-        localStorage.setItem("theme.palette.type", "dark")
-      }
-    },
     toggleMainMenu: (state, action) => { state.menu.open = !state.menu.open },
-    togglePaletteType: (state) => {
-      if (_.isUndefined(state.palette)) return
-
-      if (state.palette.type === "dark") { state.palette.type = "light" }
-      else state.palette.type = "dark"
-    },
     setDirectionToRtl: (state) => {
       state.direction = "rtl"
       document.body.dir = "rtl"

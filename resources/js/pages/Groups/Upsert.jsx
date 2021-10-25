@@ -76,7 +76,6 @@ function Upsert({ match }) {
                       filterSelectedOptions
                       options={modules_options}
                       getOptionLabel={option => option.name}
-                      getOptionSelected={(option, value) => option.uuid === value.uuid}
                       onChange={(e, value, reason) => {
                         dispatch(actions.handleChange({
                           name: modules.name,

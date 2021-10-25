@@ -43,18 +43,6 @@ function AppBar() {
         </div>
 
         <div className={classes.toolbarRight}>
-          {/* TOGGLE BRIGHTNESS */}
-          <Box mr={2}>
-            <IconButton color="inherit" onClick={() => dispatch(actions.toggleBrightness())}>
-              {state.theme.palette.type === "light" && (
-                <Brightness4Icon />
-              )}
-              {state.theme.palette.type === "dark" && (
-                <Brightness7Icon />
-              )}
-            </IconButton>
-          </Box>
-
           {/* USER AVATAR */}
           <ButtonBase onClick={e => setAnchorEl(e.currentTarget)}>
             <Avatar className={classes.avatar} />

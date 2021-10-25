@@ -6,6 +6,6 @@ export default makeStyles(theme => createStyles({
     marginRight: theme.spacing(2),
   },
   defaultLanguage: {
-    backgroundColor: theme.palette.type === "dark" ? blue[900] : blue[50],
+    backgroundColor: blue[50],
   },
 }))

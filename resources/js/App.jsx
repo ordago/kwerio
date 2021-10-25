@@ -38,12 +38,6 @@ function InnerApp({ moduleRoutes, module }) {
           document.body.setAttribute("dir", user.dir)
         }
       })
-
-      const theme_type = localStorage.getItem("theme.palette.type")
-
-      if (theme_type) {
-        dispatch(actions.setThemePaletteType(theme_type))
-      }
   }, [])
 
   return (
