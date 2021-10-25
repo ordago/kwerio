@@ -29,7 +29,6 @@ function Groupable({
         value={groups.value.map(uuid => selector.selectById(groupsState, uuid)).filter(Boolean)}
         options={options}
         getOptionLabel={option => option.name}
-        getOptionSelected={(option, value) => option.uuid === value.uuid}
         onChange={(e, value, reason) => {
           dispatch(actions.handleChange({
             name: groups.name,

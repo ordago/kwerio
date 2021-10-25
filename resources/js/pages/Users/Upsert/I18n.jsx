@@ -23,7 +23,7 @@ function I18n() {
           options={state.languages}
           autoHighlight
           value={language.length > 0 ? language[0] : null}
-          getOptionLabel={(option) => option.native_name}
+          getOptionLabel={(option) => option.name}
           filterOptions={createFilterOptions({
             stringify: option => `${option.name} ${option.native_name}`,
           })}
@@ -33,7 +33,6 @@ function I18n() {
               value: _.isNull(value) ? "" : value.locale,
             }))
           }}
-          renderOption={(option) => option.name}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -55,8 +54,6 @@ function I18n() {
           options={state.timezones}
           autoHighlight
           value={timezone.value || null}
-          getOptionLabel={(option) => option}
-          renderOption={option => option}
           onChange={(e, value) => {
             dispatch(actions.handleChange({
               name: timezone.name,
@@ -84,10 +81,7 @@ function I18n() {
           options={state.localeIsoFormats}
           autoHighlight
           value={localeIsoFormats.length > 0 ? localeIsoFormats[0] : null}
-          getOptionLabel={(option) => option.example}
-          renderOption={option => (
-            <>{option.label} ({option.example})</>
-          )}
+          getOptionLabel={(option) =>  `${option.label} (${option.example})`}
           onChange={(e, value) => {
             dispatch(actions.handleChange({
               name: locale_iso_format.name,
