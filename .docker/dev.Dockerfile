@@ -1,6 +1,6 @@
-FROM composer:2.1.8 as composer
-FROM node:16.10.0-bullseye AS node
-FROM php:8.0.11-apache-bullseye
+FROM composer:2.1.9 as composer
+FROM node:17.0.1-bullseye AS node
+FROM php:8.0.12-apache-bullseye
 
 LABEL maintainer="Oussama Elgoumri <euvoor@gmail.com>"
 
