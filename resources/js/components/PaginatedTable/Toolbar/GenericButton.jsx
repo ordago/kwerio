@@ -81,10 +81,9 @@ function GenericButton({
       {!useIcons && (
         <Button
           classes={classes}
-          color="default"
           className={className}
           aria-label={title}
-          startIcon={icon}
+          endIcon={icon}
           onClick={_handle_click}
         >
           {title}

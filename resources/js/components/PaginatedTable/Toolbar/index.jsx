@@ -8,6 +8,7 @@ import FilterListIcon from "@mui/icons-material/FilterList"
 import PauseIcon from "@mui/icons-material/Pause"
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 import React, { useState, useRef } from "react"
+import RefreshIcon from "@mui/icons-material/Refresh"
 import clsx from "clsx"
 
 import _ from "lodash"
@@ -30,6 +31,7 @@ function Toolbar({
   reducer,
   checkedItems,
   onQuery,
+  onRefreshClick,
   primaryKey,
 
   // User
@@ -66,6 +68,7 @@ function Toolbar({
     enable: false,
     filter: false,
     index: false,
+    refresh: false,
   }
 
   let defaultAbilitiesFn = {},
@@ -81,6 +84,9 @@ function Toolbar({
   }
 
   defaultRequests.delete.method = "delete"
+
+  abilities.refresh = ("refresh" in abilities) ? abilities.refresh : !!abilities.index
+  defaultAbilities.refresh = ("refresh" in abilities) ? abilities.refresh : !!abilities.index
 
   if (abilitiesPrefix) {
     for (let ability in defaultAbilities) {
@@ -210,6 +216,13 @@ function Toolbar({
                 icon={<AddIcon { ...generic_button_icon_props } />}
                 title={t("Add")}
                 { ...generic_button_props("create") }
+              /> }
+
+              {abilities.refresh && abilitiesFn.create() && <GenericButton
+                icon={<RefreshIcon { ...generic_button_icon_props } />}
+                title={t("Refresh")}
+                onClick={onRefreshClick}
+                { ...generic_button_props("refresh") }
               /> }
             </Box>
           </Box>

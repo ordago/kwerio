@@ -44,10 +44,13 @@ export const reducers = adapter => ({
   /**
    * Reset table state.
    */
-  resetTableState: (stateProxy, action) => {
-    stateProxy = {
-      ...state,
-    }
+  resetTableState: (state, action) => {
+    state.loading = false
+    state.q = ""
+    state.page = 0
+    state.per_page = 10
+    state.rsc.page = 0
+    state.rsc.total = 0
   },
 
   /**

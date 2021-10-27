@@ -44,6 +44,30 @@ class Normalizer {
     }
 
     /**
+     * Return back an info.
+     */
+    function info($message) {
+        return info()->json([
+            "message" => $message,
+            "error" => false,
+            "variant" => "info",
+            "meta" => $this->meta,
+        ], 200);
+    }
+
+    /**
+     * Return back a warning response.
+     */
+    function warning($message) {
+        return info()->json([
+            "message" => $message,
+            "error" => false,
+            "variant" => "warning",
+            "meta" => $this->meta,
+        ], 200);
+    }
+
+    /**
      * Normalize error message.
      *
      * @param string  $message

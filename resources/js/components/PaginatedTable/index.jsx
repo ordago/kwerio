@@ -163,6 +163,12 @@ function PaginatedTable({
               reducer={reducer}
               checkedItems={checkedItems}
               onQuery={() => request.index({ requests })}
+              onRefreshClick={() => {
+                dispatch(actions.resetTableState())
+                dispatch(actions.removeAll())
+
+                request.index({ requests })
+              }}
               primaryKey={primaryKey}
               {...toolbar}
             />}

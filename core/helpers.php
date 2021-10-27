@@ -3,6 +3,31 @@
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use App\Models\ApiUser;
+use Kwerio\Normalizer;
+
+if (!function_exists("response_success")) {
+    function response_success($msg) {
+        return resolve(Normalizer::class)->success($msg);
+    }
+}
+
+if (!function_exists("response_warning")) {
+    function response_warning($msg) {
+        return resolve(Normalizer::class)->warning($msg);
+    }
+}
+
+if (!function_exists("response_error")) {
+    function response_error($msg) {
+        return resolve(Normalizer::class)->error($msg);
+    }
+}
+
+if (function_exists("response_info")) {
+    function response_info($msg) {
+        return resolve(Normalizer::class)->info($msg);
+    }
+}
 
 if (!function_exists("name_to_duplicate")) {
     /**
