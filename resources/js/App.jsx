@@ -1,30 +1,29 @@
 import "fontsource-roboto"
 
+import { Box } from "@mui/system"
 import { BrowserRouter, Switch } from "react-router-dom"
 import { CssBaseline } from "@mui/material"
 import { Provider, useSelector, useDispatch } from "react-redux"
 import { SnackbarProvider } from "notistack"
-import { create } from "jss"
-import { jssPreset, StylesProvider } from "@mui/styles"
 import {
+  StyledEngineProvider,
   ThemeProvider,
   createTheme,
 } from "@mui/material/styles"
+import { create } from "jss"
+import { jssPreset, StylesProvider } from "@mui/styles"
+import DateAdapter from "@mui/lab/AdapterDayjs"
 import LocalizationProvider from "@mui/lab/LocalizationProvider"
-import DateAdapter from '@mui/lab/AdapterDayjs';
 import React from "react"
 import rtl from "jss-rtl"
-import { StyledEngineProvider  } from '@mui/material/styles'
 
-import { actions, fetch_metadata } from "./App.slice"
+import { fetch_metadata } from "./App.slice"
 import Main from "./components/Main"
 import useRoutes from "./hooks/useRoutes"
-import useStyles from "./App.styles"
 
 function InnerApp({ moduleRoutes, module }) {
   const { theme, config, user } = useSelector(state => state.app),
     dispatch = useDispatch(),
-    classes = useStyles(),
     muiTheme = React.useMemo(() => createTheme(theme), [theme]),
     jss = create({ plugins: [...jssPreset().plugins, rtl()] }),
     routes = useRoutes(moduleRoutes)
@@ -53,7 +52,10 @@ function InnerApp({ moduleRoutes, module }) {
               }}
               autoHideDuration={3000}
             >
-              <div className={classes.root}>
+              <Box sx={{
+                backgroundColor: "#fafafa",
+                display: "flex",
+              }}>
                 <CssBaseline />
                 <BrowserRouter>
                   <Main>
@@ -61,7 +63,7 @@ function InnerApp({ moduleRoutes, module }) {
                     <Switch>{routes}</Switch>
                   </Main>
                 </BrowserRouter>
-              </div>
+              </Box>
             </SnackbarProvider>
           </ThemeProvider>
         </StyledEngineProvider>

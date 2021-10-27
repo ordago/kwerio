@@ -40,31 +40,31 @@ class Normalizer {
             "error" => false,
             "variant" => "success",
             "meta" => $this->meta,
-        ], 200);
+        ], 222);
     }
 
     /**
      * Return back an info.
      */
     function info($message) {
-        return info()->json([
+        return response()->json([
             "message" => $message,
             "error" => false,
             "variant" => "info",
             "meta" => $this->meta,
-        ], 200);
+        ], 222);
     }
 
     /**
      * Return back a warning response.
      */
     function warning($message) {
-        return info()->json([
+        return response()->json([
             "message" => $message,
             "error" => false,
             "variant" => "warning",
             "meta" => $this->meta,
-        ], 200);
+        ], 222);
     }
 
     /**

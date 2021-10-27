@@ -140,7 +140,7 @@ function useRequest({
           // Display success message, if any..
           if (options.notifySuccessMessage) {
             let message = null,
-              variant = "success"
+              variant = "default"
 
             if ("message" in response.data) {
               message = response.data.message
