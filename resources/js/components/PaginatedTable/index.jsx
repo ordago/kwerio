@@ -263,7 +263,9 @@ function PaginatedTable({
                   </TableCell>
                   {state.columns.map(col => {
                     if (typeof renderCell === "function") {
-                      return renderCell(row, col)
+                      let result = renderCell(row, col)
+
+                      if (result) return result
                     }
 
                     return (
