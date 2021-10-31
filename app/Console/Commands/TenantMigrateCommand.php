@@ -113,6 +113,8 @@ class TenantMigrateCommand extends Command {
      * Install the module.
      */
     private function __install_module(string $module_uid) {
+        if (!$this->option("seed")) return;
+
         $module = ModuleModel::updateOrCreate(["uid" => $module_uid], [
             "uid" => $module_uid,
         ]);

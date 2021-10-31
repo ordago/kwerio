@@ -34,6 +34,8 @@ function Toolbar({
   onRefreshClick,
   primaryKey,
 
+  showSearchBox = true,
+
   // User
   extraButtons = [],
   useIcons = true,
@@ -149,6 +151,15 @@ function Toolbar({
     return true
   }
 
+  function _is_allowed_extra_button(button, checkedItems) {
+    if ("isAllowed" in button) {
+      if (typeof button.isAllowed === "boolean") return button.isAllowed
+      return button.isAllowed(checkedItems)
+    }
+
+    return true
+  }
+
   return (
     <>
       {Object.keys(abilities).filter(ability => abilities[ability] === true).length > 0 && (
@@ -161,7 +172,7 @@ function Toolbar({
             alignItems="flex-start"
           >
             <Box>
-              {abilities.index && ( <TextField
+              {showSearchBox && abilities.index && ( <TextField
                 label={t("Search")}
                 name="search"
                 type="search"
@@ -172,12 +183,13 @@ function Toolbar({
 
             <Box>
               {extraButtons.map(button => (
-                button.isAllowed(checkedItems) && <GenericButton
+                _is_allowed_extra_button(button, checkedItems) && <GenericButton
                   key={button.title}
                   useIcons={useIcons}
-                  icon={button.iconFn(generic_button_icon_props)}
+                  icon={("iconFn" in button) ? button.iconFn(generic_button_icon_props) : null}
                   iconSize={iconSize}
                   checkedItems={checkedItems}
+                  className={classes.genericBtn}
                   { ...button }
                 />
               ))}

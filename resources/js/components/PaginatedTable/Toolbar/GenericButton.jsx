@@ -23,6 +23,7 @@ function GenericButton({
   api,
   endpoint,
   onClick = null,
+  color = "primary",
 }) {
   const history = useHistory(),
     [delete_confirm_dialog, setConfirmDeleteDialog] = useState(false)
@@ -66,7 +67,7 @@ function GenericButton({
           />
         } />
       )}
-      {useIcons && (
+      {icon !== null && useIcons && (
         <Tooltip title={title}>
           <IconButton
             className={iconClassName}
@@ -78,13 +79,24 @@ function GenericButton({
           </IconButton>
         </Tooltip>
       )}
-      {!useIcons && (
+      {icon !== null && !useIcons && (
+        <Button
+          classes={classes}
+          aria-label={title}
+          endIcon={icon}
+          onClick={_handle_click}
+          color={color}
+        >
+          {title}
+        </Button>
+      )}
+      {icon === null && (
         <Button
           classes={classes}
           className={className}
           aria-label={title}
-          endIcon={icon}
           onClick={_handle_click}
+          color={color}
         >
           {title}
         </Button>
