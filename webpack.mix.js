@@ -19,6 +19,15 @@ modules_dir.closeSync()
 
 // ----------------------------------------- Webpack Custom Configuration -- #
 mix.webpackConfig({
+  devServer: {
+    client: {
+      progress: true,
+      webSocketURL: "auto://0.0.0.0:0/webpack-hmr-client/ws",
+    },
+  },
+  output: {
+    publicPath: "/",
+  },
   resolve: {
     alias: {
       Kwerio: path.resolve(__dirname, "resources/js"),
@@ -38,8 +47,4 @@ if (mix.inProduction()) {
 // -------------------------------------------------------------- Options -- #
 mix.options({
   runtimeChunkPath: "js",
-  hmrOptions: {
-    host: "127.0.0.1",
-    port: 8080,
-  },
 })
