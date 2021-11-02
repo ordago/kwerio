@@ -24,6 +24,7 @@ function GenericButton({
   endpoint,
   onClick = null,
   color = "primary",
+  disabled = false,
 }) {
   const history = useHistory(),
     [delete_confirm_dialog, setConfirmDeleteDialog] = useState(false)
@@ -74,6 +75,7 @@ function GenericButton({
             size={iconSize}
             aria-label={title}
             onClick={_handle_click}
+            disabled={disabled}
           >
             {icon}
           </IconButton>
@@ -86,6 +88,7 @@ function GenericButton({
           endIcon={icon}
           onClick={_handle_click}
           color={color}
+          disabled={disabled}
         >
           {title}
         </Button>
@@ -97,6 +100,7 @@ function GenericButton({
           aria-label={title}
           onClick={_handle_click}
           color={color}
+          disabled={disabled}
         >
           {title}
         </Button>
